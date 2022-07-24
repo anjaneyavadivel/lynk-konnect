@@ -7,7 +7,11 @@
 
 
 @include('admin.include.sidebar')  
-
+<style>
+  .error{
+    color:red;
+  }
+  </style>
 <?php use App\Http\Controllers\Admin\StopController; ?>
 
 <div class="page">
@@ -50,7 +54,7 @@
   </div>
 @endif
 
-                    <form method="POST" action="{{ url('edit_stop') }}">
+                    <form method="POST" action="{{ url('edit_stop') }}" id="add_form">
                       <input type="hidden" name="id" value="<?php if(isset($editview->id)){ echo $editview->id;} ?>">
                       @csrf
                       

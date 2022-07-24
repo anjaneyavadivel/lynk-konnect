@@ -7,7 +7,11 @@
 
 
 @include('admin.include.sidebar')  
-
+<style>
+  .error{
+    color:red;
+  }
+  </style>
 <div class="page">
       <div class="page-header">
         <h1 class="page-title">Routes Management</h1>
@@ -48,59 +52,62 @@
   </div>
 @endif
 
-                    <form method="POST" action="{{ url('add_route') }}">
+                    <form method="POST" action="{{ url('add_route') }}" id="add_form">
                       @csrf
                       <input type="hidden" name="country_id" value="1">
                       
                       <div class="row">
                         <div class="form-group form-material col-md-6">
-                          <label class="form-control-label" for="inputBasicFirstName">Route name</label>
-                            <input class="form-control" type="text" id="route_name" name="route_name" value="">
+                          <label class="form-control-label" for="inputBasicFirstName">Route name <span class="error">*</span></label>
+                            <input class="form-control route_name1" type="text" id="route_name" name="route_name" value="">
+                            <span class="error" id="route_name1" style="display:none">Route Name is required</span>
                         </div>
                       </div>
                       
                       <div class="row">
                         <div class="form-group form-material col-md-6">
-                          <label class="form-control-label" for="inputBasicFirstName">From County</label>
-                            <select class="form-control" id="from_route_state_id" name="from_route_state_id">
+                          <label class="form-control-label" for="inputBasicFirstName">From County <span class="error">*</span></label>
+                            <select class="form-control country" id="from_route_state_id" name="from_route_state_id">
                               <option value="">Select</option>
                               @foreach ($stateList as $Sval)
                               <option value="{{ $Sval->id }}">{{ $Sval->state_name }}</option>
                               @endforeach
                             </select>
-
+                            <span class="error" id="country" style="display:none">From County is required</span>
                         </div>
                       </div>
 
                       <div class="row">
                         <div class="form-group form-material col-md-6">
-                          <label class="form-control-label" for="inputBasicFirstName">From  Neighborhoods</label>
-                          <select class="form-control" id="from_route_city_id" name="from_route_city_id">
+                          <label class="form-control-label" for="inputBasicFirstName">From  Neighborhoods <span class="error">*</span></label>
+                          <select class="form-control neighborhoods" id="from_route_city_id" name="from_route_city_id">
                               <option value="">Select Neighborhoods</option>
                           </select>
+                          <span class="error" id="neighborhoods" style="display:none">Neighborhoods is required</span>
                         </div>
                       </div>
 
 
                       <div class="row">
                         <div class="form-group form-material col-md-6">
-                          <label class="form-control-label" for="inputBasicFirstName">To County</label>
-                            <select class="form-control" id="to_route_state_id" name="to_route_state_id">
+                          <label class="form-control-label" for="inputBasicFirstName">To County  <span class="error">*</span></label>
+                            <select class="form-control to_county" id="to_route_state_id" name="to_route_state_id">
                               <option value="">Select</option>
                               @foreach ($stateList as $Sval)
                               <option value="{{ $Sval->id }}">{{ $Sval->state_name }}</option>
                               @endforeach
                             </select>
-
+                            <span class="error" id="to_county" style="display:none">To County is required</span>
                         </div>
                       </div>
 
                       <div class="row">
                         <div class="form-group form-material col-md-6">
-                          <label class="form-control-label" for="inputBasicFirstName">To  Neighborhoods</label>
-                          <select class="form-control" id="to_route_city_id" name="to_route_city_id">
+                          <label class="form-control-label" for="inputBasicFirstName">To  Neighborhoods  <span class="error">*</span></label>
+                          <select class="form-control to_neighborhoods" id="to_route_city_id" name="to_route_city_id">
                               <option value="">Select Neighborhoods</option>
                           </select>
+                          <span class="error" id="to_neighborhoods" style="display:none">To Neighborhoods is required</span>
                         </div>
                       </div>
 
@@ -108,15 +115,16 @@
 
                       <div class="row">
                         <div class="form-group form-material col-md-6">
-                          <label class="form-control-label" for="inputBasicFirstName">Description</label>
-                            <textarea class="form-control" id="description" name="description" placeholder="" autocomplete="off"></textarea>
+                          <label class="form-control-label" for="inputBasicFirstName">Description  <span class="error">*</span></label>
+                            <textarea class="form-control description1" id="description" name="description" placeholder="" autocomplete="off"></textarea>
+                            <span class="error" id="description1" style="display:none">To Neighborhoods is required</span>
                         </div>
                       </div>
 
                       
                       
                       <div class="form-group form-material">
-                        <button type="submit" class="btn btn-primary">Submit</button>
+                        <button type="button" class="btn btn-primary submit-form">Submit</button>
                       </div>
                     
                   </div>
@@ -136,6 +144,60 @@
     </div>
 
 @include('admin.include.footer')
+<script type="text/javascript">
+  $(document).ready(function () {   
+
+  $('.submit-form').on('click',function(e) {
+    var email=$('.email').val();
+    
+    if($('.route_name1').val()=='')
+    {
+      $('#route_name1').css('display','block');
+    }else{
+      $('#route_name1').css('display','none');
+    }
+    
+    if($('.country').val()=='')
+    {
+      $('#country').css('display','block');
+    }else{
+      $('#country').css('display','none');
+    }
+    if($('.neighborhoods').val()=='')
+    {
+      $('#neighborhoods').css('display','block');
+    }else{
+      $('#neighborhoods').css('display','none');
+    }
+    if($('.to_county').val()=='')
+    {
+      $('#to_county').css('display','block');
+    }else{
+      $('#to_county').css('display','none');
+    }
+    if($('.to_neighborhoods').val()=='')
+    {
+      $('#to_neighborhoods').css('display','block');
+    }else{
+      $('#to_neighborhoods').css('display','none');
+    }
+    if($('.description1').val()=='')
+    {
+      $('#description1').css('display','block');
+    }else{
+      $('#description1').css('display','none');
+    }
+    
+
+    if($('.route_name1').val()!="" && $('.country').val()!="" && $('.neighborhoods').val()!="" && $('.to_county').val()!="" && $('.to_neighborhoods').val()!="" && $('.description1').val()!="")
+    {
+      $('form#add_form').submit();
+    }
+    
+    
+  });
+});
+</script>
 <script type="text/javascript">
         $(function() {
        

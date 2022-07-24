@@ -19,43 +19,12 @@ class Driver extends Authenticatable
     public $table = "driver";
 
     protected $fillable = [
-        'company_name',
-        'address',
-        'landmark',
-        'latitude',
-        'longitutude',
-        'contact_person',
-        'contact_no1',
-        'contact_no2',
+        'user_id',
+        'badge',
+        'address1',
+        'address2',
+        'state_id',
+        'city_id',
+        'postcode',
     ];
-    /**
-     * The attributes that should be hidden for arrays.
-     *
-     * @var array
-     */
-
-    protected $hidden = [
-        'password',
-        'remember_token',
-    ];
-    /**
-     * The attributes that should be cast to native types.
-     *
-     * @var array
-     */
-
-    protected $casts = [
-        'email_verified_at' => 'datetime',
-    ];
-
-    public static function getCompany(){
-        
-        $query = Company::select(\DB::raw('*,company.id as id'));
-        //->leftjoin('model_has_roles AS mhr','mhr.model_id', 'users.id')
-        //->leftjoin('roles AS r','r.id', 'mhr.role_id');
-        $result =  $query->get();
-
-        return $result; 
-    }
-
 }

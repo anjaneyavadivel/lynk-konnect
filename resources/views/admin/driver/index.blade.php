@@ -10,16 +10,16 @@
 
 <div class="page">
       <div class="page-header">
-        <h1 class="page-title">Company Management</h1>
+        <h1 class="page-title">Driver Management</h1>
         <ol class="breadcrumb">
           <li class="breadcrumb-item"><a href="">Dashboard</a></li>
-          <li class="breadcrumb-item"><a href="">Company Management</a></li>
+          <li class="breadcrumb-item"><a href="">Driver Management</a></li>
           <!-- <li class="breadcrumb-item active">DataTables</li> -->
         </ol>
         <div class="page-header-actions">
-          <a class="btn btn-sm btn-primary btn-round" href="{{ url('add_company') }}">
+          <a class="btn btn-sm btn-primary btn-round" href="{{ url('add_driver') }}">
         <i class="icon md-plus" aria-hidden="true"></i>
-        <span class="hidden-sm-down">Add Company</span>
+        <span class="hidden-sm-down">Add Driver</span>
       </a>
         </div>
       </div>
@@ -59,7 +59,7 @@
                   <td>{{ ++$i }}</td>
                   <td>{{ $val->company_name }}</td>
                   <td>
-                     <a class="btn btn-primary" href="{{ url('edit_company/'. $val->id)}}">Edit</a>
+                     <a class="btn btn-primary" href="{{ url('edit_driver/'. $val->id)}}">Edit</a>
                   </td>
                 </tr>
                 @endforeach

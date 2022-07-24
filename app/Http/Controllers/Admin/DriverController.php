@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Models\{User,Driver,State};
+use App\Models\{User,Driver,State,Company};
 use Spatie\Permission\Models\Role;
 use DB;
 use Hash;
@@ -31,22 +31,44 @@ class DriverController extends Controller
     public function create(Request $request) { 
       $stateList    = State::orderBy('state_name', 'ASC')->get();   
         if($request->has('_token')){   
+           
             $data = $this->validate($request, [
-                'company_name'   => 'required',
-                'address'        => 'required',
-                'landmark'       => '',
-                'latitude'       => '',
-                'longitutude'    => '', 
-                'contact_person' => '',
-                'contact_no1'    => '',
-                'contact_no2'    => '',
-            ]);
+                'company_id'   => 'required',
+                'fname'        => 'required',
+                'lname'        => '',
+                'email'        => 'required',
+                'password'        => 'required',
+                'postcode'        => 'required',
+                'address1'        => 'required',
+                'address2'        => '',
+                'state_id'       => 'required',
+                'city_id'       => 'required',
+            ]);            
+            
+            $data['company_id']=$data['company_id'];
+            $data['fname']=$data['fname'];
+            $data['lname']=$data['lname'];
+            $data['email']=$data['email'];
+            $data['password'] = Hash::make($data['password']);
 
-           $company = Company::create($data);
-           return redirect('manage_company')->withFlashSuccess('Company added successfully');
+            $user = User::create($data);         
+            
+            $data1['user_id']=$user->id;
+            $data1['address1']=$data['address1'];
+            $data1['address2']=$data['address2'];
+            $data1['state_id']=$data['state_id'];
+            $data1['city_id']=$data['city_id'];
+            $data1['postcode']=$data['postcode'];
+
+            //dd($data1);
+            $data1['badge']="test";
+
+           $company = Driver::create($data1);
+           return redirect('manage_driver')->withFlashSuccess('Driver added successfully');
             
         }
-        return view('admin.driver.create',compact('stateList'));      
+        $companyList  = Company::orderBy('company_name', 'ASC')->get();
+        return view('admin.driver.create',compact('stateList','companyList'));      
     }
     
 

@@ -19,8 +19,7 @@ class RouteController extends Controller
          $this->middleware('permission:route-delete', ['only' => ['destroy']]);
     }
     // -- Manage Route
-    public function index() { 
-
+    public function index() {
         //$list = State::orderBy('id','DESC')->get();
         $list = Routes::getRoutes();
         return view('admin.routes.index',compact('list'));
