@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Models\{User,Driver,State,Company};
+use App\Models\{User,Driver,State,Company,City};
 use Spatie\Permission\Models\Role;
 use DB;
 use Hash;
@@ -82,33 +82,61 @@ class DriverController extends Controller
     public function update(Request $request,$id=null) {
         
         if(isset($id)){
-            $editview = Company::where('id', $id)->first(); 
+            $editview = Driver::where('id', $id)->first(); 
+            $usereditview = User::where('id', $editview->user_id)->first(); 
         }else{
             $editview = array();
+            $usereditview = array();
         }
         
         if($request->has('_token')){   
             $data = $this->validate($request, [
-                'company_name'   => 'required',
-                'address'        => 'required',
-                'landmark'       => '',
-                'latitude'       => '',
-                'longitutude'    => '', 
-                'contact_person' => '',
-                'contact_no1'    => '',
-                'contact_no2'    => '',
-                'id'             => '',
-            ]);
+                'company_id'   => 'required',
+                'fname'        => 'required',
+                'lname'        => '',
+                'email'        => 'required',
+                'password'        => 'required',
+                'postcode'        => 'required',
+                'address1'        => 'required',
+                'address2'        => '',
+                'state_id'       => 'required',
+                'city_id'       => 'required',
+                'id'           => '',
+            ]);   
 
-            
+            $editview1 = Driver::where('id', $data['id'])->first(); 
             if(isset($data['id'])){
-                $user = Company::find($data['id']);
-                $user->update($data);
-                return redirect('manage_company')->withFlashSuccess('Company updated successfully');
+
+                $data['company_id']=$data['company_id'];
+            $data['fname']=$data['fname'];
+            $data['lname']=$data['lname'];
+            $data['email']=$data['email'];
+            $data['password'] = Hash::make($data['password']);
+
+            $user = User::find($editview1->user_id);         
+            $user->update($data);
+
+            $data1['user_id']=$user->id;
+            $data1['address1']=$data['address1'];
+            $data1['address2']=$data['address2'];
+            $data1['state_id']=$data['state_id'];
+            $data1['city_id']=$data['city_id'];
+            $data1['postcode']=$data['postcode'];
+
+            $data1['badge']="test";
+            $driver = Driver::find($data['id']);         
+            $driver->update($data1);
+
+                //$user = Driver::find($data['id']);
+                //$user->update($data);
+                return redirect('manage_driver')->withFlashSuccess('Driver updated successfully');
             } 
         }
         //print_r($userRole); die;
-        return view('admin.company.edit',compact('editview'));      
+        $CityList    = City::orderBy('city_name', 'ASC')->get(); 
+        $stateList    = State::orderBy('state_name', 'ASC')->get();  
+        $companyList  = Company::orderBy('company_name', 'ASC')->get();
+        return view('admin.driver.edit',compact('editview','companyList','stateList','usereditview','CityList'));      
     }
 
     

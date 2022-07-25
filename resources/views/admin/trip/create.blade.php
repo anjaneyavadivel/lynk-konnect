@@ -67,7 +67,7 @@
                       <?php if(Auth::user()->id == 2){ ?>
                       <div class="row">
                         <div class="form-group form-material col-md-6">
-                          <label class="form-control-label" for="inputBasicFirstName">Operator</label>
+                          <label class="form-control-label" for="inputBasicFirstName">Operator <span class="error">*</span></label>
                            <select class="form-control operator" id="select" name="trip_owner_company_id">
                               @foreach ($companyList as $Cval)
                               <option value="{{ $Cval->id }}">{{ $Cval->company_name }}</option>
@@ -80,12 +80,12 @@
 
                       <div class="form-row">
                         <div class="form-group form-material col-md-6">
-                          <label class="form-control-label" for="inputBasicFirstName">From Address</label>
+                          <label class="form-control-label" for="inputBasicFirstName">From Address <span class="error">*</span></label>
                             <textarea class="form-control address" id="inputBasicFirstName" name="from_address" placeholder="" autocomplete="off" required></textarea>
                             <span class="error" id="address" style="display:none">Address is required</span>
                         </div>
                         <div class="form-group form-material col-md-6">
-                          <label class="form-control-label" for="inputBasicFirstName">From County</label>
+                          <label class="form-control-label" for="inputBasicFirstName">From County <span class="error">*</span></label>
                           <select class="form-control county" id="from_state_id" name="from_state_id" required>
                               <option value="">Select County</option>
                               @foreach ($stateList as $Sval)
@@ -98,14 +98,14 @@
 
                       <div class="form-row">
                         <div class="form-group form-material col-md-6">
-                          <label class="form-control-label" for="inputBasicFirstName">From  Neighborhoods</label>
+                          <label class="form-control-label" for="inputBasicFirstName">From  Neighborhoods <span class="error">*</span></label>
                           <select class="form-control neighborhoods" id="from_city_id" name="from_city_id">
                               <option value="">Select Neighborhoods</option>
                           </select>  
                           <span class="error" id="neighborhoods" style="display:none">Neighborhoods is required</span>
                         </div>
                         <div class="form-group form-material col-md-6">
-                          <label class="form-control-label" for="inputBasicLastName">From Postcode</label>
+                          <label class="form-control-label" for="inputBasicLastName">From Postcode <span class="error">*</span></label>
                           <input type="text" class="form-control postcode" id="select" name="from_postcode" required> 
                           <span class="error" id="postcode" style="display:none">Postcode is required</span> 
                         </div>
@@ -114,12 +114,12 @@
 
                       <div class="form-row">
                         <div class="form-group form-material col-md-6">
-                          <label class="form-control-label" for="inputBasicFirstName">To Address</label>
+                          <label class="form-control-label" for="inputBasicFirstName">To Address <span class="error">*</span></label>
                             <textarea class="form-control address1" id="inputBasicFirstName" name="to_address" placeholder="" autocomplete="off"></textarea>
                             <span class="error" id="address1" style="display:none">Address is required</span> 
                         </div>
                         <div class="form-group form-material col-md-6">
-                          <label class="form-control-label" for="inputBasicFirstName">To County</label>
+                          <label class="form-control-label" for="inputBasicFirstName">To County <span class="error">*</span></label>
                           <select class="form-control county1" id="to_state_id" name="to_state_id" required>
                               <option value="">Select County</option>
                               @foreach ($stateList as $Sval)
@@ -132,14 +132,14 @@
 
                       <div class="form-row">
                         <div class="form-group form-material col-md-6">
-                          <label class="form-control-label" for="inputBasicFirstName">To Neighborhoods</label>
+                          <label class="form-control-label" for="inputBasicFirstName">To Neighborhoods <span class="error">*</span></label>
                           <select class="form-control neighborhoods1" id="to_city_id" name="to_city_id">
                               <option value="">Select Neighborhoods</option>
                           </select>  
                           <span class="error" id="neighborhoods1" style="display:none">Neighborhoods is required</span> 
                         </div>
                         <div class="form-group form-material col-md-6">
-                          <label class="form-control-label" for="inputBasicLastName">To Postcode</label>
+                          <label class="form-control-label" for="inputBasicLastName">To Postcode <span class="error">*</span></label>
                           <input type="text" class="form-control postcode1" id="select" name="to_postcode" required>
                           <span class="error" id="postcode1" style="display:none">Postcode is required</span> 
                         </div>
@@ -165,7 +165,7 @@
                   
         <div class="panel-body">
             <div class="form-group form-material col-md-6">
-              <label class="form-control-label" for="inputBasicFirstName">Trip Date/Time</label>
+              <label class="form-control-label" for="inputBasicFirstName">Trip Date/Time <span class="error">*</span></label>
             </div>
             <div class="example">
               <div class="input-group">
@@ -199,7 +199,7 @@
 
                       <div class="row">
                         <div class="form-group form-material col-md-6">
-                          <label class="form-control-label" for="inputBasicFirstName">No of persons </label>
+                          <label class="form-control-label" for="inputBasicFirstName">No of persons  <span class="error">*</span></label>
                           <input type="text" class="form-control no_of_passengers" id="inputBasicFirstName" name="no_of_passengers"
                              autocomplete="off" required/>
                              <span class="error" id="no_of_passengers" style="display:none">No of persons is required</span> 
@@ -208,7 +208,7 @@
 
                       <div class="row">
                         <div class="form-group form-material col-md-6">
-                          <label class="form-control-label" for="inputBasicFirstName">Trip amount</label>
+                          <label class="form-control-label" for="inputBasicFirstName">Trip amount <span class="error">*</span></label>
                           <input type="text" class="form-control trip_amount" id="inputBasicFirstName" name="trip_amount"
                              autocomplete="off" required/>
                              <span class="error" id="trip_amount" style="display:none">Trip amount is required</span> 

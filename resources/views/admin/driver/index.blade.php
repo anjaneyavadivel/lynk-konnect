@@ -55,9 +55,13 @@
               <tbody>
                  @php $i=0 @endphp
                  @foreach ($list as $key => $val)
+                 <?php
+                 $user = App\Models\User::where('id','=',$val->user_id)->first();
+                 $company = App\Models\Company::where('id','=',$user->company_id)->first();
+                 ?>
                 <tr>
                   <td>{{ ++$i }}</td>
-                  <td>{{ $val->company_name }}</td>
+                  <td>{{ $company->company_name }}</td>
                   <td>
                      <a class="btn btn-primary" href="{{ url('edit_driver/'. $val->id)}}">Edit</a>
                   </td>

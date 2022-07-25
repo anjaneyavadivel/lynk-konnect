@@ -60,7 +60,7 @@
                       
                       <div class="row">
                         <div class="form-group form-material col-md-6">
-                          <label class="form-control-label" for="inputBasicFirstName">Route name
+                          <label class="form-control-label" for="inputBasicFirstName">Route name  <span class="error">*</span>
                           </label>
                             <select class="form-control" id="route_id" name="route_id">
                               <option value="">Select</option>
@@ -76,7 +76,7 @@
                 <?php $k++; ?>
                       <div class="form-row">
                         <div class="form-group form-material col-md-4">
-                          <label class="form-control-label" for="inputBasicFirstName">From County</label>
+                          <label class="form-control-label" for="inputBasicFirstName">From County  <span class="error">*</span></label>
                             <select class="form-control" id="stop_state_id{{$k}}" name="stop_state_id[]">
                               <option value="">Select</option>
                               @foreach ($stateList as $Sval)
@@ -85,7 +85,7 @@
                             </select>
                         </div>
                         <div class="form-group form-material col-md-4">
-                          <label class="form-control-label" for="inputBasicFirstName">From  Neighborhoods</label>
+                          <label class="form-control-label" for="inputBasicFirstName">From  Neighborhoods  <span class="error">*</span></label>
 
                           <select class="form-control" id="stop_city_id{{$k}}" name="stop_city_id[]">
                               <option value="">Select Neighborhoods</option>
@@ -100,7 +100,7 @@
                         </div>
 
                         <div class="form-group form-material col-md-4">
-                          <label class="form-control-label" for="inputBasicFirstName">Position</label>
+                          <label class="form-control-label" for="inputBasicFirstName">Position  <span class="error">*</span></label>
                           <select class="form-control" id="position{{$k}}" name="position[]">
                               <option value="">Select Position</option>
                               @for($i=1; $i<=10; $i++)

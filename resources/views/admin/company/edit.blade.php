@@ -67,7 +67,7 @@
 
                      <div class="row">
                         <div class="form-group form-material col-md-6">
-                          <label class="form-control-label" for="inputBasicFirstName">Company Name</label>
+                          <label class="form-control-label" for="inputBasicFirstName">Company Name <span class="error">*</span></label>
                           <input type="text" class="form-control company" id="company_name" name="company_name" value="{{ $editview->company_name ?? '' }}" 
                             placeholder="" autocomplete="off" />
                             <span class="error" id="company"  style="display:none">Company is required</span>
@@ -76,7 +76,7 @@
 
                       <div class="row">
                         <div class="form-group form-material col-md-6">
-                          <label class="form-control-label" for="inputBasicFirstName">Address</label>
+                          <label class="form-control-label" for="inputBasicFirstName">Address <span class="error">*</span></label>
                          <!--  <input type="text" class="form-control" id="inputBasicFirstName" name="company_name"
                             placeholder="Company Name" autocomplete="off" /> -->
 
@@ -87,7 +87,7 @@
 
                       <div class="row">
                         <div class="form-group form-material col-md-6">
-                          <label class="form-control-label" for="inputBasicFirstName">Landmark</label>
+                          <label class="form-control-label" for="inputBasicFirstName">Landmark <span class="error">*</span></label>
                           <input type="text" class="form-control landmark1" id="landmark" name="landmark" value="{{ $editview->landmark  ?? ''}}"/>
                           <span class="error" id="landmark1" style="display:none">Landmark is required</span>
                         </div>
@@ -95,7 +95,7 @@
 
                       <div class="form-row">
                         <div class="form-group form-material col-md-6">
-                          <label class="form-control-label" for="inputBasicFirstName">County</label>
+                          <label class="form-control-label" for="inputBasicFirstName">County <span class="error">*</span></label>
                           <select class="form-control county" id="state_id" name="state_id">
                               <option value="">Select County</option>
                               @if(isset($stateList))
@@ -107,7 +107,7 @@
                           <span class="error" id="county" style="display:none">County is required</span>
                         </div>
                         <div class="form-group form-material col-md-6">
-                          <label class="form-control-label" for="inputBasicLastName">Neighborhoods</label>
+                          <label class="form-control-label" for="inputBasicLastName">Neighborhoods <span class="error">*</span></label>
                           <select class="form-control city_id1" id="city_id" name="city_id">
                               <option value="">Select Neighborhoods</option>
                                @if(isset($cityList))
@@ -137,7 +137,7 @@
                     
                       <div class="row">
                         <div class="form-group form-material col-md-6">
-                          <label class="form-control-label" for="inputBasicFirstName">Postcode</label>
+                          <label class="form-control-label" for="inputBasicFirstName">Postcode <span class="error">*</span></label>
                           <input type="text" class="form-control postcode1" name="postcode" id="postcode"  value="{{ $editview->postcode  ?? ''}}"
                              autocomplete="off" />
                              <span class="error" id="postcode1" style="display:none">Postcode is required and Postcode should be 6 digit</span>
@@ -145,7 +145,7 @@
                       </div>
                       <div class="row">
                         <div class="form-group form-material col-md-6">
-                          <label class="form-control-label" for="inputBasicFirstName">Contact person</label>
+                          <label class="form-control-label" for="inputBasicFirstName">Contact person <span class="error">*</span></label>
                           <input type="text" class="form-control contact_person" id="inputBasicFirstName" name="contact_person" value="{{ $editview->contact_person  ?? ''}}"
                              autocomplete="off" />
                              <span class="error" id="contact_person" style="display:none">Contact person is required</span>
@@ -154,13 +154,13 @@
 
                       <div class="form-row">
                         <div class="form-group form-material col-md-6">
-                          <label class="form-control-label" for="inputBasicFirstName">Contact no </label>
+                          <label class="form-control-label" for="inputBasicFirstName">Contact no  <span class="error">*</span></label>
                           <input type="text" class="form-control contact_no1" id="inputBasicFirstName" name="contact_no1" value="{{ $editview->contact_no1  ?? ''}}"
                              autocomplete="off" />
                              <span class="error" id="contact_no1" style="display:none">Contact no is required and Contact no should be 10 digit</span>
                         </div>
                         <div class="form-group form-material col-md-6">
-                          <label class="form-control-label" for="inputBasicFirstName">Alternate no </label>
+                          <label class="form-control-label" for="inputBasicFirstName">Alternate no <span class="error">*</span> </label>
                           <input type="text" class="form-control contact_no2" id="inputBasicFirstName" name="contact_no2" value="{{ $editview->contact_no2  ?? ''}}"
                              autocomplete="off" />
                              <span class="error" id="contact_no2" style="display:none">Alternate no is required and Alternate no should be 10 digit</span> 

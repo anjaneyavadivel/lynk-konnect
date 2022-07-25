@@ -61,7 +61,7 @@
                         
                       <div class="row">
                         <div class="form-group form-material col-md-6">
-                          <label class="form-control-label" for="inputBasicFirstName">Name</label>
+                          <label class="form-control-label" for="inputBasicFirstName">Name <span class="error">*</span></label>
                           <!-- <input type="text" class="form-control" id="inputBasicFirstName" name="name"
                             placeholder="Name" /> -->
                              {!! Form::text('name', null, array('placeholder' => 'Name','class' => 'form-control name')) !!}
@@ -71,7 +71,7 @@
                       </div>
                       
                       <div class="form-group form-material">
-                        <label class="form-control-label" for="inputBasicEmail">Permission</label>
+                        <label class="form-control-label" for="inputBasicEmail">Permission <span class="error">*</span></label>
                         <br> 
                         
                         @foreach($permission as $value)
