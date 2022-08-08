@@ -80,7 +80,7 @@
                   <td>
                      <a class="btn btn-primary" href="{{ url('show_trip/'. $val->id)}}">View</a>
                      <a class="btn btn-primary" href="{{ url('edit_trip/'. $val->id)}}">Edit</a>
-                     <a class="btn btn-primary" href="{{ url('manage_trip/'. $val->route_id)}}">Return Trip</a>
+                     <a class="btn btn-primary" href="{{ url('manage_trip/'. $val->route_id)}}" style="margin: 6px;">Return Trip</a>
                   </td>
                 </tr>
                 @endforeach

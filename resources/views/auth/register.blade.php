@@ -66,7 +66,7 @@
             </div>
             <form method="POST" action="{{ route('register') }}">
               @csrf
-              <input type="text" name="company_id" value="7">
+              <input type="hidden" name="company_id" value="7">
               <div class="form-group form-material floating" data-plugin="formMaterial">
                 <!-- <input type="text" class="form-control" name="name" /> -->
                 <input id="name" type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name') }}" required autocomplete="name" autofocus>

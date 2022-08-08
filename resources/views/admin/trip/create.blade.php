@@ -106,7 +106,7 @@
                         </div>
                         <div class="form-group form-material col-md-6">
                           <label class="form-control-label" for="inputBasicLastName">From Postcode <span class="error">*</span></label>
-                          <input type="text" class="form-control postcode" id="select" name="from_postcode" required> 
+                          <input type="number" class="form-control postcode" id="select" name="from_postcode" required> 
                           <span class="error" id="postcode" style="display:none">Postcode is required</span> 
                         </div>
                       </div>
@@ -140,7 +140,7 @@
                         </div>
                         <div class="form-group form-material col-md-6">
                           <label class="form-control-label" for="inputBasicLastName">To Postcode <span class="error">*</span></label>
-                          <input type="text" class="form-control postcode1" id="select" name="to_postcode" required>
+                          <input type="number" class="form-control postcode1" id="select" name="to_postcode" required>
                           <span class="error" id="postcode1" style="display:none">Postcode is required</span> 
                         </div>
                       </div>
@@ -172,7 +172,7 @@
                 <span class="input-group-addon">
                   <i class="icon md-calendar" aria-hidden="true"></i>
                 </span>
-                <input data-date-format="dd-mm-yyyy" type="text" class="form-control trip_date_time" data-plugin="datepicker" name="trip_date" id="trip_date">
+                <input data-date-format="dd-mm-yyyy" readonly type="text" pattern="([0-9]{2})\/([0-9]{2})\/([0-9]{4})" class="form-control trip_date_time" data-plugin="datepicker" name="trip_date" id="trip_date">
               </div>
             </div>
             
@@ -200,7 +200,7 @@
                       <div class="row">
                         <div class="form-group form-material col-md-6">
                           <label class="form-control-label" for="inputBasicFirstName">No of persons  <span class="error">*</span></label>
-                          <input type="text" class="form-control no_of_passengers" id="inputBasicFirstName" name="no_of_passengers"
+                          <input type="number" class="form-control no_of_passengers" id="inputBasicFirstName" name="no_of_passengers"
                              autocomplete="off" required/>
                              <span class="error" id="no_of_passengers" style="display:none">No of persons is required</span> 
                         </div>
@@ -209,7 +209,7 @@
                       <div class="row">
                         <div class="form-group form-material col-md-6">
                           <label class="form-control-label" for="inputBasicFirstName">Trip amount <span class="error">*</span></label>
-                          <input type="text" class="form-control trip_amount" id="inputBasicFirstName" name="trip_amount"
+                          <input type="number" class="form-control trip_amount" id="inputBasicFirstName" name="trip_amount"
                              autocomplete="off" required/>
                              <span class="error" id="trip_amount" style="display:none">Trip amount is required</span> 
                         </div>
@@ -297,6 +297,7 @@
       $('#postcode1').css('display','none');
     }
 
+    
     if($('.trip_date_time').val()=='')
     {
       $('#trip_date_time').css('display','block');

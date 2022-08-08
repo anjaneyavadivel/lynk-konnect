@@ -147,7 +147,7 @@
                         </div>
                         <div class="form-group form-material col-md-6">
                           <label class="form-control-label" for="inputBasicLastName">To Postcode <span class="error">*</span></label>
-                          <input type="text" class="form-control postcode1" id="select" name="to_postcode"  value="{{ $editview->to_postcode }}" required>
+                          <input type="number" class="form-control postcode1" id="select" name="to_postcode"  value="{{ $editview->to_postcode }}" required>
                           <span class="error" id="postcode1" style="display:none">Postcode is required</span>  
                         </div>
                       </div>
@@ -179,7 +179,7 @@
                       <span class="input-group-addon">
                         <i class="icon md-calendar" aria-hidden="true"></i>
                       </span>
-                      <input data-date-format="dd-mm-yyyy" type="text" class="form-control trip_date_time" value="{{ $editview->trip_date }}" data-plugin="datepicker" name="trip_date" id="trip_date">
+                      <input data-date-format="dd-mm-yyyy" type="text" readonly class="form-control trip_date_time" value="{{ $editview->trip_date }}" data-plugin="datepicker" name="trip_date" id="trip_date">
                     </div>
                   </div>
                   
@@ -188,7 +188,7 @@
                       <span class="input-group-addon">
                         <i class="icon md-time" aria-hidden="true"></i>
                       </span>
-                      <input type="text" class="form-control" data-plugin="timepicker" name="trip_time" id="trip_time"  value="{{ $editview->trip_time }}"/>
+                      <input type="text" class="form-control" disabled data-plugin="timepicker" name="trip_time" id="trip_time"  value="{{ $editview->trip_time }}"/>
                     </div>
                   </div>
                   <span class="error" id="trip_date_time" style="display:none">Trip Date/Time is required</span> 
@@ -206,7 +206,7 @@
                       <div class="row">
                         <div class="form-group form-material col-md-6">
                           <label class="form-control-label" for="inputBasicFirstName">No of persons  <span class="error">*</span></label>
-                          <input type="text" class="form-control no_of_passengers" id="inputBasicFirstName" name="no_of_passengers" value="{{ $editview->no_of_passengers }}"
+                          <input type="number" class="form-control no_of_passengers" id="inputBasicFirstName" name="no_of_passengers" value="{{ $editview->no_of_passengers }}"
                              autocomplete="off" />
                              <span class="error" id="no_of_passengers" style="display:none">No of persons is required</span> 
                         </div>
@@ -215,7 +215,7 @@
                       <div class="row">
                         <div class="form-group form-material col-md-6">
                           <label class="form-control-label" for="inputBasicFirstName">Trip amount <span class="error">*</span></label>
-                          <input type="text" class="form-control trip_amount" id="inputBasicFirstName" name="trip_amount"  value="{{ $editview->trip_amount }}"
+                          <input type="number" class="form-control trip_amount" id="inputBasicFirstName" name="trip_amount"  value="{{ $editview->trip_amount }}"
                              autocomplete="off" />
                              <span class="error" id="trip_amount" style="display:none">Trip amount is required</span> 
                         </div>

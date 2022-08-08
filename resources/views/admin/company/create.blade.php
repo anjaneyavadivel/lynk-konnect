@@ -161,9 +161,10 @@
 
                       <div class="row">
                         <div class="form-group form-material col-md-6">
-                          <label class="form-control-label" for="inputBasicFirstName">Website</label>
-                          <input type="text" class="form-control" id="website" name="website"
+                          <label class="form-control-label" for="inputBasicFirstName">Website <span class="error">*</span></label>
+                          <input type="text" class="form-control website1" id="website" name="website"
                              autocomplete="off" />
+                             <span class="error" id="website1" style="display:none">Website is required</span> 
                         </div>
                       </div>
 
@@ -207,7 +208,7 @@
     }else{
       $('#address').css('display','none');
     }
-    if($('.postcode1').val()=='' || !/^[0-9]+$/.test($('.postcode').val()) || $('.postcode').val().length<6)
+    if($('.postcode1').val()=='' || !/^[0-9]+$/.test($('.postcode').val()))
     {
       $('#postcode1').css('display','block');
     }else{
@@ -249,9 +250,15 @@
     }else{
       $('#city_id1').css('display','none');
     }
-    
 
-    if($('.company').val()!="" && $('.address').val()!="" && $('.postcode1').val()!="" && $('.landmark').val()!="" && $('.contact_person').val()!="" && $('.contact_no1').val()!="" &&  $('.contact_no2').val()!="" &&  $('.county').val()!="" && $('.city_id1').val()!="")
+    if($('.website1').val()=='')
+    {
+      $('#website1').css('display','block');
+    }else{
+      $('#website1').css('display','none');
+    }
+
+    if($('.company').val()!="" && $('.address').val()!="" && $('.postcode1').val()!="" && $('.landmark').val()!="" && $('.contact_person').val()!="" && $('.contact_no1').val()!="" &&  $('.contact_no2').val()!="" &&  $('.county').val()!="" && $('.city_id1').val()!="" && $('.website1').val()!="")
     {
       $('form#add_form').submit();
     }

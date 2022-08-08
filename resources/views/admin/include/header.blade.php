@@ -41,7 +41,7 @@
             
             <li class="nav-item dropdown">
               <a class="nav-link navbar-avatar" data-toggle="dropdown" href="#" aria-expanded="false"
-                data-animation="scale-up" role="button">{{Auth::user()->fname}}  
+                data-animation="scale-up" role="button">Welcome {{Auth::user()->fname}}        
                 <span class="avatar avatar-online"> 
                   <img src="{{ asset('temp/global/portraits/5.jpg') }}" alt="...">
                   <i></i>

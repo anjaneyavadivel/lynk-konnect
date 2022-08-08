@@ -41,6 +41,11 @@ class RegisterController extends Controller
         $this->middleware('guest');
     }
 
+    public function index()
+    {
+        return view('auth.register');
+    }
+
     /**
      * Get a validator for an incoming registration request.
      *
@@ -53,7 +58,7 @@ class RegisterController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
-            'country_id' => ['required'],
+            //'country_id' => ['required'],
         ]);
     }
 
@@ -66,10 +71,10 @@ class RegisterController extends Controller
     protected function create(array $data)
     {
         return User::create([
-            'name' => $data['name'],
+            'fname' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
-            'country_id' => $data['country_id'],
+            //'country_id' => $data['country_id'],
         ]);
     }
 }

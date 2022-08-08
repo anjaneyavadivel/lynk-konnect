@@ -199,6 +199,7 @@
         
       </div>
     </div>
+    @include('admin.include.footer')
 <script type="text/javascript">
   $(document).ready(function () {   
 
@@ -301,6 +302,6 @@
 
       });
      </script>
-     @include('admin.include.footer')
+     
 
 @endsection
