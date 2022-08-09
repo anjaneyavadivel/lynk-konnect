@@ -58,7 +58,7 @@
     <!-- Page -->
     <div class="page" data-animsition-in="fade-in" data-animsition-out="fade-out">
       <div class="page-content">
-        <div class="page-brand-info">
+        <div class="page-brand-info" style="margin: 45px 100px 0 90px !important;">
           <div class="brand">
             <img class="brand-img" src="{{ asset('temp/assets/images/lynk-konnect-logo.png') }}" alt="...">
             <h2 class="brand-text font-size-40"><!-- Lynk Konnect --></h2>
@@ -67,7 +67,7 @@
             tempor incididunt ut labore et dolore magna aliqua.</p> -->
         </div>
 
-        <div class="page-login-main">
+        <div class="page-login-main" style="padding: 121px 54px 108px !important;">
           <div class="brand hidden-md-up">
             <img class="brand-img" src="{{ asset('temp/assets/images/logo.png') }}" alt="...">
             <h3 class="brand-text font-size-30">Lynk Konnect</h3>
@@ -108,7 +108,7 @@
                 <input type="checkbox" id="remember" name="checkbox">
                 <label for="inputCheckbox">Remember me</label>
               </div>
-              <a class="float-right" href="forgot-password.html">Forgot password?</a>
+              <a class="float-right" href="{{ url('/password/reset') }}">Forgot password?</a>
             </div>
             <!-- <button type="submit" class="btn btn-primary btn-block">Sign in</button> -->
             <button type="submit" class="btn btn-primary btn-block">{{ __('Login') }}</button>

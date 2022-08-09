@@ -22,6 +22,8 @@ use App\Http\Controllers\Admin\TransactionController;
 use App\Http\Controllers\Admin\RouteController;
 use App\Http\Controllers\Admin\StopController;
 
+use App\Http\Controllers\Auth\ForgotPasswordController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -39,6 +41,9 @@ Route::get('/', function () { return view('auth/login');});
 
     Route::get('/signup', [UserController::class, 'signUp'])->name('signUp');
     Route::post('/signup', [UserController::class, 'signUp'])->name('signUp');
+
+    Route::get('password/reset', [ForgotPasswordController::class, 'showLinkRequestForm'])->name('auth.password.reset');
+    Route::post('password/email', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('auth.password.email');
 
     Route::get('/map', function () {
         return view('admin/map');

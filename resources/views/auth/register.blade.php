@@ -89,6 +89,27 @@
                                 @enderror
                 <label class="floating-label">Email</label>
               </div>
+              @php $stateList = \App\Models\State::orderBy('state_name', 'ASC')->get(); 
+              $roleList     = \Spatie\Permission\Models\Role::orderBy('name', 'ASC')->get();  
+              @endphp
+              <!-- <div class="form-group form-material floating" data-plugin="formMaterial">                          
+                <select class="form-control county" id="country_id" name="country_id" required>
+                    <option value="">Select County</option>
+                    @foreach ($stateList as $Sval)
+                    <option value="{{ $Sval->id }}">{{ $Sval->state_name }}</option>
+                    @endforeach
+                </select>                          
+              </div> -->
+
+              <div class="form-group form-material floating" data-plugin="formMaterial">                          
+                <select class="form-control county" id="role_id" name="role_id" required>
+                    <option value="">Select Role</option>
+                    @foreach ($roleList as $Sval)
+                    <option value="{{ $Sval->id }}">{{ $Sval->name }}</option>
+                    @endforeach
+                </select>                          
+              </div>
+
               <div class="form-group form-material floating" data-plugin="formMaterial">
                 <!-- <input type="password" class="form-control" name="password" /> -->
                 <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="new-password">

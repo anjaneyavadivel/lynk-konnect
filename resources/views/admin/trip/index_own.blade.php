@@ -47,6 +47,7 @@
                   <th>Trip Taken By</th>
                   <th>Trip From Address</th>
                   <th>Trip To Address</th>
+                  <th>Trip Date & Time</th>
                   <th>Passengers</th>
                   <th>Trip Amount</th>
                   <th>Status</th>
@@ -70,6 +71,7 @@
                   <td>{{ $val->confirm_fname }}</td>
                   <td>{{ $val->from_address }} <br> {{$val->f_state_name }}</td>
                   <td>{{ $val->to_address }} <br> {{ $val->t_state_name }}</td>
+                  <td>{{ date('d-m-Y',strtotime($val->trip_date)) }} <br> {{ $val->trip_time }}</td>
                   <td>{{ $val->no_of_passengers }}</td>
                   <td>{{ $val->trip_amount}}</td>
                   <td>
@@ -79,7 +81,7 @@
                   </td>
                   <td>
                      <a class="btn btn-primary" href="{{ url('show_trip/'. $val->id)}}">View</a>
-                     <a class="btn btn-primary" href="{{ url('edit_trip/'. $val->id)}}">Edit</a>
+                     @if($val->trip_date > date('Y-m-d'))<a class="btn btn-primary" href="{{ url('edit_trip/'. $val->id)}}">Edit</a>@endif
                      <a class="btn btn-primary" href="{{ url('manage_trip/'. $val->route_id)}}" style="margin: 6px;">Return Trip</a>
                   </td>
                 </tr>

@@ -4,7 +4,7 @@
           <div>
             <ul class="site-menu" data-plugin="menu">
               <li class="site-menu-category">General</li>
-              <li class="site-menu-item active">
+              <li class="site-menu-item @if(collect(request()->segments())->last()=='dashboard') active @endif">
                 <a class="animsition-link" href="{{ url('dashboard') }}">
                         <i class="site-menu-icon md-view-dashboard" aria-hidden="true"></i>
                         <span class="site-menu-title">Dashboard</span>
@@ -12,7 +12,8 @@
               </li>
               
               @can('user-list')
-              <li class="site-menu-item has-sub">
+              
+              <li class="site-menu-item has-sub @if(collect(request()->segments())->last()=='manage_users') active @elseif(collect(request()->segments())->last()=='add_user') active @endif">
                 <a href="javascript:void(0)">
                         <i class="site-menu-icon md-account-circle" aria-hidden="true"></i>
                         <span class="site-menu-title">Users</span>
@@ -33,7 +34,8 @@
               </li>
               @endcan
               @can('role-list')
-              <li class="site-menu-item has-sub">
+              
+              <li class="site-menu-item has-sub @if(collect(request()->segments())->last()=='roles') active @elseif(request()->path()=='roles/create') active @endif">
                 <a href="javascript:void(0)">
                         <i class="site-menu-icon md-bookmark" aria-hidden="true"></i>
                         <span class="site-menu-title">Roles</span>
@@ -54,7 +56,7 @@
               </li>
               @endcan
               @can('company-list')
-              <li class="site-menu-item has-sub">
+              <li class="site-menu-item has-sub @if(collect(request()->segments())->last()=='manage_company') active @elseif(request()->path()=='add_company') active @endif">
                 <a href="javascript:void(0)">
                         <i class="site-menu-icon md-account" aria-hidden="true"></i>
                         <span class="site-menu-title">Company</span>
@@ -75,7 +77,7 @@
               </li>
               @endcan
 
-              <li class="site-menu-item has-sub">
+              <li class="site-menu-item has-sub @if(collect(request()->segments())->last()=='manage_driver') active @elseif(request()->path()=='add_driver') active @endif">
                 <a href="javascript:void(0)">
                         <i class="site-menu-icon md-google-pages" aria-hidden="true"></i>
                         <span class="site-menu-title">Driver</span>
@@ -95,7 +97,7 @@
                 </ul>
               </li>
 
-              <li class="site-menu-item has-sub">
+              <li class="site-menu-item has-sub  @if(collect(request()->segments())->last()=='manage_trip') active @elseif(request()->path()=='manage_own_trip') active @elseif(request()->path()=='add_trip') active @endif">
                 <a href="javascript:void(0)">
                         <i class="site-menu-icon glyphicon-transfer" aria-hidden="true"></i>
                         <span class="site-menu-title">Trips</span>
@@ -123,7 +125,7 @@
                 </ul>
               </li>
 
-              <li class="site-menu-item has-sub">
+              <li class="site-menu-item has-sub @if(collect(request()->segments())->last()=='manage_transaction') active @endif">
                 <a href="javascript:void(0)">
                         <i class="site-menu-icon glyphicon-list" aria-hidden="true"></i>
                         <span class="site-menu-title">Transaction</span>
@@ -145,7 +147,7 @@
 
 
               @can('state-list')
-              <li class="site-menu-item has-sub">
+              <li class="site-menu-item has-sub @if(collect(request()->segments())->last()=='manage_state') active @elseif(request()->path()=='manage_city') active @elseif(request()->path()=='manage_route') active @elseif(request()->path()=='manage_stop/0') active @endif">
                 <a href="javascript:void(0)">
                         <i class="site-menu-icon md-view-compact" aria-hidden="true"></i>
                         <span class="site-menu-title">Master Settings</span>

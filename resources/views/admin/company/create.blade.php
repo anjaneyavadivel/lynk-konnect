@@ -94,7 +94,7 @@
 
                       <div class="form-row">
                         <div class="form-group form-material col-md-6">
-                          <label class="form-control-label" for="inputBasicFirstName">County <span class="error">*</span></label>
+                          <label class="form-control-label" for="inputBasicFirstName">Country <span class="error">*</span></label>
                           <select class="form-control county" id="state_id" name="state_id">
                               <option value="">Select County</option>
                               @foreach ($stateList as $Sval)
