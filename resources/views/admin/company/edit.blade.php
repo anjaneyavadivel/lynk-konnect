@@ -179,8 +179,7 @@
                       <div class="row">
                         <div class="form-group form-material col-md-6">
                           <label class="form-control-label" for="inputBasicFirstName">Operator Licence </label>
-                          <input type="file" id="input-file-events" class="dropify-event" data-default-file="../../../global/photos/placeholder.png"
-                    />
+                          <input type="file" id="input-file-events" class="dropify-event"  style="opacity: 1 !important; margin-top: 33px;margin-left: 18px;" data-default-file="../../../global/photos/placeholder.png">
                         </div>
                       </div>  
                       

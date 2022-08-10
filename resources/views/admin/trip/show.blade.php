@@ -204,7 +204,9 @@
                       </div>  
                       <input type="hidden" class="form-control" name="trip_date" id="trip_date" value="<?php echo $list->trip_date; ?>">
                       <input type="hidden" class="form-control" name="trip_time" id="trip_time" value="<?php echo $list->trip_time; ?>">
+                      @if($list->trip_status==4)
                       <button id="confirm_trip" class="btn btn-primary animation-scale-up waves-effect waves-classic">Click here to confirm the trip</button>
+                      @endif
 
                   </div>
                 </div>

@@ -129,6 +129,9 @@ Route::group(['middleware' => ['auth']], function() {
 
     Route::get('/show_trip/{id}', [TripController::class, 'show'])->name('show_trip');
 
+    Route::post('/complete_trip', [TripController::class, 'status_change'])->name('status_change');
+
+
     Route::get('/state', [TripController::class, 'getCity'])->name('state');
 
     #-- Transaction Management

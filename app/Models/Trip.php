@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
+use Auth;
 
 class Trip extends Authenticatable
 {
@@ -88,7 +89,7 @@ class Trip extends Authenticatable
                     ->leftjoin('city AS ci','ci.id', 'trip.to_city_id')
                     ->leftjoin('company AS com','com.id', 'trip.trip_owner_company_id')
                     ->leftjoin('company AS comp','comp.id', 'trip.trip_confirm_company_id')
-                    ->where('com.id', $comp_id);
+                    ->where('trip.trip_owner_user_id', Auth::id());
         
         $result =  $query->get();
 

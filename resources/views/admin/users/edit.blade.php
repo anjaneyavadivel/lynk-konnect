@@ -59,7 +59,7 @@
 
 @endif
 
-                    <form method="POST" action="{{ url('edit_user') }}">
+                    <form method="POST" action="{{ url('edit_user') }}" id="add_user">
                        <input type="hidden" name="id" value="<?php if(isset($editview->id)){ echo $editview->id;} ?>">
                       @csrf
                       <div class="row">
@@ -96,7 +96,7 @@
                       </div>
                       <div class="form-group form-material">
                         <label class="form-control-label" for="inputBasicPassword">Password <span class="error">*</span></label>
-                        <input type="text" class="form-control password" id="inputBasicPassword" name="password"
+                        <input type="password" class="form-control password" id="inputBasicPassword" name="password"
                           placeholder="Password" autocomplete="off" />
                           <span class="error" id="password"  style="display:none">Password is required and Password should be above 6 digit</span>
                       </div>
@@ -124,7 +124,13 @@
                     
                     <select class="form-control role" id="select" name="role_id">
                       @foreach ($roleList as $val)
+                      @if(Auth::user()->roles->first()->id==2)   
                       <option id="{{ $val->id }}"<?php if($userRole[0] == $val->id){ echo 'selected';}?>>{{ $val->name }}</option>
+                      @else
+                      @if($val->id!=1)                      
+                      <option id="{{ $val->id }}"<?php if($userRole[0] == $val->id){ echo 'selected';}?>>{{ $val->name }}</option>
+                      @endif
+                      @endif
                       @endforeach
                     </select>
                     <span class="error" id="role" style="display:none">Role is required</span>
@@ -244,7 +250,7 @@
       $('#role').css('display','none');
     }
 
-    if($('.fname').val()!="" && $('.email').val()!="" && $('.password').val()!="" && $('.company').val()!="" && $('.role').val()!="")
+    if($('.fname').val()!="" && $('.email').val()!="" &&  $('.company').val()!="" && $('.role').val()!="" && $('.password').val()!="")
     {
       $('form#add_user').submit();
     }

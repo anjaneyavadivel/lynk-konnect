@@ -170,7 +170,7 @@ class UserController extends Controller
             $data = $this->validate($request, [
                 'fname'      => 'required|regex:/(^[A-Za-z ]+$)+/|string|max:20',
                 'lname'      => '',  
-                'email'      => 'email|unique:users,email|',
+                'email'      => 'required|email',
                 'password'   => 'required',
                 'company_id' => 'required',
                 'role_id'    => 'required',
@@ -192,7 +192,11 @@ class UserController extends Controller
                 $data['image'] = Helpers::uploadFileToAWS($file, $name . "_" . Carbon::now());
             }
             #---End Pro-Pic --
+            
+            
                 $data['password'] = Hash::make($data['password']);
+            
+                
 
                 $user = User::find($data['id']);
                 $user->update($data);

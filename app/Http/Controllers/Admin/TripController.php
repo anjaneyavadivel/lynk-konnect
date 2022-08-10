@@ -119,6 +119,8 @@ class TripController extends Controller
 
            $data['trip_owner_user_id'] = Auth::id();
 
+           $data['trip_status'] = 1;
+
         //$user_id = Auth::user()->id;
         $id      = User::where('id', $data['trip_owner_user_id'])->first(); 
         $data['trip_owner_company_id'] = $id->company_id;
@@ -241,6 +243,22 @@ class TripController extends Controller
         User::find($id)->delete();
         return redirect()->route('users.index')->with('success','User deleted successfully');
 
+    }
+
+    public function status_change(Request $request)
+    {
+        $id=$request->id;
+        $trip_status=$request->trip_status;
+
+        $trip = Trip::find($id);
+        if($trip)
+        {
+            $data['trip_status']=$trip_status;
+            $trip->update($data);
+            return redirect()->back();
+        }
+        return redirect()->with('error','Error');      
+                
     }
 
 }

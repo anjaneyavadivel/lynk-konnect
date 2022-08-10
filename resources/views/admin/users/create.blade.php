@@ -125,7 +125,14 @@
                     <select class="form-control role" id="select" name="role_id">
                       <option value="">Select</option>
                       @foreach ($roleList as $val)
-                      <option value="{{ $val->id }}">{{ $val->name }}</option>
+                      @if(Auth::user()->roles->first()->id==2)                        
+                        <option value="{{ $val->id }}">{{ $val->name }}</option>                        
+                      @else
+                        @if($val->id!=1)
+                        <option value="{{ $val->id }}">{{ $val->name }}</option>
+                        @endif
+                      @endif
+                      
                       @endforeach
                     </select>
                     <span class="error" id="role" style="display:none">Role is required</span>
