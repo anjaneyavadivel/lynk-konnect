@@ -33,6 +33,7 @@
     <link rel="stylesheet" href="{{ asset('temp/global/fonts/material-design/material-design.min.css') }}">
     <link rel="stylesheet" href="{{ asset('temp/global/fonts/brand-icons/brand-icons.min.css') }}">
     <link rel='stylesheet' href='http://fonts.googleapis.com/css?family=Roboto:300,400,500,300italic'>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" />
     
     <!--[if lt IE 9]>
     <script src="../../../global/vendor/html5shiv/html5shiv.min.js"></script>
@@ -111,19 +112,20 @@
               </div>
 
               <div class="form-group form-material floating" data-plugin="formMaterial">
-                <!-- <input type="password" class="form-control" name="password" /> -->
                 <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="new-password">
-
-                                @error('password')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                <label class="floating-label">Password</label>
-              </div>
+                <span toggle="#password-field" class="fa fa-fw fa-eye field_icon toggle-password" style="margin-left: 145px;margin-top: -20px; position: absolute;"></span>
+                @error('password')
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                @enderror
+                <label class="floating-label">Password</label>   
+                          
+              </div>              
               <div class="form-group form-material floating" data-plugin="formMaterial">
                 <!-- <input type="password" class="form-control" name="PasswordCheck" /> -->
                 <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required autocomplete="new-password">
+                <span toggle="#password-field" class="fa fa-fw fa-eye field_icon toggle-password1" style="margin-left: 145px;margin-top: -20px; position: absolute;"></span>
                 <label class="floating-label">Re-enter Password</label>
               </div>
 
@@ -205,6 +207,23 @@
           Site.run();
         });
       })(document, window, jQuery);
+
+
+      $(document).on('click', '.toggle-password', function() {
+
+    $(this).toggleClass("fa-eye fa-eye-slash");
+
+    var input = $("#password");
+    input.attr('type') === 'password' ? input.attr('type','text') : input.attr('type','password')
+    });
+
+    $(document).on('click', '.toggle-password1', function() {
+
+$(this).toggleClass("fa-eye fa-eye-slash");
+
+var input = $("#password-confirm");
+input.attr('type') === 'password' ? input.attr('type','text') : input.attr('type','password')
+});
     </script>
     
   </body>

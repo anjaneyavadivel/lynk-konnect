@@ -63,6 +63,9 @@ Route::group(['middleware' => ['auth']], function() {
 
     Route::resource('products', ProductController::class);
 
+    Route::get('profile', [HomeController::class, 'profile'])->name('profile');
+    Route::post('profile/update', [HomeController::class, 'update'])->name('profile_update');
+
 
     #-- User Management
     Route::get('/manage_users', [UserController::class, 'index'])->name('manage_users');

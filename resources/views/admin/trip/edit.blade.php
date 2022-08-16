@@ -188,7 +188,7 @@
                       <span class="input-group-addon">
                         <i class="icon md-time" aria-hidden="true"></i>
                       </span>
-                      <input type="text" class="form-control" disabled data-plugin="timepicker" name="trip_time" id="trip_time"  value="{{ $editview->trip_time }}"/>
+                      <input type="text" class="form-control trip_time" disabled data-plugin="timepicker" name="trip_time" id="trip_time"  onkeyup="myFunction()"  value="{{ $editview->trip_time }}"/>
                     </div>
                   </div>
                   <span class="error" id="trip_date_time" style="display:none">Trip Date/Time is required</span> 
@@ -240,6 +240,11 @@
 @include('admin.include.footer')
 
 <script type="text/javascript">
+function myFunction()
+{
+  $('#trip_time').val('');
+}
+
   $(document).ready(function () {   
 
   $('.submit-form').on('click',function(e) {
@@ -303,7 +308,7 @@
       $('#postcode1').css('display','none');
     }
 
-    if($('.trip_date_time').val()=='')
+    if($('.trip_date_time').val()=='' || $('.trip_time').val()=='')
     {
       $('#trip_date_time').css('display','block');
     }else{

@@ -181,7 +181,7 @@
                 <span class="input-group-addon">
                   <i class="icon md-time" aria-hidden="true"></i>
                 </span>
-                <input type="text" class="form-control" data-plugin="timepicker" name="trip_time" id="trip_time" />
+                <input type="text" class="form-control trip_time" data-plugin="timepicker" name="trip_time" id="trip_time" onkeyup="myFunction()"/>
               </div>
             </div>
 
@@ -234,6 +234,12 @@
 @include('admin.include.footer')
 
 <script type="text/javascript">
+
+function myFunction()
+{
+  $('#trip_time').val('');
+}
+
   $(document).ready(function () {   
 
   $('.submit-form').on('click',function(e) {
@@ -298,12 +304,13 @@
     }
 
     
-    if($('.trip_date_time').val()=='')
+    if($('.trip_date_time').val()=='' || $('.trip_time').val()=='')
     {
       $('#trip_date_time').css('display','block');
     }else{
       $('#trip_date_time').css('display','none');
     }
+    
 
     if($('.no_of_passengers').val()=='')
     {
