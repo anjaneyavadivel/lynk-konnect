@@ -136,6 +136,7 @@ Route::group(['middleware' => ['auth']], function() {
 
 
     Route::get('/state', [TripController::class, 'getCity'])->name('state');
+    Route::get('/download', [TripController::class, 'download'])->name('download');
 
     #-- Transaction Management
     Route::get('/manage_transaction', [TransactionController::class, 'index'])->name('manage_transaction');

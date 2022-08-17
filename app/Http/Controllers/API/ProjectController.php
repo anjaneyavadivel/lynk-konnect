@@ -17,6 +17,7 @@ class ProjectController extends Controller
      */
     public function index()
     {
+        echo "fsdfdf"; exit;
         $projects = Project::all();
         return response([ 'projects' => ProjectResource::collection($projects), 'message' => 'Retrieved successfully'], 200);
     }

@@ -20,14 +20,14 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-
 Route::post('test', [AuthController::class, 'test']);
-
 Route::post('register', [AuthController::class, 'register']);
 Route::post('login', [AuthController::class, 'login']);
 
-Route::apiResource('projects', ProjectController::class)->middleware('au
+Route::group(['middleware' => ['auth:api']], function () {
+    Route::get('dashboard',[ProjectController::class, 'index']);
+});
 
-th:api');
+//Route::apiResource('dashboard', ProjectController::class)->middleware('auth:api');
 
 

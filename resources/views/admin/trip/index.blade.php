@@ -38,7 +38,8 @@
   <p>{{ $message }}</p>
 </div>
 @endif
-            <table class="table table-hover dataTable table-striped w-full" id="exampleTableTools">
+<a href="{{ url('/download')}}"><button style="border:none;padding: 6px;margin-left: 123px;margin-top: 1px;position: absolute;color: #fff;background-color: #818c95;border-color: #506477;box-shadow: 0 0 0px 1px rgb(132 137 145 / 51%);">CSV</button></a>
+            <table class="table table-hover dataTable table-striped w-full" id="example">
               <thead>
                 <tr>
                   <th>SNo</th>
@@ -99,4 +100,14 @@
     </div>
 
 @include('admin.include.footer')
+<script>
+$(document).ready(function() {
+    $('#example').DataTable( {
+        dom: 'Bfrtip',
+        buttons: [
+            'print','copy'
+        ]
+    } );
+} );
+  </script>
 @endsection

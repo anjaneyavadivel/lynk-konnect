@@ -11,6 +11,7 @@ use Session;
 use DateTime;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
+use Response;
 
 class TripController extends Controller
 {
@@ -259,6 +260,54 @@ class TripController extends Controller
         }
         return redirect()->with('error','Error');      
                 
+    }
+
+    public function download()
+    {
+        $headers = array(
+            'Content-Type' => 'application/vnd.ms-excel; charset=utf-8',
+            'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
+            'Content-Disposition' => 'attachment; filename=Lynk-Konnect.csv',
+            'Expires' => '0',
+            'Pragma' => 'public',
+        );
+    
+        $filename = "Lynk-Konnect.csv";
+        $handle = fopen($filename, 'w');
+        fputcsv($handle, [
+            "S No",
+            "Trip Taken By",
+            "Trip From Address",
+            "Trip To Address",
+            "Posted by",
+            "Passengers",
+            "Trip Amount",
+        ]);
+        
+        Trip::select('trip.id','trip.trip_date','trip.to_address','trip.from_address','trip.no_of_passengers','trip.trip_amount','u.fname as owner_fname','s.state_name as f_state_name', 'st.state_name as t_state_name')
+        ->join('users AS u','u.id', 'trip.trip_owner_user_id')
+        ->join('state AS s','s.id', 'trip.from_state_id')
+        ->join('state AS st','st.id', 'trip.to_state_id')
+        ->chunk(100, function ($data) use ($handle) {
+            $i=1;
+            foreach ($data as $row) {
+                // Add a new row with data
+                fputcsv($handle, [
+                    $i,
+                    date('d-m-Y',strtotime($row->trip_date)),
+                    $row->from_address.' '.$row->f_state_name,
+                    $row->to_address.' '.$row->t_state_name,
+                    $row->owner_fname,
+                    $row->no_of_passengers,
+                    $row->trip_amount
+                ]);
+                $i++;
+            }
+        });
+        
+        fclose($handle);
+        
+        return Response::download($filename, "download.csv", $headers);
     }
 
 }
