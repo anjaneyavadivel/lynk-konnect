@@ -307,7 +307,7 @@ class TripController extends Controller
         
         fclose($handle);
         
-        return Response::download($filename, "download.csv", $headers);
+        return Response::download($filename, "Lynk-Konnect.csv", $headers);
     }
 
 }
