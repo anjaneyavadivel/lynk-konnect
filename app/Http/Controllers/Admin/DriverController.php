@@ -7,6 +7,7 @@ use App\Models\{User,Driver,State,Company,City};
 use Spatie\Permission\Models\Role;
 use DB;
 use Hash;
+use Auth;
 use Illuminate\Support\Arr;
 
 class DriverController extends Controller
@@ -29,27 +30,53 @@ class DriverController extends Controller
 
     //---Create Driver
     public function create(Request $request) { 
+       
       $stateList    = State::orderBy('state_name', 'ASC')->get();   
         if($request->has('_token')){   
+            $user_info=Auth::user();
+            if($user_info->role_id==3)
+            {
+                $data = $this->validate($request, [
+                    'company_id'   => 'required',
+                    'fname'        => 'required',
+                    'lname'        => '',
+                    'email'        => 'required',
+                    'password'        => 'required',
+                    'postcode'        => 'required',
+                    'address1'        => 'required',
+                    'address2'        => '',
+                    'state_id'       => 'required',
+                    'city_id'       => 'required',
+                ]);  
+            }else{
+                $data = $this->validate($request, [
+                    'company_id'   => '',
+                    'fname'        => 'required',
+                    'lname'        => '',
+                    'email'        => 'required',
+                    'password'        => 'required',
+                    'postcode'        => 'required',
+                    'address1'        => 'required',
+                    'address2'        => '',
+                    'state_id'       => 'required',
+                    'city_id'       => 'required',
+                ]);  
+            }
            
-            $data = $this->validate($request, [
-                'company_id'   => 'required',
-                'fname'        => 'required',
-                'lname'        => '',
-                'email'        => 'required',
-                'password'        => 'required',
-                'postcode'        => 'required',
-                'address1'        => 'required',
-                'address2'        => '',
-                'state_id'       => 'required',
-                'city_id'       => 'required',
-            ]);            
+                      
             
-            $data['company_id']=$data['company_id'];
+            $user_info=Auth::user();
+            if($user_info->role_id==3)
+            {
+                $data['company_id']=$data['company_id'];
+            }else{
+                $data['company_id']=$user_info->company_id;
+            }
             $data['fname']=$data['fname'];
             $data['lname']=$data['lname'];
             $data['email']=$data['email'];
             $data['password'] = Hash::make($data['password']);
+            $data['role_id'] = 1;
 
             $user = User::create($data);         
             
@@ -59,6 +86,7 @@ class DriverController extends Controller
             $data1['state_id']=$data['state_id'];
             $data1['city_id']=$data['city_id'];
             $data1['postcode']=$data['postcode'];
+            $data1['created_by']=$user_info->id;
 
             //dd($data1);
             $data1['badge']="test";

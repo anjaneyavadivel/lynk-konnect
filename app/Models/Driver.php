@@ -26,5 +26,6 @@ class Driver extends Authenticatable
         'state_id',
         'city_id',
         'postcode',
+        'created_by',
     ];
 }

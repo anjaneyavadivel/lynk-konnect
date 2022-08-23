@@ -53,15 +53,46 @@ class AuthController extends Controller
         {
             return response(['message' => 'This User does not exist, check your details'], 400);
         }
-        $user = User::select('fname','lname','email')->where('email','=',$request->email)->first();
+        $user = User::where('email','=',$request->email)->first();
+        //$otp = mt_rand(1000, 9999);
+        $otp = 1234;
+        $user->otp = $otp;
+        $user->save();
+
         return response(['user' => $user]);
+    }
+
+    public function otp_verify(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|email|exists:users,email',
+            'otp' => 'required',
+        ]);
+        if($validator->fails()) { 
+            return response()->json(['message'=>$validator->errors(), 'success'=>0], 200);
+        }
+        try{
+            $user = User::where('email','=',$request->email)->where('otp','=',$request->otp)->first();  
+            if($user)
+            {
+                return response()->json(['message' => 'OTP verified']);
+            }else{
+                return response()->json(['error' => trans('Something Went Wrong')]);
+            }         
+            
+        }catch (Exception $e) {
+            if($request->ajax()) {
+                return response()->json(['error' => trans('Something Went Wrong')]);
+            }
+        }
     }
 
     public function reset_password(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'password' => 'required|confirmed|min:6',
-            'email' => 'required|email|exists:users,email'
+            'email' => 'required|email|exists:users,email',
+            'otp' => 'required',
         ]);
         if($validator->fails()) { 
             return response()->json(['message'=>$validator->errors(), 'success'=>0], 200);
@@ -75,7 +106,7 @@ class AuthController extends Controller
 
         }catch (Exception $e) {
             if($request->ajax()) {
-                return response()->json(['error' => trans('api.something_went_wrong')]);
+                return response()->json(['error' => trans('Something Went Wrong')]);
             }
         }
     }

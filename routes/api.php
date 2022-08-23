@@ -21,10 +21,13 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 Route::post('login', [AuthController::class, 'login']);
 Route::post('forget-password', [AuthController::class, 'forget_password']);
+Route::post('otp-verify', [AuthController::class, 'otp_verify']);
 Route::post('reset-password', [AuthController::class, 'reset_password']);
 
 Route::group(['middleware' => ['auth:api']], function () {    
     Route::get('dashboard',[ProjectController::class, 'index']);
+    Route::get('driver-list',[ProjectController::class, 'driver_list']);
+    Route::get('trip-list',[ProjectController::class, 'trip_list']);
 });
 
 //Route::apiResource('dashboard', ProjectController::class)->middleware('auth:api');

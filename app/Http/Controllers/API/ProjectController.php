@@ -4,6 +4,8 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Models\Trip;
+use App\Models\Driver;
+use App\Models\Transaction;
 use Illuminate\Http\Request;
 use Auth;
 use Illuminate\Support\Facades\Validator;
@@ -20,8 +22,9 @@ class ProjectController extends Controller
     {
         $user_info=auth()->guard('api')->user();
         $tirp=Trip::where('trip_owner_user_id','=',$user_info->id)->count();
-
-        return response(['totel_trip' => $tirp], 201);
+        $driver=Driver::where('created_by','=',$user_info->id)->count();
+        $transaction = Transaction::where('operator_id','=',$user_info->id)->count();
+        return response(['total_trip' => $tirp, 'total_driver' => $driver,'total_transaction'=> $transaction], 201);
     }
 
     /**
@@ -30,23 +33,16 @@ class ProjectController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function driver_list()
     {
-        $data = $request->all();
-
-        $validator = Validator::make($data, [
-            'name' => 'required|max:255',
-            'description' => 'required|max:255',
-            'cost' => 'required'
-        ]);
-
-        if ($validator->fails()) {
-            return response(['error' => $validator->errors(), 'Validation Error']);
-        }
-
-        $project = Project::create($data);
-
-        return response(['project' => new ProjectResource($project), 'message' => 'Created successfully'], 201);
+        $user_info=auth()->guard('api')->user();
+        $drivers=Driver::select('driver.*','users.email','company.company_name','users.fname','users.lname','state.state_name as state_name','city.city_name as city_name')
+        ->join('users','driver.user_id','=','users.id')
+        ->join('company','users.company_id','=','company.id')
+        ->join('state','driver.state_id','=','state.id')
+        ->join('city','driver.city_id','=','city.id')
+        ->where('user_id','=',$user_info->id)->get();
+        return response(['driver_list' => $drivers], 201);
     }
 
     /**
@@ -55,9 +51,17 @@ class ProjectController extends Controller
      * @param  \App\Models\Project  $project
      * @return \Illuminate\Http\Response
      */
-    public function show(Project $project)
+    public function trip_list()
     {
-        return response(['project' => new ProjectResource($project), 'message' => 'Retrieved successfully'], 200);
+        $user_info=auth()->guard('api')->user();
+        $trips=Trip::select('trip.*','company.company_name','sta.state_name as to_state_name','cit.city_name as to_city_name','state.state_name as from_state_name','city.city_name as from_city_name')
+        ->join('company','trip.trip_owner_company_id','=','company.id')
+        ->leftJoin('state','trip.from_state_id','=','state.id')
+        ->leftJoin('city','trip.from_city_id','=','city.id')
+        ->leftJoin('state as sta','trip.to_state_id','=','sta.id')
+        ->leftJoin('city as cit','trip.to_city_id','=','cit.id')
+        ->where('trip_owner_user_id','=',$user_info->id)->get();
+        return response(['trip_list' => $trips], 201);
     }
 
     /**
