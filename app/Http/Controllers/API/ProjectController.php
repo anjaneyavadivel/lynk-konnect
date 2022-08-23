@@ -3,10 +3,11 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
-use App\Models\Project;
+use App\Models\Trip;
 use Illuminate\Http\Request;
+use Auth;
 use Illuminate\Support\Facades\Validator;
-use App\Http\Resources\ProjectResource;
+//use App\Http\Resources\ProjectResource;
 
 class ProjectController extends Controller
 {
@@ -17,9 +18,10 @@ class ProjectController extends Controller
      */
     public function index()
     {
-        echo "fsdfdf"; exit;
-        $projects = Project::all();
-        return response([ 'projects' => ProjectResource::collection($projects), 'message' => 'Retrieved successfully'], 200);
+        $user_info=auth()->guard('api')->user();
+        $tirp=Trip::where('trip_owner_user_id','=',$user_info->id)->count();
+
+        return response(['totel_trip' => $tirp], 201);
     }
 
     /**

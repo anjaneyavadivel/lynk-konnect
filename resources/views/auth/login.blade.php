@@ -114,7 +114,7 @@
             <button type="submit" class="btn btn-primary btn-block">{{ __('Login') }}</button>
           </form>
 
-          <p>No account? <a href="{{ url('/register')}}">Sign Up</a></p>
+          <!-- <p>No account? <a href="{{ url('/register')}}">Sign Up</a></p> -->
 
           <!-- <footer class="page-copyright">
             <p>WEBSITE BY Creation Studio</p>
