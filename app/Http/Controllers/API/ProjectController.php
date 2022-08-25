@@ -6,6 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Models\Trip;
 use App\Models\Driver;
 use App\Models\Transaction;
+use App\Models\State;
+use App\Models\Company;
+use App\Models\User;
+use App\Models\City;
 use Illuminate\Http\Request;
 use Auth;
 use Illuminate\Support\Facades\Validator;
@@ -13,26 +17,15 @@ use Illuminate\Support\Facades\Validator;
 
 class ProjectController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
         $user_info=auth()->guard('api')->user();
         $tirp=Trip::where('trip_owner_user_id','=',$user_info->id)->count();
         $driver=Driver::where('created_by','=',$user_info->id)->count();
         $transaction = Transaction::where('operator_id','=',$user_info->id)->count();
-        return response(['total_trip' => $tirp, 'total_driver' => $driver,'total_transaction'=> $transaction], 201);
+        return response()->json(['success' => "1",'total_trip' => $tirp, 'total_driver' => $driver,'total_transaction'=> $transaction], 200);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function driver_list()
     {
         $user_info=auth()->guard('api')->user();
@@ -42,15 +35,9 @@ class ProjectController extends Controller
         ->join('state','driver.state_id','=','state.id')
         ->join('city','driver.city_id','=','city.id')
         ->where('user_id','=',$user_info->id)->get();
-        return response(['driver_list' => $drivers], 201);
+        return response()->json(['success' => "1",'driver_list' => $drivers], 201);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Project  $project
-     * @return \Illuminate\Http\Response
-     */
     public function trip_list()
     {
         $user_info=auth()->guard('api')->user();
@@ -61,33 +48,62 @@ class ProjectController extends Controller
         ->leftJoin('state as sta','trip.to_state_id','=','sta.id')
         ->leftJoin('city as cit','trip.to_city_id','=','cit.id')
         ->where('trip_owner_user_id','=',$user_info->id)->get();
-        return response(['trip_list' => $trips], 201);
+        return response()->json(['success' => "1",'trip_list' => $trips], 201);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Project  $project
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Project $project)
+    public function transaction_list()
     {
-        $project->update($request->all());
-
-        return response(['project' => new ProjectResource($project), 'message' => 'Update successfully'], 200);
+        $user_info=auth()->guard('api')->user();
+        $list = Transaction::where('operator_id','=',$user_info->id)->orderBy('id','DESC')->get();
+        return response()->json(['success' => "1",'transaction_list' => $list], 201);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Project  $project
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Project $project)
+    public function common_list()
     {
-        $project->delete();
+        $stateList = State::orderBy('state_name', 'ASC')->get();
+        $companyList  = Company::orderBy('company_name', 'ASC')->get();
+        return response()->json(['success' => "1",'state_list' => $stateList,'company_list' => $companyList], 201);
+    }
+    
+    public function create_driver(Request $request)
+    {
+        $user_info=auth()->guard('api')->user();
+        $data = $this->validate($request, [
+            'fname'        => 'required',
+            'lname'        => '',
+            'email'        => 'required',
+            'password'        => 'required',
+            'postcode'        => 'required',
+            'address1'        => 'required',
+            'address2'        => '',
+            'state_id'       => 'required',
+            'city_id'       => 'required',
+        ]);  
+           
+            $data['company_id']=$user_info->company_id;
+            $data['fname']=$data['fname'];
+            $data['lname']=$data['lname'];
+            $data['email']=$data['email'];
+            $data['password'] = Hash::make($data['password']);
+            $data['role_id'] = 1;
 
-        return response(['message' => 'Deleted']);
+            $user = User::create($data);         
+            
+            $data1['user_id']=$user->id;
+            $data1['address1']=$data['address1'];
+            $data1['address2']=$data['address2'];
+            $data1['state_id']=$data['state_id'];
+            $data1['city_id']=$data['city_id'];
+            $data1['postcode']=$data['postcode'];
+            $data1['created_by']=$user_info->id;
+            $data1['badge']="test";
+            $company = Driver::create($data1);           
+           return response(['message' => 'Driver added successfully', 'success' => 1], 201);
+    }
+
+    public function getCity(Request $request)
+    {
+       $city_list=City::select('id', 'city_name')->where('state_id', $request->state_id)->get(); 
+       return response()->json(['success' => "1",'city_list' => $city_list], 201);
     }
 }

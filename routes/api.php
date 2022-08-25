@@ -28,6 +28,10 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::get('dashboard',[ProjectController::class, 'index']);
     Route::get('driver-list',[ProjectController::class, 'driver_list']);
     Route::get('trip-list',[ProjectController::class, 'trip_list']);
+    Route::get('transaction-list',[ProjectController::class, 'transaction_list']);
+    Route::get('common-list',[ProjectController::class, 'common_list']);
+    Route::get('city-list', [ProjectController::class, 'getCity']);
+    Route::post('add-driver', [ProjectController::class, 'create_driver']);
 });
 
 //Route::apiResource('dashboard', ProjectController::class)->middleware('auth:api');
