@@ -24,16 +24,21 @@ Route::post('forget-password', [AuthController::class, 'forget_password']);
 Route::post('otp-verify', [AuthController::class, 'otp_verify']);
 Route::post('reset-password', [AuthController::class, 'reset_password']);
 
-Route::group(['middleware' => ['auth:api']], function () {    
-    Route::get('dashboard',[ProjectController::class, 'index']);
-    Route::get('driver-list',[ProjectController::class, 'driver_list']);
+Route::group(['middleware' => ['auth:api']], function () {
+     
+    Route::get('logout',[ProjectController::class, 'logout']);
+    Route::get('dashboard',[ProjectController::class, 'index']);    
     Route::get('trip-list',[ProjectController::class, 'trip_list']);
     Route::get('transaction-list',[ProjectController::class, 'transaction_list']);
     Route::get('common-list',[ProjectController::class, 'common_list']);
     Route::get('city-list', [ProjectController::class, 'getCity']);
-    Route::post('add-driver', [ProjectController::class, 'create_driver']);
+
+    Route::get('driver-list',[ProjectController::class, 'driver_list']);
+    Route::post('add-driver', [ProjectController::class, 'create_driver']); 
+    Route::post('edit-driver', [ProjectController::class, 'update_driver']);
+    Route::post('delete-driver', [ProjectController::class, 'delete_driver']);               
 });
 
-//Route::apiResource('dashboard', ProjectController::class)->middleware('auth:api');
+?>
 
 

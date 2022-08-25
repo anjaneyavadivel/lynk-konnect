@@ -110,4 +110,13 @@ class AuthController extends Controller
             }
         }
     }
+
+    public function logout()
+    {
+        $user = Auth::guard('api')->user()->token();
+        $user->revoke();
+        return response()->json([
+            'success' => 'Successfully logged out'
+        ]);
+    }
 }

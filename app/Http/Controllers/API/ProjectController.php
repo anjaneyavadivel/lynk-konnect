@@ -12,6 +12,7 @@ use App\Models\User;
 use App\Models\City;
 use Illuminate\Http\Request;
 use Auth;
+use Hash;
 use Illuminate\Support\Facades\Validator;
 //use App\Http\Resources\ProjectResource;
 
@@ -34,7 +35,8 @@ class ProjectController extends Controller
         ->join('company','users.company_id','=','company.id')
         ->join('state','driver.state_id','=','state.id')
         ->join('city','driver.city_id','=','city.id')
-        ->where('user_id','=',$user_info->id)->get();
+        ->where('driver.user_id','=',$user_info->id)
+        ->where('driver.is_active','=',1)->get();
         return response()->json(['success' => "1",'driver_list' => $drivers], 201);
     }
 
@@ -47,7 +49,7 @@ class ProjectController extends Controller
         ->leftJoin('city','trip.from_city_id','=','city.id')
         ->leftJoin('state as sta','trip.to_state_id','=','sta.id')
         ->leftJoin('city as cit','trip.to_city_id','=','cit.id')
-        ->where('trip_owner_user_id','=',$user_info->id)->get();
+        ->where('trip.trip_owner_user_id','=',$user_info->id)->get();
         return response()->json(['success' => "1",'trip_list' => $trips], 201);
     }
 
@@ -69,16 +71,18 @@ class ProjectController extends Controller
     {
         $user_info=auth()->guard('api')->user();
         $data = $this->validate($request, [
-            'fname'        => 'required',
-            'lname'        => '',
-            'email'        => 'required',
-            'password'        => 'required',
-            'postcode'        => 'required',
-            'address1'        => 'required',
-            'address2'        => '',
-            'state_id'       => 'required',
-            'city_id'       => 'required',
-        ]);  
+            'fname'=> 'required',
+            'lname'=> '',
+            'email'=> 'required',
+            'password'=> 'required',
+            'postcode'=> 'required',
+            'address1'=> 'required',
+            'address2'=> '',
+            'state_id'=> 'required',
+            'city_id'=> 'required',
+        ]); 
+
+        try{
            
             $data['company_id']=$user_info->company_id;
             $data['fname']=$data['fname'];
@@ -86,8 +90,8 @@ class ProjectController extends Controller
             $data['email']=$data['email'];
             $data['password'] = Hash::make($data['password']);
             $data['role_id'] = 1;
-
-            $user = User::create($data);         
+            $user = User::create($data);
+            $user->assignRole(1);        
             
             $data1['user_id']=$user->id;
             $data1['address1']=$data['address1'];
@@ -99,11 +103,72 @@ class ProjectController extends Controller
             $data1['badge']="test";
             $company = Driver::create($data1);           
            return response(['message' => 'Driver added successfully', 'success' => 1], 201);
+
+        }catch (Exception $e) {
+            return response()->json(['error' => 'Something Went Wrong', 'success' => 0],500);
+        }
     }
 
     public function getCity(Request $request)
     {
        $city_list=City::select('id', 'city_name')->where('state_id', $request->state_id)->get(); 
        return response()->json(['success' => "1",'city_list' => $city_list], 201);
+    }
+
+    public function update_driver(Request $request)
+    {
+        $user_info=auth()->guard('api')->user();
+        $data = $this->validate($request, [
+            'id'=> 'required',
+            'fname'=> 'required',
+            'lname'=> '',
+            'email'=> 'required',
+            'password'=> '',
+            'postcode'=> 'required',
+            'address1'=> 'required',
+            'address2'=> '',
+            'state_id'=> 'required',
+            'city_id'=> 'required',
+        ]);
+        try{  
+
+        $driver = Driver::where('id','=',$request->id)->first();
+        $user = User::where('id','=',$driver->user_id)->first();
+        $user->fname=$data['fname'];
+        $user->lname=$data['lname'];
+        $user->email=$data['email'];
+        if($data['password'])
+        {
+            $user->password= Hash::make($data['password']);
+        }
+        $user->save();
+        
+        $driver->address1=$data['address1'];
+        $driver->address2=$data['address2'];
+        $driver->state_id=$data['state_id'];
+        $driver->city_id=$data['city_id'];
+        $driver->postcode=$data['postcode'];
+        $driver->save();         
+        return response(['message' => 'Driver updated successfully', 'success' => 1], 201);
+    }catch (Exception $e) {
+        return response()->json(['error' => 'Something Went Wrong', 'success' => 0],500);
+     }
+    }
+
+    public function delete_driver(Request $request)
+    {
+        $data = $this->validate($request, [
+            'id'=> 'required',
+            'is_active'=> 'required',
+        ]);
+        $driver = Driver::where('id','=',$request->id)->first();
+        if($driver)
+        {
+            $driver->is_active=$request->is_active;
+            $driver->save();
+            return response(['message' => 'Driver deleted successfully', 'success' => 1], 201);
+        }else{
+            return response()->json(['error' => 'Something Went Wrong', 'success' => 0],500);
+        }
     }
 }
