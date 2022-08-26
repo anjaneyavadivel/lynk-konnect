@@ -24,7 +24,7 @@ class ProjectController extends Controller
         $tirp=Trip::where('trip_owner_user_id','=',$user_info->id)->count();
         $driver=Driver::where('created_by','=',$user_info->id)->count();
         $transaction = Transaction::where('operator_id','=',$user_info->id)->count();
-        return response()->json(['success' => "1",'total_trip' => $tirp, 'total_driver' => $driver,'total_transaction'=> $transaction], 200);
+        return response()->json(['success' => "1",'message'=>"",'data' => ['total_trip' => $tirp, 'total_driver' => $driver,'total_transaction'=> $transaction]], 200);
     }
 
     public function driver_list()
@@ -36,8 +36,8 @@ class ProjectController extends Controller
         ->join('state','driver.state_id','=','state.id')
         ->join('city','driver.city_id','=','city.id')
         ->where('driver.user_id','=',$user_info->id)
-        ->where('driver.is_active','=',1)->get();
-        return response()->json(['success' => "1",'driver_list' => $drivers], 201);
+        ->where('driver.is_active','=',1)->orderBy('id','Desc')->paginate(20);
+        return response()->json(['success' => "1",'message'=>"",'data' => ['driver_list' => $drivers]], 201);
     }
 
     public function trip_list()
@@ -49,22 +49,22 @@ class ProjectController extends Controller
         ->leftJoin('city','trip.from_city_id','=','city.id')
         ->leftJoin('state as sta','trip.to_state_id','=','sta.id')
         ->leftJoin('city as cit','trip.to_city_id','=','cit.id')
-        ->where('trip.trip_owner_user_id','=',$user_info->id)->get();
-        return response()->json(['success' => "1",'trip_list' => $trips], 201);
+        ->where('trip.trip_owner_user_id','=',$user_info->id)->orderBy('id','Desc')->paginate(20);
+        return response()->json(['success' => "1",'message'=>"",'data' => ['trip_list' => $trips]], 201);
     }
 
     public function transaction_list()
     {
         $user_info=auth()->guard('api')->user();
-        $list = Transaction::where('operator_id','=',$user_info->id)->orderBy('id','DESC')->get();
-        return response()->json(['success' => "1",'transaction_list' => $list], 201);
+        $list = Transaction::where('operator_id','=',$user_info->id)->orderBy('id','DESC')->paginate(20);
+        return response()->json(['success' => "1",'message'=>"",'data' => ['transaction_list' => $list]], 201);
     }
 
     public function common_list()
     {
         $stateList = State::orderBy('state_name', 'ASC')->get();
         $companyList  = Company::orderBy('company_name', 'ASC')->get();
-        return response()->json(['success' => "1",'state_list' => $stateList,'company_list' => $companyList], 201);
+        return response()->json(['success' => "1",'message'=>"",'data' => ['state_list' => $stateList,'company_list' => $companyList]], 201);
     }
     
     public function create_driver(Request $request)
@@ -102,17 +102,17 @@ class ProjectController extends Controller
             $data1['created_by']=$user_info->id;
             $data1['badge']="test";
             $company = Driver::create($data1);           
-           return response(['message' => 'Driver added successfully', 'success' => 1], 201);
+           return response(['data' => '','message' => 'Driver added successfully', 'success' => 1], 201);
 
         }catch (Exception $e) {
-            return response()->json(['error' => 'Something Went Wrong', 'success' => 0],500);
+            return response()->json(['data' => '','message' => 'Something Went Wrong', 'success' => 0],500);
         }
     }
 
     public function getCity(Request $request)
     {
        $city_list=City::select('id', 'city_name')->where('state_id', $request->state_id)->get(); 
-       return response()->json(['success' => "1",'city_list' => $city_list], 201);
+       return response()->json(['data' => ['city_list' => $city_list],'success' => "1",'message' => '',], 201);
     }
 
     public function update_driver(Request $request)
@@ -149,9 +149,9 @@ class ProjectController extends Controller
         $driver->city_id=$data['city_id'];
         $driver->postcode=$data['postcode'];
         $driver->save();         
-        return response(['message' => 'Driver updated successfully', 'success' => 1], 201);
+        return response(['data' => '','message' => 'Driver updated successfully', 'success' => 1], 201);
     }catch (Exception $e) {
-        return response()->json(['error' => 'Something Went Wrong', 'success' => 0],500);
+        return response()->json(['data' => '','message' => 'Something Went Wrong', 'success' => 0],500);
      }
     }
 
@@ -166,9 +166,9 @@ class ProjectController extends Controller
         {
             $driver->is_active=$request->is_active;
             $driver->save();
-            return response(['message' => 'Driver deleted successfully', 'success' => 1], 201);
+            return response(['data' => '','message' => 'Driver deleted successfully', 'success' => 1], 201);
         }else{
-            return response()->json(['error' => 'Something Went Wrong', 'success' => 0],500);
+            return response()->json(['data' => '','message' => 'Something Went Wrong', 'success' => 0],500);
         }
     }
 }

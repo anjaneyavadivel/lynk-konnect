@@ -21,21 +21,27 @@ class AuthController extends Controller
             return response()->json(['message'=>$validator->errors(), 'success'=>0], 400);
         }
 
-        $user = User::where('email','=',$request->email)->first();
-        if(!$user)
-        {
-            return response(['message' => 'This User does not exist, check your details'], 400);
+        try{
+            $user = User::where('email','=',$request->email)->first();
+            if(!$user)
+            {
+                return response(['message' => 'This User does not exist, check your details'], 400);
+            }
+
+            $credentials = array('email'=>$request->email,'password'=>$request->password);
+
+            if (!auth()->attempt($credentials)) {
+                return response(['message' => 'This User does not exist, check your details'], 400);
+            }
+
+            $accessToken = auth()->user()->createToken('authToken')->accessToken;
+
+            return response(['data' => ['user' => auth()->user()], 'access_token' => $accessToken,'success' => 1,'message' => 'Login Successfully']);
+        }catch (Exception $e) {
+            if($request->ajax()) {
+                return response()->json(['data' => '', 'message' =>'Something Went Wrong','success' => 0]);
+            }
         }
-
-        $credentials = array('email'=>$request->email,'password'=>$request->password);
-
-        if (!auth()->attempt($credentials)) {
-            return response(['message' => 'This User does not exist, check your details'], 400);
-        }
-
-        $accessToken = auth()->user()->createToken('authToken')->accessToken;
-
-        return response(['user' => auth()->user(), 'access_token' => $accessToken]);
     }
 
     public function forget_password(Request $request)
@@ -47,19 +53,25 @@ class AuthController extends Controller
         if($validator->fails()) { 
             return response()->json(['message'=>$validator->errors(), 'success'=>0], 400);
         }
+        try{
 
-        $user = User::select('role_id')->where('email','=',$request->email)->first();
-        if($user->role_id!=2)
-        {
-            return response(['message' => 'This User does not exist, check your details'], 400);
+            $user = User::select('role_id')->where('email','=',$request->email)->first();
+            if($user->role_id!=2)
+            {
+                return response(['message' => 'This User does not exist, check your details'], 400);
+            }
+            $user = User::where('email','=',$request->email)->first();
+            //$otp = mt_rand(1000, 9999);
+            $otp = 1234;
+            $user->otp = $otp;
+            $user->save();
+
+            return response(['data' => ['user' => $user],'success' => 1,'message' => 'Login Successfully']);
+        }catch (Exception $e) {
+            if($request->ajax()) {
+                return response()->json(['data' => '', 'message' =>'Something Went Wrong','success' => 0]);
+            }
         }
-        $user = User::where('email','=',$request->email)->first();
-        //$otp = mt_rand(1000, 9999);
-        $otp = 1234;
-        $user->otp = $otp;
-        $user->save();
-
-        return response(['user' => $user]);
     }
 
     public function otp_verify(Request $request)
@@ -75,14 +87,14 @@ class AuthController extends Controller
             $user = User::where('email','=',$request->email)->where('otp','=',$request->otp)->first();  
             if($user)
             {
-                return response()->json(['message' => 'OTP verified']);
+                return response(['data' => '','success' => 1,'message' => 'OTP verified']);
             }else{
-                return response()->json(['error' => trans('Something Went Wrong')]);
+                return response()->json(['data' => '', 'message' =>'Something Went Wrong','success' => 0]);
             }         
             
         }catch (Exception $e) {
             if($request->ajax()) {
-                return response()->json(['error' => trans('Something Went Wrong')]);
+                return response()->json(['data' => '', 'message' =>'Something Went Wrong','success' => 0]);
             }
         }
     }
@@ -102,21 +114,25 @@ class AuthController extends Controller
             $user = User::where('email','=',$request->email)->first();
             $user->password = bcrypt($request->password);
             $user->save();
-            return response()->json(['message' => 'Password Updated']);
+            return response(['data' => '','success' => 1,'message' => 'Password Updated']);
 
         }catch (Exception $e) {
             if($request->ajax()) {
-                return response()->json(['error' => trans('Something Went Wrong')]);
+                return response()->json(['data' => '', 'message' =>'Something Went Wrong','success' => 0]);
             }
         }
     }
 
     public function logout()
     {
-        $user = Auth::guard('api')->user()->token();
-        $user->revoke();
-        return response()->json([
-            'success' => 'Successfully logged out'
-        ]);
+        try{
+            $user = Auth::guard('api')->user()->token();
+            $user->revoke();
+            return response(['data' => '','success' => 1,'message' => 'Successfully logged out']);
+        }catch (Exception $e) {
+            if($request->ajax()) {
+                return response()->json(['data' => '', 'message' =>'Something Went Wrong','success' => 0]);
+            }
+        }
     }
 }
