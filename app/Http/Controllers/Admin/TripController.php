@@ -17,10 +17,8 @@ class TripController extends Controller
 {
 
     function __construct(){
-         $this->middleware('permission:trip-list|trip-list-own|trip-create|trip-edit|trip-delete', ['only' => ['index','show']]);
-         
+         $this->middleware('permission:trip-list|trip-list-own|trip-create|trip-edit|trip-delete', ['only' => ['index','show']]);         
          $this->middleware('permission:trip-list-own', ['only' => ['index_own']]);
-
          $this->middleware('permission:trip-create', ['only' => ['create','store']]);
          $this->middleware('permission:trip-edit', ['only' => ['edit','update']]);
          $this->middleware('permission:trip-delete', ['only' => ['destroy']]);
