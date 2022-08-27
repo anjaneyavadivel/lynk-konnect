@@ -26,6 +26,7 @@ Route::post('reset-password', [AuthController::class, 'reset_password']);
 
 Route::group(['middleware' => ['auth:api']], function () {
      
+    Route::post('update-profile', [ProjectController::class, 'update_profile']);
     Route::get('logout',[ProjectController::class, 'logout']);
     Route::get('dashboard',[ProjectController::class, 'index']);
     Route::get('trip-list',[ProjectController::class, 'trip_list']);
@@ -38,8 +39,11 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::post('edit-driver', [ProjectController::class, 'update_driver']);
     Route::post('delete-driver', [ProjectController::class, 'delete_driver']);
 
-
     Route::post('add-trip', [ProjectController::class, 'create_trip']);
+    Route::post('edit-trip', [ProjectController::class, 'update_trip']);
+    Route::post('delete-trip', [ProjectController::class, 'delete_trip']);
+    Route::get('manage-own-trip', [ProjectController::class, 'manageown_trip']);
+    Route::post('change-trip-status', [ProjectController::class, 'change_trip_status']);
 });
 
 ?>

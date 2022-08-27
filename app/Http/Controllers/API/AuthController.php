@@ -55,11 +55,11 @@ class AuthController extends Controller
         }
         try{
 
-            $user = User::select('role_id')->where('email','=',$request->email)->first();
-            if($user->role_id!=2)
-            {
-                return response()->json(['data' => '','message' => 'This User does not exist, check your details','success' => 0], 400);
-            }
+            // $user = User::select('role_id')->where('email','=',$request->email)->first();
+            // if($user->role_id!=2)
+            // {
+            //     return response()->json(['data' => '','message' => 'This User does not exist, check your details','success' => 0], 400);
+            // }
             $user = User::where('email','=',$request->email)->first();
             //$otp = mt_rand(1000, 9999);
             $otp = 1234;

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Auth;
+use Hash;
 use App\Models\User;
 class HomeController extends Controller
 {
@@ -44,7 +45,7 @@ class HomeController extends Controller
         $user_info->email=$request->email;
         if($request->password)
         {
-            $user_info->password=$request->password;
+            $user_info->password=Hash::make($request->password);
         }
         $user_info->save();
         return redirect('profile')->withFlashSuccess('Profile Updated successfully');
