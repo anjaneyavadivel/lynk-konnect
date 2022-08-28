@@ -43,7 +43,7 @@ class ProjectController extends Controller
         $user = User::select('role_id')->where('id','=',Auth::id())->first();
         if($user->role_id!=2)
         {
-            return response()->json(['data' => '','message' => 'This User does not exist, check your details','success' => 0], 400);
+            return response()->json(['data' => data,'message' => 'This User does not exist, check your details','success' => 0], 400);
         }
         $user_info=auth()->guard('api')->user();
         $drivers=Driver::select('driver.*','users.email','company.company_name','users.fname','users.lname','state.state_name as state_name','city.city_name as city_name')
@@ -74,7 +74,7 @@ class ProjectController extends Controller
         $user = User::select('role_id')->where('id','=',Auth::id())->first();
         if($user->role_id!=2)
         {
-            return response()->json(['data' => '','message' => 'This User does not exist, check your details','success' => 0], 400);
+            return response()->json(['data' => [],'message' => 'This User does not exist, check your details','success' => 0], 400);
         }
         $user_info=auth()->guard('api')->user();
         $list = Transaction::where('operator_id','=',$user_info->id)->orderBy('id','DESC')->paginate(20);
@@ -93,7 +93,7 @@ class ProjectController extends Controller
         $user = User::select('role_id')->where('id','=',Auth::id())->first();
         if($user->role_id!=2)
         {
-            return response()->json(['data' => '','message' => 'This User does not exist, check your details','success' => 0], 400);
+            return response()->json(['data' => [],'message' => 'This User does not exist, check your details','success' => 0], 400);
         }
         $user_info=auth()->guard('api')->user();
         $data = $this->validate($request, [
@@ -128,10 +128,10 @@ class ProjectController extends Controller
             $data1['created_by']=$user_info->id;
             $data1['badge']="test";
             $company = Driver::create($data1);           
-            return response()->json(['data' => '','message' => 'Driver added successfully', 'success' => 1], 200);
+            return response()->json(['data' => [],'message' => 'Driver added successfully', 'success' => 1], 200);
 
         }catch (Exception $e) {
-            return response()->json(['data' => '','message' => 'Something Went Wrong', 'success' => 0],500);
+            return response()->json(['data' => [],'message' => 'Something Went Wrong', 'success' => 0],500);
         }
     }
 
@@ -146,7 +146,7 @@ class ProjectController extends Controller
         $user = User::select('role_id')->where('id','=',Auth::id())->first();
         if($user->role_id!=2)
         {
-            return response()->json(['data' => '','message' => 'This User does not exist, check your details','success' => 0], 400);
+            return response()->json(['data' => [],'message' => 'This User does not exist, check your details','success' => 0], 400);
         }
         $user_info=auth()->guard('api')->user();
         $data = $this->validate($request, [
@@ -179,9 +179,9 @@ class ProjectController extends Controller
             $driver->city_id=$data['city_id'];
             $driver->postcode=$data['postcode'];
             $driver->save();         
-            return response()->json(['data' => '','message' => 'Driver updated successfully', 'success' => 1], 200);
+            return response()->json(['data' => [],'message' => 'Driver updated successfully', 'success' => 1], 200);
         }catch (Exception $e) {
-            return response()->json(['data' => '','message' => 'Something Went Wrong', 'success' => 0],500);
+            return response()->json(['data' => [],'message' => 'Something Went Wrong', 'success' => 0],500);
         }
     }
 
@@ -190,7 +190,7 @@ class ProjectController extends Controller
         $user = User::select('role_id')->where('id','=',Auth::id())->first();
         if($user->role_id!=2)
         {
-            return response()->json(['data' => '','message' => 'This User does not exist, check your details','success' => 0], 400);
+            return response()->json(['data' => [],'message' => 'This User does not exist, check your details','success' => 0], 400);
         }
         $data = $this->validate($request, [
             'id'=> 'required',
@@ -201,9 +201,9 @@ class ProjectController extends Controller
         {
             $driver->is_active=$request->is_active;
             $driver->save();
-            return response()->json(['data' => '','message' => 'Driver deleted successfully', 'success' => 1], 200);
+            return response()->json(['data' => [],'message' => 'Driver deleted successfully', 'success' => 1], 200);
         }else{
-            return response()->json(['data' => '','message' => 'Something Went Wrong', 'success' => 0],500);
+            return response()->json(['data' => [],'message' => 'Something Went Wrong', 'success' => 0],500);
         }
     }
 
@@ -257,9 +257,9 @@ class ProjectController extends Controller
 
            $trip = Trip::create($data);
 
-           return response()->json(['data' => '','message' => 'Trip added successfully', 'success' => 1], 200);
+           return response()->json(['data' => [],'message' => 'Trip added successfully', 'success' => 1], 200);
         }catch (Exception $e) {
-            return response()->json(['data' => '','message' => 'Something Went Wrong', 'success' => 0],500);
+            return response()->json(['data' => [],'message' => 'Something Went Wrong', 'success' => 0],500);
         }
     }
 
@@ -293,10 +293,10 @@ class ProjectController extends Controller
             if(isset($data['id'])){
                 $user = Trip::find($data['id']);
                 $user->update($data);
-                return response()->json(['data' => '','message' => 'Trip updated successfully', 'success' => 1], 200);
+                return response()->json(['data' => [],'message' => 'Trip updated successfully', 'success' => 1], 200);
             }
         }catch (Exception $e) {
-            return response()->json(['data' => '','message' => 'Something Went Wrong', 'success' => 0],500);
+            return response()->json(['data' => [],'message' => 'Something Went Wrong', 'success' => 0],500);
         }
     }
 
@@ -311,9 +311,9 @@ class ProjectController extends Controller
         {
             $trip->is_active=$request->is_active;
             $trip->save();
-            return response()->json(['data' => '','message' => 'Trip deleted successfully', 'success' => 1], 200);
+            return response()->json(['data' => [],'message' => 'Trip deleted successfully', 'success' => 1], 200);
         }else{
-            return response()->json(['data' => '','message' => 'Something Went Wrong', 'success' => 0],500);
+            return response()->json(['data' => [],'message' => 'Something Went Wrong', 'success' => 0],500);
         }
     }
 
@@ -343,9 +343,9 @@ class ProjectController extends Controller
         {
             $trip->trip_status=$request->trip_status;
             $trip->save();
-            return response()->json(['data' => '','message' => 'Trip status changed successfully', 'success' => 1], 200);
+            return response()->json(['data' => [],'message' => 'Trip status changed successfully', 'success' => 1], 200);
         }else{
-            return response()->json(['data' => '','message' => 'Something Went Wrong', 'success' => 0],500);
+            return response()->json(['data' => [],'message' => 'Something Went Wrong', 'success' => 0],500);
         }
     }
 
@@ -366,6 +366,6 @@ class ProjectController extends Controller
             $user_info->password=Hash::make($request->password);
         }
         $user_info->save();
-        return response()->json(['data' => '','message' => 'Profile Updated successfully', 'success' => 1], 200);
+        return response()->json(['data' => [],'message' => 'Profile Updated successfully', 'success' => 1], 200);
     }
 }

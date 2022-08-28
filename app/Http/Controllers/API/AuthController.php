@@ -18,20 +18,20 @@ class AuthController extends Controller
         ]);
 
         if($validator->fails()) {
-            return response()->json(['data'=> ['error' => $validator->errors()],'message'=>'Invalid inputs', 'success'=>0], 400);
+            return response()->json(['data'=> [],'message'=>'Invalid inputs', 'success'=>0], 400);
         }
 
         try{
             $user = User::where('email','=',$request->email)->first();
             if(!$user)
             {
-                return response()->json(['data' => '','message' => 'This User does not exist, check your details','success' => 0], 400);
+                return response()->json(['data' => [],'message' => 'This User does not exist, check your details','success' => 0], 400);
             }
 
             $credentials = array('email'=>$request->email,'password'=>$request->password);
 
             if (!auth()->attempt($credentials)) {
-                return response()->json(['data' => '','message' => 'This User does not exist, check your details','success' => 0], 400);
+                return response()->json(['data' => [],'message' => 'This User does not exist, check your details','success' => 0], 400);
             }
 
             $accessToken = auth()->user()->createToken('authToken')->accessToken;
@@ -39,7 +39,7 @@ class AuthController extends Controller
             return response()->json(['data' => ['user' => auth()->user()], 'access_token' => $accessToken,'success' => 1,'message' => 'Login Successfully'],200);
         }catch (Exception $e) {
             if($request->ajax()) {
-                return response()->json(['data' => '', 'message' =>'Something Went Wrong','success' => 0], 400);
+                return response()->json(['data' => [], 'message' =>'Something Went Wrong','success' => 0], 400);
             }
         }
     }
@@ -51,7 +51,7 @@ class AuthController extends Controller
         ]);
 
         if($validator->fails()) { 
-            return response()->json(['data' => ['error' => $validator->errors()],'message'=>'Invalid Inputs', 'success'=>0], 400);
+            return response()->json(['data' => [],'message'=>'Invalid Inputs', 'success'=>0], 400);
         }
         try{
 
@@ -69,7 +69,7 @@ class AuthController extends Controller
             return response()->json(['data' => ['user' => $user],'success' => 1,'message' => 'Login Successfully'],200);
         }catch (Exception $e) {
             if($request->ajax()) {
-                return response()->json(['data' => '', 'message' =>'Something Went Wrong','success' => 0],400);
+                return response()->json(['data' => [], 'message' =>'Something Went Wrong','success' => 0],400);
             }
         }
     }
@@ -81,20 +81,20 @@ class AuthController extends Controller
             'otp' => 'required',
         ]);
         if($validator->fails()) { 
-            return response()->json(['data' => ['error' => $validator->errors()],'message'=>'Invalid inputs', 'success'=>0], 400);
+            return response()->json(['data' => [],'message'=>'Invalid inputs', 'success'=>0], 400);
         }
         try{
             $user = User::where('email','=',$request->email)->where('otp','=',$request->otp)->first();  
             if($user)
             {
-                return response()->json(['data' => '','success' => 1,'message' => 'OTP verified'],200);
+                return response()->json(['data' => [],'success' => 1,'message' => 'OTP verified'],200);
             }else{
-                return response()->json(['data' => '', 'message' =>'Something Went Wrong','success' => 0],400);
+                return response()->json(['data' => [], 'message' =>'Something Went Wrong','success' => 0],400);
             }         
             
         }catch (Exception $e) {
             if($request->ajax()) {
-                return response()->json(['data' => '', 'message' =>'Something Went Wrong','success' => 0],400);
+                return response()->json(['data' => [], 'message' =>'Something Went Wrong','success' => 0],400);
             }
         }
     }
@@ -107,18 +107,18 @@ class AuthController extends Controller
             'otp' => 'required',
         ]);
         if($validator->fails()) { 
-            return response()->json(['data' => ['error' => $validator->errors()],'message'=>'Invalid input', 'success'=>0], 400);
+            return response()->json(['data' => [],'message'=>'Invalid input', 'success'=>0], 400);
         }
 
         try{
             $user = User::where('email','=',$request->email)->first();
             $user->password = bcrypt($request->password);
             $user->save();
-            return response()->json(['data' => '','success' => 1,'message' => 'Password Updated'],200);
+            return response()->json(['data' => [],'success' => 1,'message' => 'Password Updated'],200);
 
         }catch (Exception $e) {
             if($request->ajax()) {
-                return response()->json(['data' => '', 'message' =>'Something Went Wrong','success' => 0],400);
+                return response()->json(['data' => [], 'message' =>'Something Went Wrong','success' => 0],400);
             }
         }
     }
@@ -128,10 +128,10 @@ class AuthController extends Controller
         try{
             $user = Auth::guard('api')->user()->token();
             $user->revoke();
-            return response()->json(['data' => ['error' => $validator->errors()],'success' => 1,'message' => 'Successfully logged out'],200);
+            return response()->json(['data' => [],'success' => 1,'message' => 'Successfully logged out'],200);
         }catch (Exception $e) {
             if($request->ajax()) {
-                return response()->json(['data' => '', 'message' =>'Something Went Wrong','success' => 0],400);
+                return response()->json(['data' => [], 'message' =>'Something Went Wrong','success' => 0],400);
             }
         }
     }
