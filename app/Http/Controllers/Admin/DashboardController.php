@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Models\{User};;
+use App\Models\{User};
+use App\Models\Company;
+use App\Models\Trip;
 use Spatie\Permission\Models\Role;
 use DB;
 use Hash;
@@ -37,15 +39,19 @@ class DashboardController extends Controller
         
         $user_id = Auth::user()->id;
         $id      = User::where('id', $user_id)->first(); 
+        $usercount=User::count();
+        $companycount=Company::count();
+        $divercount=User::where('role_id', 1)->count();
+        $tripcount=Trip::count();
+      
         //print_r($id); die;
         Session::put('company_id_s', $id->company_id);
 
-        return view('admin.dashboard.admin_dash');
+        return view('admin.dashboard.admin_dash',compact('usercount','companycount','divercount','tripcount'));
     }
 
     public function dashboardOperator()
-    {
-        
+    {      
         $user_id = Auth::user()->id;
         $id      = User::where('id', $user_id)->first(); 
         
