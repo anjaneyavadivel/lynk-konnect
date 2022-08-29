@@ -35,8 +35,27 @@ class AuthController extends Controller
             }
 
             $accessToken = auth()->user()->createToken('authToken')->accessToken;
-
-            return response()->json(['data' => ['user' => auth()->user()], 'access_token' => $accessToken,'success' => 1,'message' => 'Login Successfully'],200);
+            $data= [
+                'success'=> 1,
+                'message'=> "Login Successfully",
+                'access_token'=> $accessToken,
+                'data' => ['user' => auth()->user()]
+            ];
+            $WorkingArray = json_decode(json_encode([$data]),true);
+            $arr = array ();
+//   'success'=> 1,
+//                 'message'=> "Login Successfully",
+//                 'access_token'=> $accessToken,
+//       array(
+//           "name" => "Apeksha Jaiswal",
+//           "age" => "20"
+//       )
+//   );
+            $data =array();
+            //$data['access_token'] =$accessToken;
+            $data['user'] =auth()->user();
+            return response()->json(['success' => 1,'message'=>"Login Successfully",'access_token'=>$accessToken,'data' => json_decode(json_encode([$data]),true)], 200);
+            return (array)$WorkingArray;
         }catch (Exception $e) {
             if($request->ajax()) {
                 return response()->json(['data' => [], 'message' =>'Something Went Wrong','success' => 0], 400);
