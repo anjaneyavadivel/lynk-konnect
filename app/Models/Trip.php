@@ -40,6 +40,10 @@ class Trip extends Authenticatable
         'return_route_id',
         'trip_date',
         'trip_time',
+        'from_latitude',
+        'from_longitude',
+        'to_latitude',
+        'to_longitude',
         'is_active',
     ];
     
