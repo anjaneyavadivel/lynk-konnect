@@ -182,7 +182,7 @@
                                              
                         </div> 
                         <div class="form-group form-material col-md-3" style="margin:30px;">
-                          <a href="javascript::" class="get-lotitude" data-type="1"> Get Latitude & Longitude</a>
+                          <a href="javascript::" class="get-lotitude" data-type="2"> Get Latitude & Longitude</a>
                       </div>
                         <span class="error" id="latitude-error-2" style="display:none"> To address Latitude & longitude is required</span> 
                       </div>  
@@ -218,14 +218,14 @@
                           <label class="form-control-label" for="inputBasicFirstName">Trip Description</label>
                           <textarea class="form-control" id="inputBasicFirstName" name="description_trip" placeholder="" autocomplete="off"></textarea>
                         </div>
-                       <div class="form-group form-material col-md-6">
+                       <div class="form-group form-material col-md-4">
                           <label class="form-control-label" for="inputBasicFirstName">No of persons  <span class="error">*</span></label>
                           <input type="number" class="form-control no_of_passengers" id="inputBasicFirstName" name="no_of_passengers"
                              autocomplete="off" required/>
                              <span class="error" id="no_of_passengers" style="display:none">No of persons is required</span> 
                         </div>
                       
-                        <div class="form-group form-material col-md-6">
+                        <div class="form-group form-material col-md-4">
                           <label class="form-control-label" for="inputBasicFirstName">Trip amount <span class="error">*</span></label>
                           <input type="number" class="form-control trip_amount" id="inputBasicFirstName" name="trip_amount"
                              autocomplete="off" required/>

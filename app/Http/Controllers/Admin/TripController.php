@@ -94,7 +94,7 @@ class TripController extends Controller
     $companyList  = Company::orderBy('company_name', 'ASC')->get();
     $stateList    = State::orderBy('state_name', 'ASC')->get();
         if($request->has('_token')){   
-          //  dd($request->all());
+           // dd($request->all());
             $data = $this->validate($request, [
                 //'trip_owner_user_id'    => 'required',
                 'trip_owner_company_id'   => '',
@@ -122,6 +122,7 @@ class TripController extends Controller
                 'trip_time'               => '', 
 
             ]);
+            //echo $data['to_latitude'];exit;
            $data['trip_owner_user_id'] = Auth::id();
 
            $data['trip_status'] = 1;
@@ -185,8 +186,9 @@ class TripController extends Controller
 
     //---update Driver
     public function update(Request $request,$id=null) {
-        
+     
         if(isset($id)){
+           
             //$editview = Company::where('id', $id)->first(); 
             $editview = Trip::where('id', $id)->first(); 
         }else{
@@ -194,7 +196,7 @@ class TripController extends Controller
         }
         
         if($request->has('_token')){  
-                
+          //  dd($request->all());
             
            $data = $this->validate($request, [
                 //'trip_owner_user_id'    => 'required',
@@ -217,6 +219,10 @@ class TripController extends Controller
                 'return_route_id'         => '', 
                 'trip_date'               => '', 
                 'trip_time'               => '', 
+                'from_latitude'           => '', 
+                'from_longitude'          => '',
+                'to_latitude'             => '', 
+                'to_longitude'            => '', 
                 'id' => '', 
 
             ]);
