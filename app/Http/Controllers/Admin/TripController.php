@@ -76,6 +76,8 @@ class TripController extends Controller
     //---Create Trip
     public function create(Request $request) { 
         // $time = '04:25PM'; 
+
+        
         // echo date("H:i:s", strtotime($time));
         // die; 
         // $fromStateId  = 130; 
@@ -92,6 +94,7 @@ class TripController extends Controller
     $companyList  = Company::orderBy('company_name', 'ASC')->get();
     $stateList    = State::orderBy('state_name', 'ASC')->get();
         if($request->has('_token')){   
+          //  dd($request->all());
             $data = $this->validate($request, [
                 //'trip_owner_user_id'    => 'required',
                 'trip_owner_company_id'   => '',
@@ -112,10 +115,13 @@ class TripController extends Controller
                 'route_id'                => '',
                 'return_route_id'         => '', 
                 'trip_date'               => '', 
+                'from_latitude'           => '', 
+                'from_longitude'          => '',
+                'to_latitude'             => '', 
+                'to_longitude'            => '', 
                 'trip_time'               => '', 
 
             ]);
-
            $data['trip_owner_user_id'] = Auth::id();
 
            $data['trip_status'] = 1;
@@ -159,7 +165,7 @@ class TripController extends Controller
            #---- End of dev  ----
 
            $trip = Trip::create($data);
-
+      
            return redirect('manage_trip')->withFlashSuccess('Trip added successfully');
             
         }
