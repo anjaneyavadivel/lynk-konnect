@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\ProjectController;
@@ -14,6 +15,20 @@ use App\Http\Controllers\API\ProjectController;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+
+Route::middleware('auth:api')->get('/user', function (Request $request) {
+    return $request->user();
+});
+
+
+Route::post('test', [AuthController::class, 'test']);
+
+Route::post('register', [AuthController::class, 'register']);
+//Route::post('login', [AuthController::class, 'login']);
+
+Route::apiResource('projects', ProjectController::class)->middleware('au
+
+th:api');
 
 Route::post('login', [AuthController::class, 'login']);
 Route::post('forget-password', [AuthController::class, 'forget_password']);
@@ -41,7 +56,5 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::get('manage-own-trip', [ProjectController::class, 'manageown_trip']);
     Route::post('change-trip-status', [ProjectController::class, 'change_trip_status']);
 });
-
-?>
 
 
