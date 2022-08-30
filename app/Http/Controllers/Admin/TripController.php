@@ -320,4 +320,112 @@ class TripController extends Controller
         return Response::download($filename, "Lynk-Konnect.csv", $headers);
     }
 
+    public function add_return_trip(Request $request)
+    {    
+        $companyList  = Company::orderBy('company_name', 'ASC')->get();
+        $stateList    = State::orderBy('state_name', 'ASC')->get();
+            if($request->has('_token')){   
+                $data = $this->validate($request, [
+                    'trip_owner_company_id'   => '',
+                    'from_address'            => '',
+                    'from_state_id'           => '',
+                    'from_city_id'            => '', 
+                    'from_postcode'           => '',
+                    'to_address'              => '',
+                    'to_state_id'             => '',
+                    'to_city_id'              => '', 
+                    'to_postcode'             => '',
+                    'description_trip'        => '',
+                    'no_of_passengers'        => '',
+                    'trip_amount'             => '',
+                    'trip_confirm_user_id'    => '',
+                    'trip_confirm_company_id' => '',
+                    'trip_status'             => '',
+                    'route_id'                => '',
+                    'return_route_id'         => '', 
+                    'trip_date'               => '', 
+                    'from_latitude'           => '', 
+                    'from_longitude'          => '',
+                    'to_latitude'             => '', 
+                    'to_longitude'            => '', 
+                    'trip_time'               => '', 
+    
+                ]);
+                
+               $data['trip_owner_user_id'] = Auth::id();    
+               $data['trip_status'] = 1; 
+
+               $to_address = $data['from_address'];    
+               $to_state_id = $data['from_state_id']; 
+               $to_city_id = $data['from_city_id'];    
+               $to_postcode = $data['from_postcode']; 
+               $to_latitude= $data['from_latitude']; 
+               $to_longitude = $data['from_longitude'];
+
+
+               $data['from_address'] = $data['to_address'];    
+               $data['from_state_id'] = $data['to_state_id']; 
+               $data['from_city_id'] = $data['to_city_id'];    
+               $data['from_postcode'] = $data['to_postcode'];
+               $data['from_latitude'] = $data['to_latitude']; 
+               $data['from_longitude'] = $data['to_longitude']; 
+
+               $data['to_address'] = $to_address;    
+               $data['to_state_id'] = $to_state_id; 
+               $data['to_city_id'] = $to_city_id;    
+               $data['to_postcode'] = $to_postcode; 
+               $data['to_latitude'] = $to_latitude; 
+               $data['to_longitude'] = $to_longitude;
+            
+                $id      = User::where('id', $data['trip_owner_user_id'])->first(); 
+                $data['trip_owner_company_id'] = $id->company_id;   
+                
+                $source   = $data['trip_date'];
+                $date     = new DateTime($source);
+                $tripdate = $date->format('Y-m-d');                    
+                $data['trip_date'] = $tripdate;
+                $triptime = date("H:i:s", strtotime($data['trip_time']));
+                $data['trip_time'] = $triptime;
+                $data['is_return_trip']=1;
+    
+               $trip = Trip::create($data);
+          
+               return redirect('manage_trip')->withFlashSuccess('Return Trip added successfully');
+                
+            }
+            return view('admin.trip.create', compact('companyList','stateList'));  
+    }
+
+    public function return_trip(Request $request,$id)
+    {
+        $distence=0;
+        $trip_id=$id;
+        $data=1; $output=[];
+        if($request->has('_token')){
+
+            $distence=$request->distence;
+            $trip_id=$id;
+            $data=2;
+
+            $from=Trip::form_location($distence,$trip_id);            
+            if($from)
+            {
+                $from =$from->toArray();
+                $result1 =array_column($from, 'id');
+            }
+
+            $to = Trip::to_location($distence,$trip_id);
+            if($to)
+            {
+                $to =$to->toArray();
+                $result2 =array_column($to, 'id');
+            }
+
+            $output = array_merge(array_diff($result1, $result2), array_diff($result2, $result1));
+        }
+
+        $list = Trip::getreturnTrip($data,$output);
+        return view('admin.trip.index_return', compact('list','id'));  
+    }
+
 }
