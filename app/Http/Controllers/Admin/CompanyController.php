@@ -43,9 +43,15 @@ class CompanyController extends Controller
                 'contact_person' => '',
                 'contact_no1'    => 'required',
                 'contact_no2'    => 'required',
-                'licence'        => '',
+               
                 'website'        => 'required',
+
             ]);
+            /*$request->validate([
+                'licence' => 'required|mimes:pdf,png,jpg,jpeg|max:2048',
+            ]);*/
+      
+          
 
            $company = Company::create($data);
            return redirect('manage_company')->withFlashSuccess('Company added successfully');

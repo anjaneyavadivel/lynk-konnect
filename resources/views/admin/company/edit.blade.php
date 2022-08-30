@@ -121,7 +121,7 @@
                       </div>
                       
                       <div class="form-group form-material">
-                        <button type="button" class="btn btn-primary submit-form">Submit</button>
+                        <button type="submit" class="btn btn-primary submit-form">Submit</button>
                       </div>
                     
                   </div>
@@ -139,7 +139,7 @@
                         <div class="form-group form-material col-md-6">
                           <label class="form-control-label" for="inputBasicFirstName">Postcode <span class="error">*</span></label>
                           <input type="text" class="form-control postcode1" name="postcode" id="postcode"  value="{{ $editview->postcode  ?? ''}}"
-                             autocomplete="off" />
+                             autocomplete="off" onkeypress="return event.charCode >= 48 && event.charCode <= 57"/>
                              <span class="error" id="postcode1" style="display:none">Postcode is required and Postcode should be 6 digit</span>
                         </div>
                       </div>
@@ -156,13 +156,13 @@
                         <div class="form-group form-material col-md-6">
                           <label class="form-control-label" for="inputBasicFirstName">Contact no  <span class="error">*</span></label>
                           <input type="text" class="form-control contact_no1" id="inputBasicFirstName" name="contact_no1" value="{{ $editview->contact_no1  ?? ''}}"
-                             autocomplete="off" />
+                             autocomplete="off" onkeypress="return event.charCode >= 48 && event.charCode <= 57"/>
                              <span class="error" id="contact_no1" style="display:none">Contact no is required and Contact no should be 10 digit</span>
                         </div>
                         <div class="form-group form-material col-md-6">
                           <label class="form-control-label" for="inputBasicFirstName">Alternate no <span class="error">*</span> </label>
                           <input type="text" class="form-control contact_no2" id="inputBasicFirstName" name="contact_no2" value="{{ $editview->contact_no2  ?? ''}}"
-                             autocomplete="off" />
+                             autocomplete="off" onkeypress="return event.charCode >= 48 && event.charCode <= 57"/>
                              <span class="error" id="contact_no2" style="display:none">Alternate no is required and Alternate no should be 10 digit</span> 
                         </div>
                       </div>
@@ -170,7 +170,7 @@
                       <div class="row">
                         <div class="form-group form-material col-md-6">
                           <label class="form-control-label" for="inputBasicFirstName">Website <span class="error">*</span></label>
-                          <input type="text" class="form-control website1" id="website" name="website" value="{{ $editview->website  ?? ''}}"
+                          <input type="url" class="form-control website1" id="website" name="website" value="{{ $editview->website  ?? ''}}"
                              autocomplete="off" />
                              <span class="error" id="website1" style="display:none">Website is required</span> 
                         </div>
@@ -203,7 +203,7 @@
     
     alert($('.postcode').val().length);
 
-  $('.submit-form').on('click',function(e) {
+  $('#add_form').on('submit',function(e) {
     
     if($('.company').val()=='')
     {
