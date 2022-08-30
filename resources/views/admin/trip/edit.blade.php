@@ -202,7 +202,7 @@
                         </div>
                         <div class="form-group form-material col-md-4">
                           <label class="form-control-label" for="inputBasicLastName">To Postcode <span class="error">*</span></label>
-                          <input type="number" class="form-control postcode1" id="select" name="to_postcode"  value="{{ $editview->to_postcode }}" required>
+                          <input type="text" class="form-control postcode1" id="select" name="to_postcode"  value="{{ $editview->to_postcode }}" required>
                           <span class="error" id="postcode1" style="display:none">Postcode is required</span>  
                         </div>
                       </div>
