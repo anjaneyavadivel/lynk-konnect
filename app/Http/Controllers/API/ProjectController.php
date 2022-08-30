@@ -59,13 +59,15 @@ class ProjectController extends Controller
     public function trip_list()
     {
         $user_info=auth()->guard('api')->user();
-        $trips=Trip::select('trip.*','company.company_name','sta.state_name as to_state_name','cit.city_name as to_city_name','state.state_name as from_state_name','city.city_name as from_city_name')
-        ->join('company','trip.trip_owner_company_id','=','company.id')
-        ->leftJoin('state','trip.from_state_id','=','state.id')
-        ->leftJoin('city','trip.from_city_id','=','city.id')
-        ->leftJoin('state as sta','trip.to_state_id','=','sta.id')
-        ->leftJoin('city as cit','trip.to_city_id','=','cit.id')
-        ->where('trip.trip_owner_user_id','=',$user_info->id)->orderBy('id','Desc')->paginate(20);
+        $trips=Trip::select(\DB::raw('*,trip.id as id,u.fname as owner_fname, us.fname as confirm_fname, s.state_name as f_state_name, st.state_name as t_state_name'))
+        ->leftjoin('users AS u','u.id', 'trip.trip_owner_user_id')
+        ->leftjoin('users AS us','us.id', 'trip.trip_confirm_user_id')
+        ->leftjoin('state AS s','s.id', 'trip.from_state_id')
+        ->leftjoin('state AS st','st.id', 'trip.to_state_id')
+        ->leftjoin('city AS c','c.id', 'trip.from_city_id')
+        ->leftjoin('city AS ci','ci.id', 'trip.to_city_id')
+        ->leftjoin('company AS com','com.id', 'trip.trip_owner_company_id')
+        ->leftjoin('company AS comp','comp.id', 'trip.trip_confirm_company_id')->paginate(20);
         return response()->json(['success' => 1,'message'=>"",'data' => ['trip_list' => $trips]], 200);
     }
 
@@ -320,15 +322,15 @@ class ProjectController extends Controller
     public function manageown_trip()
     {
         $query = Trip::select(\DB::raw('*,trip.id as id, trip.route_id as r_id,u.fname as owner_fname, us.fname as confirm_fname, s.state_name as f_state_name, st.state_name as t_state_name'))
-                    ->leftjoin('users AS u','u.id', 'trip.trip_owner_user_id')
-                    ->leftjoin('users AS us','us.id', 'trip.trip_confirm_user_id')
-                    ->leftjoin('state AS s','s.id', 'trip.from_state_id')
-                    ->leftjoin('state AS st','st.id', 'trip.to_state_id')
-                    ->leftjoin('city AS c','c.id', 'trip.from_city_id')
-                    ->leftjoin('city AS ci','ci.id', 'trip.to_city_id')
-                    ->leftjoin('company AS com','com.id', 'trip.trip_owner_company_id')
-                    ->leftjoin('company AS comp','comp.id', 'trip.trip_confirm_company_id')
-                    ->where('trip.trip_owner_user_id', Auth::id())->get();
+                ->leftjoin('users AS u','u.id', 'trip.trip_owner_user_id')
+                ->leftjoin('users AS us','us.id', 'trip.trip_confirm_user_id')
+                ->leftjoin('state AS s','s.id', 'trip.from_state_id')
+                ->leftjoin('state AS st','st.id', 'trip.to_state_id')
+                ->leftjoin('city AS c','c.id', 'trip.from_city_id')
+                ->leftjoin('city AS ci','ci.id', 'trip.to_city_id')
+                ->leftjoin('company AS com','com.id', 'trip.trip_owner_company_id')
+                ->leftjoin('company AS comp','comp.id', 'trip.trip_confirm_company_id')
+                ->where('trip.trip_owner_user_id', Auth::id())->get();
         return response()->json(['success' => 1,'message'=>"",'data' => ['manage_trip' => $query]], 200);
     }
 

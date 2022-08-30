@@ -129,7 +129,10 @@ Route::group(['middleware' => ['auth']], function() {
     Route::post('/add_trip', [TripController::class, 'create'])->name('add_trip');
     Route::get('/edit_trip/{id}', [TripController::class, 'update'])->name('edit_trip');
     Route::post('/edit_trip', [TripController::class, 'update'])->name('edit_trip');
+    Route::post('/add_return_trip', [TripController::class, 'add_return_trip'])->name('add_return_trip');
 
+    Route::get('/return_trip/{id}', [TripController::class, 'return_trip'])->name('return_trip');
+    Route::post('/return_trip/{id}', [TripController::class, 'return_trip'])->name('return_trip');
     Route::get('/show_trip/{id}', [TripController::class, 'show'])->name('show_trip');
 
     Route::post('/complete_trip', [TripController::class, 'status_change'])->name('status_change');

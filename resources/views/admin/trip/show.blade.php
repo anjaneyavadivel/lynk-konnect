@@ -68,7 +68,7 @@
 
 @endif
 
-                    <form method="POST" action="{{ url('add_trip') }}">
+                    <form method="POST" action="{{ url('add_return_trip') }}">
                       @csrf
                       <div class="form-row">
                         <div class="form-group form-material col-md-4">
@@ -134,7 +134,7 @@
                               <option value="{{ $Sval->id }}" <?php if($list->from_state_id == $Sval->id){ echo 'selected';}?>>{{ $Sval->state_name }}</option>
                               @endforeach
                           </select>  
-                        </div>
+                        </div>                        
                         <div class="form-group form-material col-md-4">
                           <label class="form-control-label" for="inputBasicFirstName">From Neighborhoods</label>
                           <select class="form-control" id="select" name="from_city_id">
@@ -144,6 +144,7 @@
                               @endforeach
                           </select>  
                         </div>
+                        <input type="hidden" name="from_city_id" value="{{$list->from_city_id}}">
                         <div class="form-group form-material col-md-4">
                           <label class="form-control-label" for="inputBasicLastName">From Postcode</label>
                           <input type="text" class="form-control" id="select" name="from_postcode" value="<?php  echo $list->from_postcode; ?>">
@@ -153,12 +154,12 @@
                       <div class="form-row">
                         <div class="form-group form-material col-md-3" style="margin-bottom:0px;">
                           <label class="form-control-label" for="inputBasicLastName">From Latitude <span class="error">*</span></label>
-                          <input name="from_latitude" class="from-lat form-control" value="<?php  echo $list->from_latitude; ?>" type="text" placeholder="Latitude" style="margin-bottom:10px;" readonly >
+                          <input name="from_latitude" class="from-lat form-control" required value="<?php  echo $list->from_latitude; ?>" type="text" placeholder="Latitude" style="margin-bottom:10px;" readonly >
                                              
                         </div>
                         <div class="form-group form-material col-md-3"  style="margin-bottom:0px;">
                             <label class="form-control-label" for="inputBasicLastName">From Longitude <span class="error">*</span></label>
-                            <input name="from_longitude" class="from-long form-control" value="<?php  echo $list->from_longitude; ?>" type="text" placeholder="Longitude" style="width: 161px;" readonly>
+                            <input name="from_longitude" class="from-long form-control" required value="<?php  echo $list->from_longitude; ?>" type="text" placeholder="Longitude" style="width: 161px;" readonly>
                            
                         </div>
                         
@@ -196,6 +197,7 @@
                               @endforeach
                           </select>  
                         </div>
+                        <input type="hidden" name="to_city_id" value="{{$list->to_city_id}}">
                         <div class="form-group form-material col-md-4">
                           <label class="form-control-label" for="inputBasicLastName">To Postcode</label>
                           <input type="text" class="form-control" id="select" name="to_postcode" value="<?php echo $list->to_postcode; ?>">
@@ -205,12 +207,13 @@
                       <div class="form-row">                        
                         <div class="form-group form-material col-md-3"  style="margin-bottom:0px;">
                           <label class="form-control-label" for="inputBasicLastName">To Latitude <span class="error">*</span></label>
-                          <input name="to_latitude" class="to-lat form-control" value="<?php  echo $list->to_latitude; ?>" type="text" placeholder="Latitude" style="margin-bottom:10px;" readonly>
+                          <input name="to_latitude" class="to-lat form-control" required value="<?php  echo $list->to_latitude; ?>" type="text" placeholder="Latitude" style="margin-bottom:10px;" readonly>
                                          
                         </div>
                         <div class="form-group form-material col-md-3"  style="margin-bottom:0px;">
                           <label class="form-control-label" for="inputBasicLastName">To Longitude <span class="error">*</span></label>
-                          <input name="to_longitude" class="to-long form-control" value="<?php  echo $list->to_longitude; ?>" type="text" placeholder="Longitude" style="width: 161px;" readonly>
+                          <input name="to_longitude" class="to-long form-control" required
+                           value="<?php  echo $list->to_longitude; ?>" type="text" placeholder="Longitude" style="width: 161px;" readonly>
                                              
                         </div> 
                         <div class="form-group form-material col-md-3" style="margin:30px;">

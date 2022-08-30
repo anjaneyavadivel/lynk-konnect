@@ -45,6 +45,7 @@ class Trip extends Authenticatable
         'to_latitude',
         'to_longitude',
         'is_active',
+        'is_return_trip',
     ];
     
 
@@ -73,7 +74,7 @@ class Trip extends Authenticatable
                     ->leftjoin('city AS ci','ci.id', 'trip.to_city_id')
                     ->leftjoin('company AS com','com.id', 'trip.trip_owner_company_id')
                     ->leftjoin('company AS comp','comp.id', 'trip.trip_confirm_company_id')
-                    ->where('trip.return_route_id', $rid);
+                    ->where('trip.is_return_trip','=',1);
 
                 }
         
@@ -99,6 +100,65 @@ class Trip extends Authenticatable
         $result =  $query->get();
 
         return $result; 
+    }
+
+    public static function getreturnTrip($data,$output){
+        $trip_ids=[];
+        if($data == 1){
+            $query = Trip::select(\DB::raw('*,trip.id as id,u.fname as owner_fname, us.fname as confirm_fname, s.state_name as f_state_name, st.state_name as t_state_name'))
+                    ->leftjoin('users AS u','u.id', 'trip.trip_owner_user_id')
+                    ->leftjoin('users AS us','us.id', 'trip.trip_confirm_user_id')
+                    ->leftjoin('state AS s','s.id', 'trip.from_state_id')
+                    ->leftjoin('state AS st','st.id', 'trip.to_state_id')
+                    ->leftjoin('city AS c','c.id', 'trip.from_city_id')
+                    ->leftjoin('city AS ci','ci.id', 'trip.to_city_id')
+                    ->leftjoin('company AS com','com.id', 'trip.trip_owner_company_id')
+                    ->leftjoin('company AS comp','comp.id', 'trip.trip_confirm_company_id')
+                    ->where('trip.is_return_trip','=',1);
+                
+                }else{
+
+                    $query = Trip::select(\DB::raw('*,trip.id as id,u.fname as owner_fname, us.fname as confirm_fname, s.state_name as f_state_name, st.state_name as t_state_name'))
+                    ->leftjoin('users AS u','u.id', 'trip.trip_owner_user_id')
+                    ->leftjoin('users AS us','us.id', 'trip.trip_confirm_user_id')
+                    ->leftjoin('state AS s','s.id', 'trip.from_state_id')
+                    ->leftjoin('state AS st','st.id', 'trip.to_state_id')
+                    ->leftjoin('city AS c','c.id', 'trip.from_city_id')
+                    ->leftjoin('city AS ci','ci.id', 'trip.to_city_id')
+                    ->leftjoin('company AS com','com.id', 'trip.trip_owner_company_id')
+                    ->leftjoin('company AS comp','comp.id', 'trip.trip_confirm_company_id')
+                    ->where('trip.is_return_trip','=',1)->where(function ($query) use ($output) {
+                        $query->where('trip.id', [$output]);
+                    });
+
+                }
+        
+                $result =  $query->get();
+                return $result; 
+    }
+
+    public function form_location($distance,$trip_id)
+    {
+        $trip = Trip::where('id','=',$trip_id)->first();
+
+        $latitude=$trip->from_latitude;
+        $longitude=$trip->from_longitude;
+
+        return $query = Trip::selectRaw("id as id,(1.609344 * 3956 * acos( cos( radians('$latitude') ) * cos( radians(from_latitude) ) * cos( radians(from_longitude) - radians('$longitude') ) + sin( radians('$latitude') ) * sin( radians(from_latitude) ) ) ) AS distance")
+                        ->having('distance', '<', $distance)->where('trip.is_return_trip','=',1)
+                        ->orderBy('distance')->get();
+    }
+
+    public function to_location($distance,$trip_id)
+    {
+        $trip = Trip::where('id','=',$trip_id)->first();        
+
+        $to_latitude=$trip->to_latitude;
+        $to_longitude=$trip->to_longitude;
+
+        return $query = Trip::selectRaw("id as id,(1.609344 * 3956 * acos( cos( radians('$to_latitude') ) * cos( radians(to_latitude) ) * cos( radians(to_longitude) - radians('$to_longitude') ) + sin( radians('$to_latitude') ) * sin( radians(from_latitude) ) ) ) AS distance")
+                    ->having('distance', '<', $distance)->where('trip.is_return_trip','=',1)
+                    ->orderBy('distance')->get();
     }
 
     
