@@ -12,7 +12,7 @@
               </li>
               @php $user_info=Auth::user()->roles->first()->id; @endphp
               @can('user-list')               
-              @if($user_info==3 || $user_info==2)
+              @if($user_info==3)
               <li class="site-menu-item has-sub @if(collect(request()->segments())->last()=='manage_users') active @elseif(collect(request()->segments())->last()=='add_user') active @endif">
                 <a href="javascript:void(0)">
                         <i class="site-menu-icon md-account-circle" aria-hidden="true"></i>

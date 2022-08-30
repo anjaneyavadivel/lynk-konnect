@@ -23,7 +23,8 @@ class DriverController extends Controller
     // -- Manage Driver
     public function index() { 
 
-        $list = Driver::orderBy('id','DESC')->get();
+        $list = Driver::driverlist();
+       // dd($list);
         //$list = Company::getCompany();
         return view('admin.driver.index',compact('list'));
     }
@@ -110,7 +111,7 @@ class DriverController extends Controller
     public function update(Request $request,$id=null) {
         
         if(isset($id)){
-            $editview = Driver::where('id', $id)->first(); 
+            $editview = Driver::where('id', $id)->first();
             $usereditview = User::where('id', $editview->user_id)->first(); 
         }else{
             $editview = array();

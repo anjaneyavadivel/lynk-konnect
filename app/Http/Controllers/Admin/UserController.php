@@ -71,6 +71,7 @@ class UserController extends Controller
 
         //$list = User::orderBy('id','DESC')->get();
         $list = User::getUsers($company_id_s);
+        //dd($list);
         return view('admin.users.index',compact('list'));
     }
 

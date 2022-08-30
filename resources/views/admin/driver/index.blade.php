@@ -42,28 +42,23 @@
                 <tr>
                   <th>No</th>
                   <th>Company Name</th>
+                  <th>Name</th>
+                  <th>Eamil</th>
+                 
                   <th>Action</th>
                 </tr>
               </thead>
-              <tfoot>
-                <tr>
-                  <th>No</th>
-                  <th>Company Name</th>
-                  <th>Action</th>
-                </tr>
-              </tfoot>
+             
               <tbody>
                  @php $i=0 @endphp
-                 @foreach ($list as $key => $val)
-                 <?php
-                 $user = App\Models\User::where('id','=',$val->user_id)->first();
-                 $company = App\Models\Company::where('id','=',$user->company_id)->first();
-                 ?>
+                 @foreach ($list as $key => $val)               
                 <tr>
                   <td>{{ ++$i }}</td>
-                  <td>{{ $company->company_name }}</td>
+                  <td>{{ $val->company_name }}</td>
+                  <td>{{ $val->fname }} {{ $val->lname }}</td>
+                  <td>{{ $val->email }}</td>                
                   <td>
-                     <a class="btn btn-primary" href="{{ url('edit_driver/'. $val->id)}}">Edit</a>
+                     <a class="btn btn-primary" href="{{ url('edit_driver/'. $val->driverid)}}">Edit</a>
                   </td>
                 </tr>
                 @endforeach
