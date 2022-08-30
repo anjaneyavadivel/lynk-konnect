@@ -108,7 +108,9 @@ class ProjectController extends Controller
             'address2'=> '',
             'state_id'=> 'required',
             'city_id'=> 'required',
+            'contactnumber' => 'required',
         ]); 
+        
 
         try{
            
@@ -127,6 +129,7 @@ class ProjectController extends Controller
             $data1['state_id']=$data['state_id'];
             $data1['city_id']=$data['city_id'];
             $data1['postcode']=$data['postcode'];
+            $data1['contactnumber']=$data['contactnumber'];
             $data1['created_by']=$user_info->id;
             $data1['badge']="test";
             $company = Driver::create($data1);           
@@ -162,6 +165,7 @@ class ProjectController extends Controller
             'address2'=> '',
             'state_id'=> 'required',
             'city_id'=> 'required',
+            'contactnumber' => 'required',
         ]);
         try{
             $driver = Driver::where('id','=',$request->id)->first();
@@ -180,6 +184,7 @@ class ProjectController extends Controller
             $driver->state_id=$data['state_id'];
             $driver->city_id=$data['city_id'];
             $driver->postcode=$data['postcode'];
+            $driver->contactnumber=$data['contactnumber'];
             $driver->save();         
             return response()->json(['data' => [],'message' => 'Driver updated successfully', 'success' => 1], 200);
         }catch (Exception $e) {
@@ -225,6 +230,10 @@ class ProjectController extends Controller
             'trip_amount'             => 'required',
             'trip_date'               => 'required', 
             'trip_time'               => 'required',
+            'from_latitude'           => 'required',
+            'from_longitude' => 'required',
+            'to_latitude' => 'required',
+            'to_longitude' => 'required',
         ]);
         try{ 
 
@@ -281,7 +290,11 @@ class ProjectController extends Controller
             'trip_amount'             => 'required',
             'trip_date'               => 'required', 
             'trip_time'               => 'required',
-            'id' => 'required', 
+            'id' => 'required',
+            'from_latitude'           => 'required',
+            'from_longitude' => 'required',
+            'to_latitude' => 'required',
+            'to_longitude' => 'required', 
         ]);
         try{
             $source   = $data['trip_date'];
@@ -330,7 +343,7 @@ class ProjectController extends Controller
                 ->leftjoin('city AS ci','ci.id', 'trip.to_city_id')
                 ->leftjoin('company AS com','com.id', 'trip.trip_owner_company_id')
                 ->leftjoin('company AS comp','comp.id', 'trip.trip_confirm_company_id')
-                ->where('trip.trip_owner_user_id', Auth::id())->get();
+                ->where('trip.trip_owner_user_id', Auth::id())->paginate(20);
         return response()->json(['success' => 1,'message'=>"",'data' => ['manage_trip' => $query]], 200);
     }
 

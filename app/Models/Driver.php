@@ -28,6 +28,7 @@ class Driver extends Authenticatable
         'postcode',
         'created_by',
         'is_active',
+        'contactnumber'
     ];
 
     public static function driverlist(){
