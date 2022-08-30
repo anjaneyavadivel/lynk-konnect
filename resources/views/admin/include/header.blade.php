@@ -43,7 +43,7 @@
               <a class="nav-link navbar-avatar" data-toggle="dropdown" href="#" aria-expanded="false"
                 data-animation="scale-up" role="button">Welcome {{Auth::user()->fname}}        
                 <span class="avatar avatar-online"> 
-                  <img src="{{ asset('temp/global/portraits/5.jpg') }}" alt="...">
+                  <img src="{{ asset('temp/global/portraits/user.jpeg') }}" alt="...">
                   <i></i>
                 </span>
               </a>
