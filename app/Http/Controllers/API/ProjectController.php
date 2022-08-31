@@ -459,14 +459,14 @@ class ProjectController extends Controller
             $trip_id=$request->trip_id;
             $data=2;
 
-            $from=Trip::form_location($distance,$trip_id);            
+            $from=Trip::FormLocation($distance,$trip_id);            
             if($from)
             {
                 $from =$from->toArray();
                 $result1 =array_column($from, 'id');
             }
 
-            $to = Trip::to_location($distance,$trip_id);
+            $to = Trip::ToLocation($distance,$trip_id);
             if($to)
             {
                 $to =$to->toArray();

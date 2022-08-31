@@ -408,14 +408,14 @@ class TripController extends Controller
             $trip_id=$id;
             $data=2;
 
-            $from=Trip::form_location($distence,$trip_id);            
+            $from=Trip::FormLocation($distence,$trip_id);            
             if($from)
             {
                 $from =$from->toArray();
                 $result1 =array_column($from, 'id');
             }
 
-            $to = Trip::to_location($distence,$trip_id);
+            $to = Trip::ToLocation($distence,$trip_id);
             if($to)
             {
                 $to =$to->toArray();

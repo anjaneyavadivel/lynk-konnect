@@ -140,7 +140,7 @@ class Trip extends Authenticatable
                 return $result; 
     }
 
-    public function form_location($distance,$trip_id)
+    public static function FormLocation($distance,$trip_id)
     {
         $trip = Trip::where('id','=',$trip_id)->first();
 
@@ -152,7 +152,7 @@ class Trip extends Authenticatable
                         ->orderBy('distance')->get();
     }
 
-    public function to_location($distance,$trip_id)
+    public static function ToLocation($distance,$trip_id)
     {
         $trip = Trip::where('id','=',$trip_id)->first();        
 
