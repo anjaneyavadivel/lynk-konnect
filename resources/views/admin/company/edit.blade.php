@@ -11,6 +11,12 @@
   .error{
     color:red;
   }
+  .licenceatt img{
+    float: left;
+    width: 100%;
+    height: auto;
+    max-height: 100%;
+  }
   </style>
 <div class="page">
       <div class="page-header">
@@ -61,7 +67,7 @@
 
 @endif
 
-                    <form method="POST" action="{{ url('edit_company') }}" id="add_form">
+                    <form method="POST" action="{{ url('edit_company') }}" id="add_form" enctype="multipart/form-data">
                       <input type="hidden" name="id" value="<?php if(isset($editview->id)){ echo $editview->id;} ?>">
                       @csrf
 
@@ -71,6 +77,12 @@
                           <input type="text" class="form-control company" id="company_name" name="company_name" value="{{ $editview->company_name ?? '' }}" 
                             placeholder="" autocomplete="off" />
                             <span class="error" id="company"  style="display:none">Company is required</span>
+                        </div>
+                        <div class="form-group form-material col-md-6">
+                          <label class="form-control-label" for="inputBasicFirstName">Company Email <span class="error">*</span></label>
+                          <input type="email" class="form-control email" id="inputBasicFirstName" name="emailid"
+                            placeholder="" autocomplete="off" value="{{ $editview->emailid ?? '' }}"/>
+                            <span class="error" id="emailid"  style="display:none">Email is required</span>
                         </div>
                       </div>
 
@@ -171,18 +183,33 @@
                         <div class="form-group form-material col-md-6">
                           <label class="form-control-label" for="inputBasicFirstName">Website <span class="error">*</span></label>
                           <input type="url" class="form-control website1" id="website" name="website" value="{{ $editview->website  ?? ''}}"
-                             autocomplete="off" />
+                             autocomplete="off"  placeholder="https://example.com" pattern="^(http(s)?:\/\/)+[\w\-\._~:\/?#[\]@!\$&'\(\)\*\+,;=.]+$"  required/>
                              <span class="error" id="website1" style="display:none">Website is required</span> 
                         </div>
                       </div>
 
                       <div class="row">
                         <div class="form-group form-material col-md-6">
-                          <label class="form-control-label" for="inputBasicFirstName">Operator Licence </label>
-                          <input type="file" id="input-file-events" class="dropify-event"  style="opacity: 1 !important; margin-top: 33px;margin-left: 18px;" data-default-file="../../../global/photos/placeholder.png">
+                          <label class="form-control-label" for="inputBasicFirstName">Operator Licence </label>                        
+                          <input name="licence" type="file" id="input-file-events" class="dropify-event"  style="opacity: 1 !important; margin-top: 33px;margin-left: 18px;" data-default-file="../../../global/photos/placeholder.png">
+                         <input type="hidden" name="licencehidden" value="{{$editview->licence}}">
                         </div>
-                      </div>  
-                      
+                      </div>
+                      <div class="row" style="margin-top: 30px;">
+                        <div class="col-sm-6 licenceatt">
+                          @php  
+                          if(!empty($editview->licence)){                    
+                                $info = pathinfo($editview->licence);
+                                if($info["extension"]=='pdf'){
+                                  echo '<a href='.url("public/uploads/".$editview->licence).' target="_blank">View licence</a>' ;                                  
+                                }
+                                else{ 
+                                  echo '<img src='.url("public/uploads/".$editview->licence).'>';                                 
+                                }
+                          }
+                          @endphp
+                          </div>
+                      </div>                       
                   </div>
                 </div>
                
@@ -203,7 +230,8 @@
     
     alert($('.postcode').val().length);
 
-  $('#add_form').on('submit',function(e) {
+    $('#add_form').on('submit',function(e) {
+      e.preventDefault();
     
     if($('.company').val()=='')
     {
@@ -223,6 +251,12 @@
     }else{
       $('#postcode1').css('display','none');
     }    
+    if($('.email').val()=='')
+    {
+      $('#emailid').css('display','block');
+    }else{
+      $('#emailid').css('display','none');
+    }
     if($('.landmark1').val()=='')
     {
       $('#landmark1').css('display','block');
@@ -268,7 +302,7 @@
 
     if($('.company').val()!="" && $('.address1').val()!="" && $('.postcode1').val()!="" && $('.landmark1').val()!="" && $('.contact_person').val()!="" && $('.contact_no1').val()!="" &&  $('.contact_no2').val()!="" &&  $('.county').val()!="" && $('.city_id1').val()!="" && $('.website1').val()!="")
     {
-      $('form#add_form').submit();
+      $('#add_form')[0].submit();
     }
     
     

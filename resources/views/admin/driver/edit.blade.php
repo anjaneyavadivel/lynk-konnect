@@ -111,7 +111,7 @@
                       <div class="form-group form-material">
                         <label class="form-control-label" for="inputBasicPassword">Password <span class="error">*</span></label>
                         <input type="password" class="form-control password" id="inputBasicPassword" name="password"
-                          placeholder="Password" autocomplete="off" />
+                          placeholder="Password" autocomplete="off" value="{{$usereditview->password}}"/>
                           <span class="error" id="password"  style="display:none">Password is required and Password should be above 6 digit</span>
                       </div>
 
@@ -126,6 +126,13 @@
                         <input type="text" class="form-control postcode" name="postcode" value="{{$editview->postcode}}"
                           placeholder="postcode" autocomplete="off" />
                           <span class="error" id="postcode" style="display:none">Postcode is required and Postcode should be 6 digit</span>
+                      </div>
+
+                      <div class="form-group form-material">
+                        <label class="form-control-label" for="">Contactnumber <span class="error">*</span></label>
+                        <input type="text" class="form-control contact_no1" name="contactnumber"
+                          placeholder="Contact Number" autocomplete="off" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="{{$editview->contactnumber}}"/>
+                          <span class="error" id="contactnumber" style="display:none">Contact no is required and Contact no should be 10 digit</span>
                       </div>
                       
                       <div class="form-group form-material">
@@ -223,7 +230,12 @@
     }else{
       $('#company').css('display','none');
     }
-    
+    if($('.contact_no1').val()=='')
+    {
+      $('#contactnumber').css('display','block');
+    }else{
+      $('#contactnumber').css('display','none');
+    }   
     if($('.address1').val()=='')
     {
       $('#address1').css('display','block');

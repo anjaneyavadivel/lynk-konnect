@@ -7,6 +7,12 @@
 
 
 @include('admin.include.sidebar')  
+<style>
+  @media print {
+      table td:last-child {display:none}
+      table th:last-child {display:none}
+  }
+</style>
 
 <div class="page">
       <div class="page-header">
@@ -38,7 +44,7 @@
 </div>
 @endif -->
 @include('admin.flash-message')
-            <table class="table table-hover dataTable table-striped w-full" id="exampleTableTools">
+            <table class="table table-hover dataTable table-striped w-full" id="example">
               <thead>
                 <tr>
                   <th>No</th>
@@ -46,7 +52,7 @@
                   <th>Email</th>
                   <th>Company</th>
                   <th>Roles</th>
-                  <th>Action</th>
+                  <th class="not-export-col">Action</th>
                 </tr>
               </thead>
               <!-- <tfoot>
@@ -68,7 +74,7 @@
                   <td>{{ $user->email }}</td>
                   <td>{{ $user->company_name }}</td>
                   <td>{{ $user->role_name}}</td>
-                  <td>
+                  <td class="not-export-col">
                     <!-- <a class="btn btn-info" href="">Show</a> -->
                     <a class="btn btn-primary" href="{{ url('edit_user/'. $user->id)}}">Edit</a>
 
@@ -95,5 +101,32 @@
   "pageLength": 10
 } );  
 </script> -->
+<script>
+ $(document).ready(function() {
+  $('#example').DataTable( {
+      dom: 'Bfrtip',
+      buttons: [
+          {
+              extend: 'copyHtml5',
+              exportOptions: {
+                  columns: [ 0,1,2,3,4]
+              }
+          },
+          {
+              extend: 'print',
+              exportOptions: {
+                  columns: ':visible'
+              }
+          },
+          {
+              extend: 'csvHtml5',
+              exportOptions: {
+                columns: [ 0,1,2,3,4]
+              }
+          },
 
+      ]
+  } );
+} );
+    </script>
 @endsection

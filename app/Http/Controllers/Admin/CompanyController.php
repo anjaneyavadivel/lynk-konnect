@@ -42,17 +42,17 @@ class CompanyController extends Controller
                 'longitutude'    => '', 
                 'contact_person' => '',
                 'contact_no1'    => 'required',
-                'contact_no2'    => 'required',
-               
+                'contact_no2'    => 'required',              
                 'website'        => 'required',
+                'emailid'        => 'required',
+                'licence' => 'mimes:jpeg,png,jpg,gif,svg,pdf|max:2048',
 
             ]);
-            /*$request->validate([
-                'licence' => 'required|mimes:pdf,png,jpg,jpeg|max:2048',
-            ]);*/
-      
-          
-
+            if (request()->hasFile('licence')) {
+               $imageName = time().'.'.request()->licence->getClientOriginalExtension();
+               request()->licence->move(public_path('uploads'), $imageName);
+               $data['licence']=$imageName;
+            }
            $company = Company::create($data);
            return redirect('manage_company')->withFlashSuccess('Company added successfully');
             
@@ -92,12 +92,20 @@ class CompanyController extends Controller
                 'contact_person' => '',
                 'contact_no1'    => 'required',
                 'contact_no2'    => 'required',
-                'licence'        => '',
+                'licence' => 'mimes:jpeg,png,jpg,gif,svg,pdf|max:2048',
                 'website'        => 'required',
-                'id'                    => 'required',
+                'emailid'        => 'required',
+                'id'              => 'required',
             ]);
 
-            
+            if (request()->hasFile('licence')) {
+                $imageName = time().'.'.request()->licence->getClientOriginalExtension();
+                request()->licence->move(public_path('uploads'), $imageName);
+                $data['licence']=$imageName;
+             }
+             else{
+                $data['licence']=request()->licencehidden;
+             }
             if(isset($data['id'])){
                 $user = Company::find($data['id']);
                 $user->update($data);

@@ -97,7 +97,9 @@
                       <div class="form-group form-material">
                         <label class="form-control-label" for="inputBasicPassword">Password <span class="error">*</span></label>
                         <input type="password" class="form-control password" id="inputBasicPassword" name="password"
-                          placeholder="Password" autocomplete="off" />
+                        autocomplete="new-password" 
+                        onblur="this.setAttribute('readonly', 'readonly');" 
+                        onfocus="this.removeAttribute('readonly');" readonly>
                           <span class="error" id="password"  style="display:none">Password is required and Password should be above 6 digit</span>
                       </div>
 
@@ -189,7 +191,7 @@
                       </div>
                      <div class="form-group form-material">
                         <label class="form-control-label" for="inputBasicEmail">Postcode <span class="error">*</span></label>
-                        <input type="email" class="form-control postcode" id="inputBasicEmail" name="postcode"
+                        <input type="text" onkeypress="return event.charCode >= 48 && event.charCode <= 57" class="form-control postcode" id="inputBasicEmail" name="postcode"
                           placeholder="postcode" autocomplete="off" />
                       </div>
                       <span class="error" id="postcode" style="display:none">Postcode is required and Postcode should be 6 digit</span>

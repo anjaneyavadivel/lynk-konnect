@@ -61,7 +61,7 @@
 
 @endif
 
-                    <form method="POST" action="{{ url('add_company') }}" id="add_form">
+                    <form method="POST" action="{{ url('add_company') }}" id="add_form" enctype="multipart/form-data">
                       @csrf
                       <div class="row">
                         <div class="form-group form-material col-md-6">
@@ -69,6 +69,12 @@
                           <input type="text" class="form-control company" id="inputBasicFirstName" name="company_name"
                             placeholder="" autocomplete="off" />
                             <span class="error" id="company"  style="display:none">Company is required</span>
+                        </div>
+                        <div class="form-group form-material col-md-6">
+                          <label class="form-control-label" for="inputBasicFirstName">Company Email <span class="error">*</span></label>
+                          <input type="email" class="form-control email" id="inputBasicFirstName" name="emailid"
+                            placeholder="" autocomplete="off" />
+                            <span class="error" id="emailid"  style="display:none">Email is required</span>
                         </div>
                       </div>
 
@@ -225,6 +231,12 @@
     }else{
       $('#contact_person').css('display','none');
     }
+    if($('.email').val()=='')
+    {
+      $('#emailid').css('display','block');
+    }else{
+      $('#emailid').css('display','none');
+    }
     if($('.contact_no1').val()=='')
     {
       $('#contact_no1').css('display','block');
@@ -257,7 +269,7 @@
       $('#website1').css('display','none');
     }
 
-    if($('.company').val()!="" && $('.address').val()!="" && $('.postcode1').val()!="" && $('.landmark').val()!="" && $('.contact_person').val()!="" && $('.contact_no1').val()!="" &&  $('.contact_no2').val()!="" &&  $('.county').val()!="" && $('.city_id1').val()!="" && $('.website1').val()!="")
+    if($('.company').val()!="" && $('.address').val()!="" &&$('.email').val()!=""  && $('.postcode1').val()!="" && $('.landmark').val()!="" && $('.contact_person').val()!="" && $('.contact_no1').val()!="" &&  $('.contact_no2').val()!="" &&  $('.county').val()!="" && $('.city_id1').val()!="" && $('.website1').val()!="")
     {
   
       $('#add_form')[0].submit();
