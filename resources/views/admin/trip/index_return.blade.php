@@ -35,11 +35,11 @@
           <label class="form-control-label" for="inputBasicFirstName">Distance</label>                       
             <select class="form-control" id="distence" name="distence">
                 <option value="">Select distance</option>
-                <option>10</option>
-                <option>20</option>
-                <option>30</option>
-                <option>50</option>
-                <option>100</option>
+                <option value="10" @if($distence==10) selected @endif>10</option>
+                <option value="20" @if($distence==20) selected @endif>20</option>
+                <option value="30" @if($distence==30) selected @endif>30</option>
+                <option value="50" @if($distence==50) selected @endif>50</option>
+                <option value="100" @if($distence==100) selected @endif>100</option>
               </select>                         
           </div>
           <div class="form-group form-material col-md-4" style="margin-top: 30px;">   

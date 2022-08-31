@@ -265,6 +265,7 @@ class TripController extends Controller
         if($trip)
         {
             $data['trip_status']=$trip_status;
+            $data['completed_on']=date('Y-m-d H:i:s');
             $trip->update($data);
             return redirect()->back();
         }
@@ -398,12 +399,12 @@ class TripController extends Controller
 
     public function return_trip(Request $request,$id)
     {
-        $distence=0;
+        $distence=10;
         $trip_id=$id;
         $data=1; $output=[];
-        if($request->has('_token')){
+        //if($request->has('_token')){
 
-            $distence=$request->distence;
+            $distence=$request->distence??10;
             $trip_id=$id;
             $data=2;
 
@@ -422,10 +423,10 @@ class TripController extends Controller
             }
 
             $output = array_merge(array_diff($result1, $result2), array_diff($result2, $result1));
-        }
+        //}
 
         $list = Trip::getreturnTrip($data,$output);
-        return view('admin.trip.index_return', compact('list','id'));  
+        return view('admin.trip.index_return', compact('list','id','distence'));  
     }
 
 }

@@ -46,6 +46,7 @@ class Trip extends Authenticatable
         'to_longitude',
         'is_active',
         'is_return_trip',
+        'completed_on',
     ];
     
 
@@ -61,7 +62,9 @@ class Trip extends Authenticatable
                     ->leftjoin('city AS c','c.id', 'trip.from_city_id')
                     ->leftjoin('city AS ci','ci.id', 'trip.to_city_id')
                     ->leftjoin('company AS com','com.id', 'trip.trip_owner_company_id')
-                    ->leftjoin('company AS comp','comp.id', 'trip.trip_confirm_company_id');
+                    ->leftjoin('company AS comp','comp.id', 'trip.trip_confirm_company_id')
+                    ->where('trip.completed_on','=',null)
+                    ->orWhere('trip.trip_date','>=',date('Y-m-d'));
                 
                 }else{
 

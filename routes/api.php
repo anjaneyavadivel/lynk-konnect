@@ -59,6 +59,9 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::post('add-return-trip', [ProjectController::class, 'add_return_trip']);
     Route::get('return-trip', [ProjectController::class, 'return_trip_list']);
 
+    Route::post('live-tracking', [ProjectController::class, 'live_tracking']);
+    
+
 });
 
 

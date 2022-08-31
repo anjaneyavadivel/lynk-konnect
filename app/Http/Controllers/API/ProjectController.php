@@ -15,6 +15,7 @@ use Auth;
 use Hash;
 use DateTime;
 use App\Models\Stops;
+use App\Models\LiveTracking;
 use Illuminate\Support\Facades\Validator;
 //use App\Http\Resources\ProjectResource;
 
@@ -67,7 +68,9 @@ class ProjectController extends Controller
         ->leftjoin('city AS c','c.id', 'trip.from_city_id')
         ->leftjoin('city AS ci','ci.id', 'trip.to_city_id')
         ->leftjoin('company AS com','com.id', 'trip.trip_owner_company_id')
-        ->leftjoin('company AS comp','comp.id', 'trip.trip_confirm_company_id')->paginate(20);
+        ->leftjoin('company AS comp','comp.id', 'trip.trip_confirm_company_id')
+        ->where('trip.completed_on','=',null)
+        ->orWhere('trip.trip_date','>=',date('Y-m-d'))->paginate(20);
         return response()->json(['success' => 1,'message'=>"",'data' => ['trip_list' => $trips]], 200);
     }
 
@@ -357,6 +360,7 @@ class ProjectController extends Controller
         if($trip)
         {
             $trip->trip_status=$request->trip_status;
+            $trip->completed_on=date('Y-m-d H:i:s');
             $trip->save();
             return response()->json(['data' => [],'message' => 'Trip status changed successfully', 'success' => 1], 200);
         }else{
@@ -446,12 +450,12 @@ class ProjectController extends Controller
 
     public function return_trip_list(Request $request)
     {
-        $distance=0;
+        $distance=10;
         $trip_id='';
         $data=1; $output='';
-        if($request->trip_id!=0){
+        //if($request->trip_id!=0){
 
-            $distance=$request->distance;
+            $distance=$request->distance??10;
             $trip_id=$request->trip_id;
             $data=2;
 
@@ -470,7 +474,7 @@ class ProjectController extends Controller
             }
 
             $output = array_merge(array_diff($result1, $result2), array_diff($result2, $result1));
-        }
+        //}
 
         $user_info=auth()->guard('api')->user();
         $trips=Trip::select(\DB::raw('*,trip.id as id,u.fname as owner_fname, us.fname as confirm_fname, s.state_name as f_state_name, st.state_name as t_state_name'))
@@ -489,7 +493,23 @@ class ProjectController extends Controller
             }
             
         });
-        $trips=$trips->where('trip.is_return_trip','=',1)->paginate(20);
+        $trips=$trips->paginate(20);
         return response()->json(['success' => 1,'message'=>"",'data' => ['return_trip_list' => $trips]], 200);
+    }
+
+    public function live_tracking(Request $request)
+    {
+        $data = $this->validate($request, [
+            'trip_id'            => 'required',
+            'latitude'           => 'required',
+            'longitude'            => 'required',
+        ]);
+
+        $tracking=new LiveTracking;
+        $tracking->trip_id=$request->trip_id;
+        $tracking->latitude=$request->latitude;
+        $tracking->longitude=$request->longitude;
+        $tracking->save();
+        return response()->json(['success' => 1,'message'=>"Tracking updated successfully",'data' => []], 200);
     }
 }
