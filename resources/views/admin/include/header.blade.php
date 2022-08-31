@@ -9,7 +9,7 @@
           data-toggle="collapse">
           <i class="icon md-more" aria-hidden="true"></i>
         </button>
-        <div class="navbar-brand navbar-brand-center site-gridmenu-toggle" data-toggle="gridmenu">
+        <div class="navbar-brand navbar-brand-center" data-toggle="gridmenu">
           <img class="navbar-brand-logo" src="{{ asset('temp/assets/images/logo.png') }}" title="Remark">
           <span class="navbar-brand-text hidden-xs-down"> Lynk Konnect</span>
         </div>

@@ -140,7 +140,7 @@
                         </div>
                         <div class="form-group form-material col-md-4">
                           <label class="form-control-label" for="inputBasicLastName">From Postcode <span class="error">*</span></label>
-                          <input type="text" class="form-control postcode" id="select" name="from_postcode" required> 
+                          <input type="text" class="form-control postcode" id="select" name="from_postcode" required onkeypress="return event.charCode >= 48 && event.charCode <= 57"> 
                           <span class="error" id="postcode" style="display:none">Postcode is required</span> 
                         </div>
                       </div>
@@ -207,7 +207,7 @@
                         </div>
                         <div class="form-group form-material col-md-4">
                           <label class="form-control-label" for="inputBasicLastName">To Postcode <span class="error">*</span></label>
-                          <input type="text" class="form-control postcode1" id="select" name="to_postcode" required>
+                          <input type="text" class="form-control postcode1" id="select" name="to_postcode" required onkeypress="return event.charCode >= 48 && event.charCode <= 57">
                           <span class="error" id="postcode1" style="display:none">Postcode is required</span> 
                         </div>
                       </div>

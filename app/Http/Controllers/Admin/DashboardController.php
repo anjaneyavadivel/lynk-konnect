@@ -24,7 +24,7 @@ class DashboardController extends Controller
          //$this->middleware('permission:user-list|user-create|user-edit|user-delete', ['only' => ['index','show']]);
          $this->middleware('permission:dashboard-admin', ['only' => ['dashboardAdmin']]);
          $this->middleware('permission:dashboard-operator', ['only' => ['dashboardOperator']]);
-         $this->middleware('permission:dashboard-driver', ['only' => ['dashboardDriver']]);
+        $this->middleware('permission:dashboard-driver', ['only' => ['dashboardDriver']]);
          // $this->middleware('permission:user-edit', ['only' => ['edit','update']]);
          // $this->middleware('permission:user-delete', ['only' => ['destroy']]);
     }

@@ -48,6 +48,7 @@ class DriverController extends Controller
                     'address2'        => '',
                     'state_id'       => 'required',
                     'city_id'       => 'required',
+                    'contactnumber'  => 'required',
                 ]);  
             }else{
                 $data = $this->validate($request, [
@@ -61,6 +62,7 @@ class DriverController extends Controller
                     'address2'        => '',
                     'state_id'       => 'required',
                     'city_id'       => 'required',
+                    'contactnumber'  => 'required',
                 ]);  
             }
            
@@ -76,7 +78,8 @@ class DriverController extends Controller
             $data['fname']=$data['fname'];
             $data['lname']=$data['lname'];
             $data['email']=$data['email'];
-            $data['password'] = Hash::make($data['password']);
+            $data['contactnumber']=$data['contactnumber'];
+          
             $data['role_id'] = 1;
 
             $user = User::create($data);         
@@ -87,6 +90,7 @@ class DriverController extends Controller
             $data1['state_id']=$data['state_id'];
             $data1['city_id']=$data['city_id'];
             $data1['postcode']=$data['postcode'];
+            $data1['contactnumber']=$data['contactnumber'];
             $data1['created_by']=$user_info->id;
 
             //dd($data1);
@@ -130,6 +134,7 @@ class DriverController extends Controller
                 'address2'        => '',
                 'state_id'       => 'required',
                 'city_id'       => 'required',
+                'contactnumber'  => 'required',
                 'id'           => '',
             ]);   
 
@@ -141,6 +146,7 @@ class DriverController extends Controller
             $data['lname']=$data['lname'];
             $data['email']=$data['email'];
             $data['password'] = Hash::make($data['password']);
+            $data['contactnumber']=$data['contactnumber'];
 
             $user = User::find($editview1->user_id);         
             $user->update($data);
@@ -151,7 +157,7 @@ class DriverController extends Controller
             $data1['state_id']=$data['state_id'];
             $data1['city_id']=$data['city_id'];
             $data1['postcode']=$data['postcode'];
-
+            $data1['contactnumber']=$data['contactnumber'];
             $data1['badge']="test";
             $driver = Driver::find($data['id']);         
             $driver->update($data1);

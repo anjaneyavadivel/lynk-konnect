@@ -7,6 +7,12 @@
 
 
 @include('admin.include.sidebar')  
+<style>
+  @media print {
+      table td:last-child {display:none}
+      table th:last-child {display:none}
+  }
+</style>
 
 <?php use App\Http\Controllers\Admin\TripController; ?>
 
@@ -39,7 +45,7 @@
   <p>{{ $message }}</p>
 </div>
 @endif
-            <table class="table table-hover dataTable table-striped w-full" id="exampleTableTools">
+            <table class="table table-hover dataTable table-striped w-full" id="example">
               <thead>
                 <tr>
                   <th>SNo</th>
@@ -110,4 +116,32 @@
     </div>
 
 @include('admin.include.footer')
+<script>
+  $(document).ready(function() {
+    $('#example').DataTable( {
+        dom: 'Bfrtip',
+        buttons: [
+            {
+                extend: 'copyHtml5',
+                exportOptions: {
+                    columns: [  0,1,2,3,4,5,6,7]
+                }
+            },
+            {
+                extend: 'print',
+                exportOptions: {
+                    columns: ':visible'
+                }
+            },
+            {
+                extend: 'csvHtml5',
+                exportOptions: {
+                  columns: [ 0,1,2,3,4,5,6,7]
+                }
+            },
+  
+        ]
+    } );
+  } );
+  </script>
 @endsection

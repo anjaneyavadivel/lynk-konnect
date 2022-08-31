@@ -7,6 +7,12 @@
 
 
 @include('admin.include.sidebar')  
+<style>
+  @media print {
+      table td:last-child {display:none}
+      table th:last-child {display:none}
+  }
+</style>
 
 <div class="page">
       <div class="page-header">
@@ -37,14 +43,14 @@
   <p>{{ $message }}</p>
 </div>
 @endif
-            <table class="table table-hover dataTable table-striped w-full" id="exampleTableTools">
+            <table class="table table-hover dataTable table-striped w-full" id="example">
               <thead>
                 <tr>
                   <th>No</th>
                   <th>Company Name</th>
                   <th>Name</th>
                   <th>Eamil</th>
-                 
+                  <th>Contact Number</th>
                   <th>Action</th>
                 </tr>
               </thead>
@@ -56,7 +62,8 @@
                   <td>{{ ++$i }}</td>
                   <td>{{ $val->company_name }}</td>
                   <td>{{ $val->fname }} {{ $val->lname }}</td>
-                  <td>{{ $val->email }}</td>                
+                  <td>{{ $val->email }}</td>
+                  <td>{{ $val->contactnumber }}</td>            
                   <td>
                      <a class="btn btn-primary" href="{{ url('edit_driver/'. $val->driverid)}}">Edit</a>
                   </td>
@@ -72,4 +79,32 @@
     </div>
 
 @include('admin.include.footer')
+<script>
+  $(document).ready(function() {
+    $('#example').DataTable( {
+        dom: 'Bfrtip',
+        buttons: [
+            {
+                extend: 'copyHtml5',
+                exportOptions: {
+                    columns: [ 0,1,2,3,4 ]
+                }
+            },
+            {
+                extend: 'print',
+                exportOptions: {
+                    columns: ':visible'
+                }
+            },
+            {
+                extend: 'csvHtml5',
+                exportOptions: {
+                  columns: [ 0,1,2,3,4]
+                }
+            },
+  
+        ]
+    } );
+  } );
+  </script>
 @endsection

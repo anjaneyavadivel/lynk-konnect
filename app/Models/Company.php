@@ -32,6 +32,7 @@ class Company extends Authenticatable
         'contact_no2',
         'licence',
         'website',
+        'emailid'
     ];
     /**
      * The attributes that should be hidden for arrays.

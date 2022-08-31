@@ -7,6 +7,12 @@
 
 
 @include('admin.include.sidebar')  
+<style>
+  @media print {
+      table td:last-child {display:none}
+      table th:last-child {display:none}
+  }
+</style>
 
 <div class="page">
       <div class="page-header">
@@ -37,7 +43,7 @@
   <p>{{ $message }}</p>
 </div>
 @endif
-            <table class="table table-hover dataTable table-striped w-full" id="exampleTableTools">
+            <table class="table table-hover dataTable table-striped w-full" id="example">
               <thead>
                 <tr>
                   <th>No</th>
@@ -73,4 +79,33 @@
     </div>
 
 @include('admin.include.footer')
+
+<script>
+$(document).ready(function() {
+  $('#example').DataTable( {
+      dom: 'Bfrtip',
+      buttons: [
+          {
+              extend: 'copyHtml5',
+              exportOptions: {
+                  columns: [ 0,1 ]
+              }
+          },
+          {
+              extend: 'print',
+              exportOptions: {
+                  columns: ':visible'
+              }
+          },
+          {
+              extend: 'csvHtml5',
+              exportOptions: {
+                columns: [ 0,1]
+              }
+          },
+
+      ]
+  } );
+} );
+</script>
 @endsection

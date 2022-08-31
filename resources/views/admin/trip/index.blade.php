@@ -7,7 +7,12 @@
 
 
 @include('admin.include.sidebar')  
-
+<style>
+   @media print {
+       table td:last-child {display:none}
+       table th:last-child {display:none}
+   }
+</style>
 
 <div class="page">
       <div class="page-header">
@@ -50,7 +55,7 @@
                   <th>Passengers count</th>
                   <th>Amount</th>
                   <th>Status</th>
-                  <th>Action</th>
+                  <th class="not-export-col">Action</th>
                 </tr>
               </thead>
               <!-- <tfoot>
@@ -79,7 +84,7 @@
                     <?php  if($val->trip_status == 3){ echo 'Payment failure';} ?>  
                     <?php  if($val->trip_status == 4){ echo 'Completed';} ?> 
                   </td>
-                  <td>
+                  <td class="not-export-col">
                      <a class="btn btn-primary" href="{{ url('show_trip/'. $val->id)}}">View</a>
                      @if($val->trip_date > date('Y-m-d'))<a class="btn btn-primary" href="{{ url('edit_trip/'. $val->id)}}">Edit</a>@endif
                   </td>
@@ -106,7 +111,11 @@ $(document).ready(function() {
         dom: 'Bfrtip',
         buttons: [
             'print','copy'
-        ]
+        ],
+        exportOptions: {
+          columns: ':visible:not(.not-export-col)',
+          }
+        
     } );
 } );
   </script>
