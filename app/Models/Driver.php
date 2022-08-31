@@ -29,6 +29,7 @@ class Driver extends Authenticatable
         'contactnumber',
         'created_by',
         'is_active',
+        'contactnumber'
     ];
 
     public static function driverlist(){
