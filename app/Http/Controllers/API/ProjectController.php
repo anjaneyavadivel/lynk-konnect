@@ -383,4 +383,113 @@ class ProjectController extends Controller
         $user_info->save();
         return response()->json(['data' => [],'message' => 'Profile Updated successfully', 'success' => 1], 200);
     }
+
+    public function add_return_trip(Request $request)
+    {
+        $data = $this->validate($request, [
+            'from_address'            => 'required',
+            'from_state_id'           => 'required',
+            'from_city_id'            => 'required', 
+            'from_postcode'           => 'required',
+            'to_address'              => 'required',
+            'to_state_id'             => 'required',
+            'to_city_id'              => 'required', 
+            'to_postcode'             => 'required',
+            'description_trip'        => '',
+            'no_of_passengers'        => 'required',
+            'trip_amount'             => 'required',
+            'trip_date'               => 'required', 
+            'trip_time'               => 'required',
+            'from_latitude'           => 'required',
+            'from_longitude' => 'required',
+            'to_latitude' => 'required',
+        ]);
+        try{ 
+
+           $data['trip_owner_user_id'] = Auth::id();
+           $data['trip_status'] = 1;
+           $data['is_return_trip'] =1;
+        
+            $id= User::where('id', $data['trip_owner_user_id'])->first(); 
+            $data['trip_owner_company_id'] = $id->company_id;  
+            $fromStateId  = $data['from_state_id']; 
+            $toStateId    = $data['to_state_id'];        
+            
+            $routeId = Stops::getRouteId($fromStateId,$toStateId);
+            if(isset($routeId['0']['routeId'])){
+                $data['route_id'] = $routeId['0']['routeId'];
+            }else{
+                $data['route_id'] =  0;
+            }
+
+            $returnRouteId = Stops::getReturnRouteId($fromStateId,$toStateId);
+            if(isset($returnRouteId['0']['routeId'])){
+                $data['return_route_id'] = $returnRouteId['0']['routeId'];
+            }else{
+                $data['return_route_id'] =  0;
+            }
+            $source   = $data['trip_date'];
+            $date     = new DateTime($source);
+            $tripdate = $date->format('Y-m-d');           
+                
+            $data['trip_date'] = $tripdate;
+            $triptime = date("H:i:s", strtotime($data['trip_time']));
+            $data['trip_time'] = $triptime;
+
+           $trip = Trip::create($data);
+
+           return response()->json(['data' => [],'message' => 'Return Trip added successfully', 'success' => 1], 200);
+        }catch (Exception $e) {
+            return response()->json(['data' => [],'message' => 'Something Went Wrong', 'success' => 0],500);
+        }
+    }
+
+    public function return_trip_list(Request $request)
+    {
+        $distance=0;
+        $trip_id='';
+        $data=1; $output='';
+        if($request->trip_id!=0){
+
+            $distance=$request->distance;
+            $trip_id=$request->trip_id;
+            $data=2;
+
+            $from=Trip::form_location($distance,$trip_id);            
+            if($from)
+            {
+                $from =$from->toArray();
+                $result1 =array_column($from, 'id');
+            }
+
+            $to = Trip::to_location($distance,$trip_id);
+            if($to)
+            {
+                $to =$to->toArray();
+                $result2 =array_column($to, 'id');
+            }
+
+            $output = array_merge(array_diff($result1, $result2), array_diff($result2, $result1));
+        }
+
+        $user_info=auth()->guard('api')->user();
+        $trips=Trip::select(\DB::raw('*,trip.id as id,u.fname as owner_fname, us.fname as confirm_fname, s.state_name as f_state_name, st.state_name as t_state_name'))
+        ->leftjoin('users AS u','u.id', 'trip.trip_owner_user_id')
+        ->leftjoin('users AS us','us.id', 'trip.trip_confirm_user_id')
+        ->leftjoin('state AS s','s.id', 'trip.from_state_id')
+        ->leftjoin('state AS st','st.id', 'trip.to_state_id')
+        ->leftjoin('city AS c','c.id', 'trip.from_city_id')
+        ->leftjoin('city AS ci','ci.id', 'trip.to_city_id')
+        ->leftjoin('company AS com','com.id', 'trip.trip_owner_company_id')
+        ->leftjoin('company AS comp','comp.id', 'trip.trip_confirm_company_id');        
+        $trips=$trips->where(function ($query) use ($output) {
+            if($output!='')
+            {
+                $query->where('trip.id', [$output]);
+            }
+            
+        });
+        $trips=$trips->where('trip.is_return_trip','=',1)->paginate(20);
+        return response()->json(['success' => 1,'message'=>"",'data' => ['return_trip_list' => $trips]], 200);
+    }
 }

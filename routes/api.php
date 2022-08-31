@@ -55,6 +55,10 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::post('delete-trip', [ProjectController::class, 'delete_trip']);
     Route::get('manage-own-trip', [ProjectController::class, 'manageown_trip']);
     Route::post('change-trip-status', [ProjectController::class, 'change_trip_status']);
+
+    Route::post('add-return-trip', [ProjectController::class, 'add_return_trip']);
+    Route::get('return-trip', [ProjectController::class, 'return_trip_list']);
+
 });
 
 
