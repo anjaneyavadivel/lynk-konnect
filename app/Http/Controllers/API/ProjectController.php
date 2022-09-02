@@ -27,13 +27,13 @@ class ProjectController extends Controller
         if($user->role_id==2)
         {
             $user_info=auth()->guard('api')->user();
-            $tirp=Trip::where('trip_owner_user_id','=',$user_info->id)->count();
-            $driver=Driver::where('created_by','=',$user_info->id)->count();
+            $tirp=Trip::where('is_active','=',1)->count();
+            $driver=Driver::where('created_by','=',$user_info->id)->where('is_active','=',1)->count();
             $transaction = Transaction::where('operator_id','=',$user_info->id)->count();
             return response()->json(['success' => 1,'message'=>"",'data' => ['total_trip' => $tirp, 'total_driver' => $driver,'total_transaction'=> $transaction]], 200);
         }else{
             $user_info=auth()->guard('api')->user();
-            $tirp=Trip::where('trip_owner_user_id','=',$user_info->id)->count();
+            $tirp=Trip::where('trip_owner_user_id','=',$user_info->id)->where('is_active','=',1)->count();
             return response()->json(['success' => 1,'message'=>"",'data' => ['total_trip' => $tirp]], 200);
         }
         
@@ -69,6 +69,7 @@ class ProjectController extends Controller
         ->leftjoin('city AS ci','ci.id', 'trip.to_city_id')
         ->leftjoin('company AS com','com.id', 'trip.trip_owner_company_id')
         ->leftjoin('company AS comp','comp.id', 'trip.trip_confirm_company_id')
+        ->where('trip.is_active','=',1)
         ->where('trip.completed_on','=',null)
         ->orWhere('trip.trip_date','>=',date('Y-m-d'))->paginate(20);
         return response()->json(['success' => 1,'message'=>"",'data' => ['trip_list' => $trips]], 200);
@@ -346,7 +347,7 @@ class ProjectController extends Controller
                 ->leftjoin('city AS ci','ci.id', 'trip.to_city_id')
                 ->leftjoin('company AS com','com.id', 'trip.trip_owner_company_id')
                 ->leftjoin('company AS comp','comp.id', 'trip.trip_confirm_company_id')
-                ->where('trip.trip_owner_user_id', Auth::id())->paginate(20);
+                ->where('trip.trip_owner_user_id', Auth::id())->where('trip.is_active','=',1)->paginate(20);
         return response()->json(['success' => 1,'message'=>"",'data' => ['manage_trip' => $query]], 200);
     }
 
