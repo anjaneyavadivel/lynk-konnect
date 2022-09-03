@@ -453,7 +453,7 @@ class ProjectController extends Controller
     {
         $distance=10;
         $trip_id='';
-        $data=1; $output='';
+        $data=1; $output=''; $suggestion_trip=[];
         //if($request->trip_id!=0){
 
             $distance=$request->distance??10;
@@ -495,7 +495,48 @@ class ProjectController extends Controller
             
         });
         $trips=$trips->paginate(20);
-        return response()->json(['success' => 1,'message'=>"",'data' => ['return_trip_list' => $trips]], 200);
+
+        $livetrip=LiveTracking::where('trip_id','=',$trip_id)->orderBy('id','DESC')->first();
+        if($livetrip)
+        {
+            $to = Trip::ToLocation($distance,$trip_id);
+            if($to)
+            {
+                $to =$to->toArray();
+                $result2 =array_column($to, 'id');
+            }
+
+            $latitude=$livetrip->latitude;
+            $longitude=$livetrip->longitude;
+
+            $to = Trip::LiveToLocation($distance,$longitude,$latitude);
+            if($to)
+            {
+                $to =$to->toArray();
+                $result2 =array_column($to, 'id');
+            }            
+
+            $output1 = array_merge(array_diff($result1, $result2), array_diff($result2, $result1));
+
+            $suggestion_trip=Trip::select(\DB::raw('*,trip.id as id,u.fname as owner_fname, us.fname as confirm_fname, s.state_name as f_state_name, st.state_name as t_state_name'))
+            ->leftjoin('users AS u','u.id', 'trip.trip_owner_user_id')
+            ->leftjoin('users AS us','us.id', 'trip.trip_confirm_user_id')
+            ->leftjoin('state AS s','s.id', 'trip.from_state_id')
+            ->leftjoin('state AS st','st.id', 'trip.to_state_id')
+            ->leftjoin('city AS c','c.id', 'trip.from_city_id')
+            ->leftjoin('city AS ci','ci.id', 'trip.to_city_id')
+            ->leftjoin('company AS com','com.id', 'trip.trip_owner_company_id')
+            ->leftjoin('company AS comp','comp.id', 'trip.trip_confirm_company_id');        
+            $suggestion_trip=$suggestion_trip->where(function ($query) use ($output) {
+                if($output1!='')
+                {
+                    $query->where('trip.id', [$output1]);
+                }
+                
+            });
+            $suggestion_trip=$suggestion_trip->paginate(20);
+        }
+        return response()->json(['success' => 1,'message'=>"",'data' => ['return_trip_list' => $trips, 'suggestion_trips' => $suggestion_trip]], 200);
     }
 
     public function live_tracking(Request $request)

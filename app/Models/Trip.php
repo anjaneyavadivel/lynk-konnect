@@ -164,6 +164,14 @@ class Trip extends Authenticatable
                     ->orderBy('distance')->get();
     }
 
-    
+    public static function LiveToLocation($distance,$longitude,$latitude)
+    { 
+        $to_latitude=$latitude;
+        $to_longitude=$longitude;
+
+        return $query = Trip::selectRaw("id as id,(1.609344 * 3956 * acos( cos( radians('$to_latitude') ) * cos( radians(to_latitude) ) * cos( radians(to_longitude) - radians('$to_longitude') ) + sin( radians('$to_latitude') ) * sin( radians(from_latitude) ) ) ) AS distance")
+                    ->having('distance', '<', $distance)->where('trip.is_return_trip','=',1)
+                    ->orderBy('distance')->get();
+    }
 
 }

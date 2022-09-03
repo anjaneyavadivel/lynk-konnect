@@ -10,6 +10,7 @@ use Hash;
 use Session;
 use DateTime;
 use Illuminate\Support\Arr;
+use App\Models\LiveTracking;
 use Illuminate\Support\Facades\Auth;
 use Response;
 
@@ -401,7 +402,7 @@ class TripController extends Controller
     {
         $distence=10;
         $trip_id=$id;
-        $data=1; $output=[];
+        $data=1; $output=[]; $suggestion_trip=[]; $output1=[];
         //if($request->has('_token')){
 
             $distence=$request->distence??10;
@@ -426,7 +427,49 @@ class TripController extends Controller
         //}
 
         $list = Trip::getreturnTrip($data,$output);
-        return view('admin.trip.index_return', compact('list','id','distence'));  
+
+        $livetrip=LiveTracking::where('trip_id','=',$trip_id)->orderBy('id','DESC')->first();
+        if($livetrip)
+        {
+            $to = Trip::ToLocation($distance,$trip_id);
+            if($to)
+            {
+                $to =$to->toArray();
+                $result2 =array_column($to, 'id');
+            }
+
+            $latitude=$livetrip->latitude;
+            $longitude=$livetrip->longitude;
+
+            $to = Trip::LiveToLocation($distance,$longitude,$latitude);
+            if($to)
+            {
+                $to =$to->toArray();
+                $result2 =array_column($to, 'id');
+            }            
+
+            $output1 = array_merge(array_diff($result1, $result2), array_diff($result2, $result1));
+
+            $suggestion_trip=Trip::select(\DB::raw('*,trip.id as id,u.fname as owner_fname, us.fname as confirm_fname, s.state_name as f_state_name, st.state_name as t_state_name'))
+            ->leftjoin('users AS u','u.id', 'trip.trip_owner_user_id')
+            ->leftjoin('users AS us','us.id', 'trip.trip_confirm_user_id')
+            ->leftjoin('state AS s','s.id', 'trip.from_state_id')
+            ->leftjoin('state AS st','st.id', 'trip.to_state_id')
+            ->leftjoin('city AS c','c.id', 'trip.from_city_id')
+            ->leftjoin('city AS ci','ci.id', 'trip.to_city_id')
+            ->leftjoin('company AS com','com.id', 'trip.trip_owner_company_id')
+            ->leftjoin('company AS comp','comp.id', 'trip.trip_confirm_company_id');        
+            $suggestion_trip=$suggestion_trip->where(function ($query) use ($output) {
+                if($output1!='')
+                {
+                    $query->where('trip.id', [$output1]);
+                }
+                
+            });
+            $suggestion_trip=$suggestion_trip->paginate(20);
+        }
+
+        return view('admin.trip.index_return', compact('list','id','distence','suggestion_trip'));  
     }
 
 }
