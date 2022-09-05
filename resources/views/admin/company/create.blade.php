@@ -87,9 +87,6 @@
                             <textarea class="form-control address" id="inputBasicFirstName" name="address" placeholder="" autocomplete="off"></textarea>
                             <span class="error" id="address" style="display:none">Address is required</span>
                         </div>
-                      </div>
-
-                      <div class="row">
                         <div class="form-group form-material col-md-6">
                           <label class="form-control-label" for="inputBasicFirstName">Landmark <span class="error">*</span></label>
                           <input type="text" class="form-control landmark" id="inputBasicFirstName" name="landmark"
@@ -117,8 +114,14 @@
                           <span class="error" id="city_id1" style="display:none">Neighborhoods is required</span>
                         </div>
                       </div>
+                      <div class="row">
+                        <div class="form-group form-material col-md-6">
+                          <label class="form-control-label" for="inputBasicFirstName">Operator Licence </label>
+                          <input type="file" name="licence" id="input-file-events" class="dropify-event" style="opacity: 1 !important; margin-top: 33px;margin-left: 18px;" data-default-file="../../../global/photos/placeholder.png"/>
+                        </div>
+                      </div>
                       
-                      <div class="form-group form-material">
+                      <div class="form-group form-material" style="margin-top: 55px;">
                         <button type="submit" class="btn btn-primary submit-form">Submit</button>
                       </div>
                     
@@ -174,12 +177,7 @@
                         </div>
                       </div>
 
-                      <div class="row">
-                        <div class="form-group form-material col-md-6">
-                          <label class="form-control-label" for="inputBasicFirstName">Operator Licence </label>
-                          <input type="file" name="licence" id="input-file-events" class="dropify-event" style="opacity: 1 !important; margin-top: 33px;margin-left: 18px;" data-default-file="../../../global/photos/placeholder.png"/>
-                        </div>
-                      </div>  
+                        
                       
                   </div>
                 </div>

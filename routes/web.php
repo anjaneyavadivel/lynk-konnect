@@ -128,8 +128,7 @@ Route::group(['middleware' => ['auth']], function() {
     Route::get('/add_trip', [TripController::class, 'create'])->name('add_trip');
     Route::post('/add_trip', [TripController::class, 'create'])->name('add_trip');
     Route::get('/edit_trip/{id}', [TripController::class, 'update'])->name('edit_trip');
-    Route::post('/edit_trip', [TripController::class, 'update'])->name('edit_trip');
-    Route::post('/add_return_trip', [TripController::class, 'add_return_trip'])->name('add_return_trip');
+    Route::post('/edit_trip', [TripController::class, 'update'])->name('edit_trip');    
 
     Route::get('/return_trip/{id}', [TripController::class, 'return_trip'])->name('return_trip');
     Route::post('/return_trip/{id}', [TripController::class, 'return_trip'])->name('return_trip');
@@ -143,7 +142,7 @@ Route::group(['middleware' => ['auth']], function() {
 
     #-- Transaction Management
     Route::get('/manage_transaction', [TransactionController::class, 'index'])->name('manage_transaction');
-    //Route::get('/add_trip', [TransactionController::class, 'create'])->name('add_trip');
+    Route::post('/pay_trip', [TransactionController::class, 'pay_trip'])->name('pay_trip');
 
 
     #-- Route Management

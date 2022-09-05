@@ -29,7 +29,7 @@ class ProjectController extends Controller
             $user_info=auth()->guard('api')->user();
             $tirp=Trip::where('is_active','=',1)->count();
             $driver=Driver::where('created_by','=',$user_info->id)->where('is_active','=',1)->count();
-            $transaction = Transaction::where('operator_id','=',$user_info->id)->count();
+            $transaction = Transaction::where('operator_id','=',$user_info->company_id)->count();
             return response()->json(['success' => 1,'message'=>"",'data' => ['total_trip' => $tirp, 'total_driver' => $driver,'total_transaction'=> $transaction]], 200);
         }else{
             $user_info=auth()->guard('api')->user();
@@ -83,7 +83,7 @@ class ProjectController extends Controller
             return response()->json(['data' => [],'message' => 'This User does not exist, check your details','success' => 0], 400);
         }
         $user_info=auth()->guard('api')->user();
-        $list = Transaction::where('operator_id','=',$user_info->id)->orderBy('id','DESC')->paginate(20);
+        $list = Transaction::where('operator_id','=',$user_info->company_id)->orderBy('id','DESC')->paginate(20);
         return response()->json(['success' => 1,'message'=>"",'data' => ['transaction_list' => $list]], 200);
     }
 
@@ -363,6 +363,17 @@ class ProjectController extends Controller
             $trip->trip_status=$request->trip_status;
             $trip->completed_on=date('Y-m-d H:i:s');
             $trip->save();
+
+            if($trip_status==2)
+            {
+                $transaction=new Transaction;
+                $transaction->uniq_id=mt_rand(10000000,99999999);
+                $transaction->trip_id=$id;
+                $transaction->operator_id=$trip->trip_owner_company_id;
+                $transaction->status=1;
+                $transaction->save();
+            }
+
             return response()->json(['data' => [],'message' => 'Trip status changed successfully', 'success' => 1], 200);
         }else{
             return response()->json(['data' => [],'message' => 'Something Went Wrong', 'success' => 0],500);
@@ -387,67 +398,7 @@ class ProjectController extends Controller
         }
         $user_info->save();
         return response()->json(['data' => [],'message' => 'Profile Updated successfully', 'success' => 1], 200);
-    }
-
-    public function add_return_trip(Request $request)
-    {
-        $data = $this->validate($request, [
-            'from_address'            => 'required',
-            'from_state_id'           => 'required',
-            'from_city_id'            => 'required', 
-            'from_postcode'           => 'required',
-            'to_address'              => 'required',
-            'to_state_id'             => 'required',
-            'to_city_id'              => 'required', 
-            'to_postcode'             => 'required',
-            'description_trip'        => '',
-            'no_of_passengers'        => 'required',
-            'trip_amount'             => 'required',
-            'trip_date'               => 'required', 
-            'trip_time'               => 'required',
-            'from_latitude'           => 'required',
-            'from_longitude' => 'required',
-            'to_latitude' => 'required',
-        ]);
-        try{ 
-
-           $data['trip_owner_user_id'] = Auth::id();
-           $data['trip_status'] = 1;
-           $data['is_return_trip'] =1;
-        
-            $id= User::where('id', $data['trip_owner_user_id'])->first(); 
-            $data['trip_owner_company_id'] = $id->company_id;  
-            $fromStateId  = $data['from_state_id']; 
-            $toStateId    = $data['to_state_id'];        
-            
-            $routeId = Stops::getRouteId($fromStateId,$toStateId);
-            if(isset($routeId['0']['routeId'])){
-                $data['route_id'] = $routeId['0']['routeId'];
-            }else{
-                $data['route_id'] =  0;
-            }
-
-            $returnRouteId = Stops::getReturnRouteId($fromStateId,$toStateId);
-            if(isset($returnRouteId['0']['routeId'])){
-                $data['return_route_id'] = $returnRouteId['0']['routeId'];
-            }else{
-                $data['return_route_id'] =  0;
-            }
-            $source   = $data['trip_date'];
-            $date     = new DateTime($source);
-            $tripdate = $date->format('Y-m-d');           
-                
-            $data['trip_date'] = $tripdate;
-            $triptime = date("H:i:s", strtotime($data['trip_time']));
-            $data['trip_time'] = $triptime;
-
-           $trip = Trip::create($data);
-
-           return response()->json(['data' => [],'message' => 'Return Trip added successfully', 'success' => 1], 200);
-        }catch (Exception $e) {
-            return response()->json(['data' => [],'message' => 'Something Went Wrong', 'success' => 0],500);
-        }
-    }
+    }    
 
     public function return_trip_list(Request $request)
     {
@@ -553,5 +504,21 @@ class ProjectController extends Controller
         $tracking->longitude=$request->longitude;
         $tracking->save();
         return response()->json(['success' => 1,'message'=>"Tracking updated successfully",'data' => []], 200);
+    }
+
+    public function pay_trip(Request $request)
+    {
+        $id=$request->id;
+        $pay_status=$request->pay_status;
+
+        $pay = Transaction::find($id);
+        if($pay)
+        {
+            $data['status']=$pay_status;
+            $data['updated_at']=date('Y-m-d H:i:s');
+            $pay->update($data);
+            return response()->json(['success' => 1,'message'=>"Paid successfully",'data' => []], 200);
+        }
+        return response()->json(['data' => [],'message' => 'Something Went Wrong', 'success' => 0],500);  
     }
 }

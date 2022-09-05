@@ -68,7 +68,7 @@
 
 @endif
 
-                    <form method="POST" action="{{ url('add_return_trip') }}">
+                    <form method="POST" action="{{ url('add_trip') }}">
                       @csrf
                       <div class="form-row">
                         <div class="form-group form-material col-md-4">

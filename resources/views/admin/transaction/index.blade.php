@@ -51,6 +51,7 @@
                   <th>Trip Id</th>
                   <th>Operator</th>
                   <th>Trasaction Date</th>
+                  <th>Amount</th>
                   <th>Status</th>
                   <th>Action</th>
                 </tr>
@@ -67,20 +68,21 @@
                  @foreach ($list as $key => $val)
                 <tr>
                   <td>{{ ++$i }}</td>
-                  <td>{{ $val->owner_fname }}</td>
-                  <td>{{ $val->confirm_fname }}</td>
-                  <td>{{ $val->from_address }} <br> {{$val->f_state_name }}</td>
-                  <td>{{ $val->to_address }} <br> {{ $val->t_state_name }}</td>
-                  <td>{{ $val->no_of_passengers }}</td>
-                  <td>{{ $val->trip_amount}}</td>
+                  <td>{{ $val->uniq_id }}</td>
+                  <td>{{ $val->trip_id }}</td>
+                  <td>{{ $val->company_name }}</td>
+                  <td>{{ date('d-m-Y',strtotime($val->created_at)) }}</td>
+                  <td>{{ $val->trip_amount }} </td>
+                  <td>@if($val->status==1) Unpaid @else Paid @endif</td>
                   <td>
-                    <?php  if($val->trip_status == 1){ echo 'Posted by operator';} ?>
-                    <?php  if($val->trip_status == 2){ echo 'Confirmed by operator';} ?>
-                    <?php  if($val->trip_status == 3){ echo 'Payment failure';} ?>  
-                  </td>
-                  <td>
-                     <a class="btn btn-primary" href="{{ url('show_trip/'. $val->id)}}">View</a>
-                     <a class="btn btn-primary" href="{{ url('edit_trip/'. $val->id)}}">Edit</a>
+                    @if($val->status==1)
+                    <form method="POST" action="{{ url('pay_trip') }}">
+                      @csrf
+                      <input type="hidden" value="{{$val->id}}" name="id">
+                      <input type="hidden" value="2" name="pay_status">
+                     <button tyep="submit" class="btn btn-primary" style="margin: 6px;">Pay</button>
+                    </form>
+                     @else - @endif
                   </td>
                 </tr>
                 @endforeach

@@ -108,13 +108,13 @@
                     </a>
                 <ul class="site-menu-sub">
                   <?php  $ff = Auth::user()->id; ?>
-                   
+                  @if($user_info==3)
                   <li class="site-menu-item">
                     <a class="animsition-link" href="{{ url('manage_trip')}}">
                       <span class="site-menu-title">Manage Trip</span>
                     </a>
                   </li>
-                  
+                  @endif
                  @if($user_info!=1)
                   <li class="site-menu-item">
                     <a class="animsition-link" href="{{ url('manage_own_trip')}}">
@@ -176,7 +176,7 @@
                     </a>
                   </li>
 
-                  <li class="site-menu-item">
+                  <!-- <li class="site-menu-item">
                     <a class="animsition-link" href="{{ url('manage_route') }}">
                       <span class="site-menu-title">Routes</span>
                     </a>
@@ -186,7 +186,7 @@
                     <a class="animsition-link" href="{{ url('manage_stop/0') }}">
                       <span class="site-menu-title">Stops</span>
                     </a>
-                  </li>
+                  </li> -->
 
                 </ul>
               </li>
