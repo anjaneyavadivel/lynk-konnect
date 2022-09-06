@@ -48,6 +48,7 @@ class Trip extends Authenticatable
         'map_to_address',
         'is_active',
         'is_return_trip',
+        'completed_on',
     ];
     
 
@@ -63,7 +64,9 @@ class Trip extends Authenticatable
                     ->leftjoin('city AS c','c.id', 'trip.from_city_id')
                     ->leftjoin('city AS ci','ci.id', 'trip.to_city_id')
                     ->leftjoin('company AS com','com.id', 'trip.trip_owner_company_id')
-                    ->leftjoin('company AS comp','comp.id', 'trip.trip_confirm_company_id');
+                    ->leftjoin('company AS comp','comp.id', 'trip.trip_confirm_company_id')
+                    ->where('trip.completed_on','=',null)
+                    ->orWhere('trip.trip_date','>=',date('Y-m-d'));
                 
                 }else{
 
@@ -139,7 +142,7 @@ class Trip extends Authenticatable
                 return $result; 
     }
 
-    public function form_location($distance,$trip_id)
+    public static function FormLocation($distance,$trip_id)
     {
         $trip = Trip::where('id','=',$trip_id)->first();
 
@@ -151,7 +154,7 @@ class Trip extends Authenticatable
                         ->orderBy('distance')->get();
     }
 
-    public function to_location($distance,$trip_id)
+    public static function ToLocation($distance,$trip_id)
     {
         $trip = Trip::where('id','=',$trip_id)->first();        
 
@@ -163,6 +166,14 @@ class Trip extends Authenticatable
                     ->orderBy('distance')->get();
     }
 
-    
+    public static function LiveToLocation($distance,$longitude,$latitude)
+    { 
+        $to_latitude=$latitude;
+        $to_longitude=$longitude;
+
+        return $query = Trip::selectRaw("id as id,(1.609344 * 3956 * acos( cos( radians('$to_latitude') ) * cos( radians(to_latitude) ) * cos( radians(to_longitude) - radians('$to_longitude') ) + sin( radians('$to_latitude') ) * sin( radians(from_latitude) ) ) ) AS distance")
+                    ->having('distance', '<', $distance)->where('trip.is_return_trip','=',1)
+                    ->orderBy('distance')->get();
+    }
 
 }

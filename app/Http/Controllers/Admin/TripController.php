@@ -3,13 +3,14 @@
 namespace App\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Models\{User,Company,State,City,Driver,Trip,Routes,Stops};
+use App\Models\{User,Company,State,City,Driver,Trip,Routes,Stops,Transaction};
 use Spatie\Permission\Models\Role;
 use DB;
 use Hash;
 use Session;
 use DateTime;
 use Illuminate\Support\Arr;
+use App\Models\LiveTracking;
 use Illuminate\Support\Facades\Auth;
 use Response;
 
@@ -269,7 +270,18 @@ class TripController extends Controller
         if($trip)
         {
             $data['trip_status']=$trip_status;
+            $data['completed_on']=date('Y-m-d H:i:s');
             $trip->update($data);
+
+            if($trip_status==2)
+            {
+                $transaction=new Transaction;
+                $transaction->uniq_id=mt_rand(10000000,99999999);
+                $transaction->trip_id=$id;
+                $transaction->operator_id=$trip->trip_owner_company_id;
+                $transaction->status=1;
+                $transaction->save();
+            }
             return redirect()->back();
         }
         return redirect()->with('error','Error');      
@@ -324,101 +336,25 @@ class TripController extends Controller
         return Response::download($filename, "Lynk-Konnect.csv", $headers);
     }
 
-    public function add_return_trip(Request $request)
-    {    
-        $companyList  = Company::orderBy('company_name', 'ASC')->get();
-        $stateList    = State::orderBy('state_name', 'ASC')->get();
-            if($request->has('_token')){   
-                $data = $this->validate($request, [
-                    'trip_owner_company_id'   => '',
-                    'from_address'            => '',
-                    'from_state_id'           => '',
-                    'from_city_id'            => '', 
-                    'from_postcode'           => '',
-                    'to_address'              => '',
-                    'to_state_id'             => '',
-                    'to_city_id'              => '', 
-                    'to_postcode'             => '',
-                    'description_trip'        => '',
-                    'no_of_passengers'        => '',
-                    'trip_amount'             => '',
-                    'trip_confirm_user_id'    => '',
-                    'trip_confirm_company_id' => '',
-                    'trip_status'             => '',
-                    'route_id'                => '',
-                    'return_route_id'         => '', 
-                    'trip_date'               => '', 
-                    'from_latitude'           => '', 
-                    'from_longitude'          => '',
-                    'to_latitude'             => '', 
-                    'to_longitude'            => '', 
-                    'trip_time'               => '', 
-    
-                ]);
-                
-               $data['trip_owner_user_id'] = Auth::id();    
-               $data['trip_status'] = 1; 
-
-               $to_address = $data['from_address'];    
-               $to_state_id = $data['from_state_id']; 
-               $to_city_id = $data['from_city_id'];    
-               $to_postcode = $data['from_postcode']; 
-               $to_latitude= $data['from_latitude']; 
-               $to_longitude = $data['from_longitude'];
-
-
-               $data['from_address'] = $data['to_address'];    
-               $data['from_state_id'] = $data['to_state_id']; 
-               $data['from_city_id'] = $data['to_city_id'];    
-               $data['from_postcode'] = $data['to_postcode'];
-               $data['from_latitude'] = $data['to_latitude']; 
-               $data['from_longitude'] = $data['to_longitude']; 
-
-               $data['to_address'] = $to_address;    
-               $data['to_state_id'] = $to_state_id; 
-               $data['to_city_id'] = $to_city_id;    
-               $data['to_postcode'] = $to_postcode; 
-               $data['to_latitude'] = $to_latitude; 
-               $data['to_longitude'] = $to_longitude;
-            
-                $id      = User::where('id', $data['trip_owner_user_id'])->first(); 
-                $data['trip_owner_company_id'] = $id->company_id;   
-                
-                $source   = $data['trip_date'];
-                $date     = new DateTime($source);
-                $tripdate = $date->format('Y-m-d');                    
-                $data['trip_date'] = $tripdate;
-                $triptime = date("H:i:s", strtotime($data['trip_time']));
-                $data['trip_time'] = $triptime;
-                $data['is_return_trip']=1;
-    
-               $trip = Trip::create($data);
-          
-               return redirect('manage_trip')->withFlashSuccess('Return Trip added successfully');
-                
-            }
-            return view('admin.trip.create', compact('companyList','stateList'));  
-    }
-
     public function return_trip(Request $request,$id)
     {
-        $distence=0;
+        $distence=10;
         $trip_id=$id;
-        $data=1; $output=[];
-        if($request->has('_token')){
+        $data=1; $output=[]; $suggestion_trip=[]; $output1=[];
+        //if($request->has('_token')){
 
-            $distence=$request->distence;
+            $distence=$request->distence??10;
             $trip_id=$id;
             $data=2;
 
-            $from=Trip::form_location($distence,$trip_id);            
+            $from=Trip::FormLocation($distence,$trip_id);            
             if($from)
             {
                 $from =$from->toArray();
                 $result1 =array_column($from, 'id');
             }
 
-            $to = Trip::to_location($distence,$trip_id);
+            $to = Trip::ToLocation($distence,$trip_id);
             if($to)
             {
                 $to =$to->toArray();
@@ -426,10 +362,53 @@ class TripController extends Controller
             }
 
             $output = array_merge(array_diff($result1, $result2), array_diff($result2, $result1));
-        }
+        //}
 
         $list = Trip::getreturnTrip($data,$output);
-        return view('admin.trip.index_return', compact('list','id'));  
+
+        $livetrip=LiveTracking::where('trip_id','=',$trip_id)->orderBy('id','DESC')->first();
+        if($livetrip)
+        {
+            $to = Trip::ToLocation($distance,$trip_id);
+            if($to)
+            {
+                $to =$to->toArray();
+                $result2 =array_column($to, 'id');
+            }
+
+            $latitude=$livetrip->latitude;
+            $longitude=$livetrip->longitude;
+
+            $to = Trip::LiveToLocation($distance,$longitude,$latitude);
+            if($to)
+            {
+                $to =$to->toArray();
+                $result2 =array_column($to, 'id');
+            }            
+
+            $output1 = array_merge(array_diff($result1, $result2), array_diff($result2, $result1));
+
+            $suggestion_trip=Trip::select(\DB::raw('*,trip.id as id,u.fname as owner_fname, us.fname as confirm_fname, s.state_name as f_state_name, st.state_name as t_state_name'))
+            ->leftjoin('users AS u','u.id', 'trip.trip_owner_user_id')
+            ->leftjoin('users AS us','us.id', 'trip.trip_confirm_user_id')
+            ->leftjoin('state AS s','s.id', 'trip.from_state_id')
+            ->leftjoin('state AS st','st.id', 'trip.to_state_id')
+            ->leftjoin('city AS c','c.id', 'trip.from_city_id')
+            ->leftjoin('city AS ci','ci.id', 'trip.to_city_id')
+            ->leftjoin('company AS com','com.id', 'trip.trip_owner_company_id')
+            ->leftjoin('company AS comp','comp.id', 'trip.trip_confirm_company_id')
+            ->where('trip.trip_status','=',1);        
+            $suggestion_trip=$suggestion_trip->where(function ($query) use ($output) {
+                if($output1!='')
+                {
+                    $query->where('trip.id', [$output1]);
+                }
+                
+            });
+            $suggestion_trip=$suggestion_trip->paginate(20);
+        }
+
+        return view('admin.trip.index_return', compact('list','id','distence','suggestion_trip'));  
     }
 
 }

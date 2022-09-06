@@ -15,6 +15,7 @@ use Auth;
 use Hash;
 use DateTime;
 use App\Models\Stops;
+use App\Models\LiveTracking;
 use Illuminate\Support\Facades\Validator;
 //use App\Http\Resources\ProjectResource;
 
@@ -26,13 +27,13 @@ class ProjectController extends Controller
         if($user->role_id==2)
         {
             $user_info=auth()->guard('api')->user();
-            $tirp=Trip::where('trip_owner_user_id','=',$user_info->id)->count();
-            $driver=Driver::where('created_by','=',$user_info->id)->count();
-            $transaction = Transaction::where('operator_id','=',$user_info->id)->count();
+            $tirp=Trip::where('is_active','=',1)->count();
+            $driver=Driver::where('created_by','=',$user_info->id)->where('is_active','=',1)->count();
+            $transaction = Transaction::where('operator_id','=',$user_info->company_id)->count();
             return response()->json(['success' => 1,'message'=>"",'data' => ['total_trip' => $tirp, 'total_driver' => $driver,'total_transaction'=> $transaction]], 200);
         }else{
             $user_info=auth()->guard('api')->user();
-            $tirp=Trip::where('trip_owner_user_id','=',$user_info->id)->count();
+            $tirp=Trip::where('trip_owner_user_id','=',$user_info->id)->where('is_active','=',1)->count();
             return response()->json(['success' => 1,'message'=>"",'data' => ['total_trip' => $tirp]], 200);
         }
         
@@ -67,7 +68,10 @@ class ProjectController extends Controller
         ->leftjoin('city AS c','c.id', 'trip.from_city_id')
         ->leftjoin('city AS ci','ci.id', 'trip.to_city_id')
         ->leftjoin('company AS com','com.id', 'trip.trip_owner_company_id')
-        ->leftjoin('company AS comp','comp.id', 'trip.trip_confirm_company_id')->paginate(20);
+        ->leftjoin('company AS comp','comp.id', 'trip.trip_confirm_company_id')
+        ->where('trip.is_active','=',1)
+        ->where('trip.completed_on','=',null)
+        ->orWhere('trip.trip_date','>=',date('Y-m-d'))->paginate(20);
         return response()->json(['success' => 1,'message'=>"",'data' => ['trip_list' => $trips]], 200);
     }
 
@@ -79,7 +83,7 @@ class ProjectController extends Controller
             return response()->json(['data' => [],'message' => 'This User does not exist, check your details','success' => 0], 400);
         }
         $user_info=auth()->guard('api')->user();
-        $list = Transaction::where('operator_id','=',$user_info->id)->orderBy('id','DESC')->paginate(20);
+        $list = Transaction::where('operator_id','=',$user_info->company_id)->orderBy('id','DESC')->paginate(20);
         return response()->json(['success' => 1,'message'=>"",'data' => ['transaction_list' => $list]], 200);
     }
 
@@ -343,7 +347,7 @@ class ProjectController extends Controller
                 ->leftjoin('city AS ci','ci.id', 'trip.to_city_id')
                 ->leftjoin('company AS com','com.id', 'trip.trip_owner_company_id')
                 ->leftjoin('company AS comp','comp.id', 'trip.trip_confirm_company_id')
-                ->where('trip.trip_owner_user_id', Auth::id())->paginate(20);
+                ->where('trip.trip_owner_user_id', Auth::id())->where('trip.is_active','=',1)->paginate(20);
         return response()->json(['success' => 1,'message'=>"",'data' => ['manage_trip' => $query]], 200);
     }
 
@@ -357,7 +361,19 @@ class ProjectController extends Controller
         if($trip)
         {
             $trip->trip_status=$request->trip_status;
+            $trip->completed_on=date('Y-m-d H:i:s');
             $trip->save();
+
+            if($trip_status==2)
+            {
+                $transaction=new Transaction;
+                $transaction->uniq_id=mt_rand(10000000,99999999);
+                $transaction->trip_id=$id;
+                $transaction->operator_id=$trip->trip_owner_company_id;
+                $transaction->status=1;
+                $transaction->save();
+            }
+
             return response()->json(['data' => [],'message' => 'Trip status changed successfully', 'success' => 1], 200);
         }else{
             return response()->json(['data' => [],'message' => 'Something Went Wrong', 'success' => 0],500);
@@ -382,5 +398,127 @@ class ProjectController extends Controller
         }
         $user_info->save();
         return response()->json(['data' => [],'message' => 'Profile Updated successfully', 'success' => 1], 200);
+    }    
+
+    public function return_trip_list(Request $request)
+    {
+        $distance=10;
+        $trip_id='';
+        $data=1; $output=''; $suggestion_trip=[];
+        //if($request->trip_id!=0){
+
+            $distance=$request->distance??10;
+            $trip_id=$request->trip_id;
+            $data=2;
+
+            $from=Trip::FormLocation($distance,$trip_id);            
+            if($from)
+            {
+                $from =$from->toArray();
+                $result1 =array_column($from, 'id');
+            }
+
+            $to = Trip::ToLocation($distance,$trip_id);
+            if($to)
+            {
+                $to =$to->toArray();
+                $result2 =array_column($to, 'id');
+            }
+
+            $output = array_merge(array_diff($result1, $result2), array_diff($result2, $result1));
+        //}
+
+        $user_info=auth()->guard('api')->user();
+        $trips=Trip::select(\DB::raw('*,trip.id as id,u.fname as owner_fname, us.fname as confirm_fname, s.state_name as f_state_name, st.state_name as t_state_name'))
+        ->leftjoin('users AS u','u.id', 'trip.trip_owner_user_id')
+        ->leftjoin('users AS us','us.id', 'trip.trip_confirm_user_id')
+        ->leftjoin('state AS s','s.id', 'trip.from_state_id')
+        ->leftjoin('state AS st','st.id', 'trip.to_state_id')
+        ->leftjoin('city AS c','c.id', 'trip.from_city_id')
+        ->leftjoin('city AS ci','ci.id', 'trip.to_city_id')
+        ->leftjoin('company AS com','com.id', 'trip.trip_owner_company_id')
+        ->leftjoin('company AS comp','comp.id', 'trip.trip_confirm_company_id');        
+        $trips=$trips->where(function ($query) use ($output) {
+            if($output!='')
+            {
+                $query->where('trip.id', [$output]);
+            }
+            
+        });
+        $trips=$trips->paginate(20);
+
+        $livetrip=LiveTracking::where('trip_id','=',$trip_id)->orderBy('id','DESC')->first();
+        if($livetrip)
+        {
+            $to = Trip::ToLocation($distance,$trip_id);
+            if($to)
+            {
+                $to =$to->toArray();
+                $result2 =array_column($to, 'id');
+            }
+
+            $latitude=$livetrip->latitude;
+            $longitude=$livetrip->longitude;
+
+            $to = Trip::LiveToLocation($distance,$longitude,$latitude);
+            if($to)
+            {
+                $to =$to->toArray();
+                $result2 =array_column($to, 'id');
+            }            
+
+            $output1 = array_merge(array_diff($result1, $result2), array_diff($result2, $result1));
+
+            $suggestion_trip=Trip::select(\DB::raw('*,trip.id as id,u.fname as owner_fname, us.fname as confirm_fname, s.state_name as f_state_name, st.state_name as t_state_name'))
+            ->leftjoin('users AS u','u.id', 'trip.trip_owner_user_id')
+            ->leftjoin('users AS us','us.id', 'trip.trip_confirm_user_id')
+            ->leftjoin('state AS s','s.id', 'trip.from_state_id')
+            ->leftjoin('state AS st','st.id', 'trip.to_state_id')
+            ->leftjoin('city AS c','c.id', 'trip.from_city_id')
+            ->leftjoin('city AS ci','ci.id', 'trip.to_city_id')
+            ->leftjoin('company AS com','com.id', 'trip.trip_owner_company_id')
+            ->leftjoin('company AS comp','comp.id', 'trip.trip_confirm_company_id');        
+            $suggestion_trip=$suggestion_trip->where(function ($query) use ($output) {
+                if($output1!='')
+                {
+                    $query->where('trip.id', [$output1]);
+                }
+                
+            });
+            $suggestion_trip=$suggestion_trip->paginate(20);
+        }
+        return response()->json(['success' => 1,'message'=>"",'data' => ['return_trip_list' => $trips, 'suggestion_trips' => $suggestion_trip]], 200);
+    }
+
+    public function live_tracking(Request $request)
+    {
+        $data = $this->validate($request, [
+            'trip_id'            => 'required',
+            'latitude'           => 'required',
+            'longitude'            => 'required',
+        ]);
+
+        $tracking=new LiveTracking;
+        $tracking->trip_id=$request->trip_id;
+        $tracking->latitude=$request->latitude;
+        $tracking->longitude=$request->longitude;
+        $tracking->save();
+        return response()->json(['success' => 1,'message'=>"Tracking updated successfully",'data' => []], 200);
+    }
+
+    public function pay_trip(Request $request)
+    {
+        $id=$request->id;
+        $pay_status=$request->pay_status;
+
+        $pay = Transaction::find($id);
+        if($pay)
+        {
+            $data['status']=$pay_status;
+            $data['updated_at']=date('Y-m-d H:i:s');
+            $pay->update($data);
+            return response()->json(['success' => 1,'message'=>"Paid successfully",'data' => []], 200);
+        }
+        return response()->json(['data' => [],'message' => 'Something Went Wrong', 'success' => 0],500);  
     }
 }

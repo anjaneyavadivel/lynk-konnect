@@ -22,7 +22,9 @@ class TransactionController extends Controller
     // -- Manage Transaction
     public function index() { 
 
-        $list = Transaction::orderBy('id','DESC')->get();
+        $list = Transaction::select('transaction.*','company.company_name','trip.trip_amount')
+        ->join('trip','trip.id','=','transaction.trip_id')
+        ->join('company','company.id','=','transaction.operator_id')->orderBy('id','DESC')->get();
         //$list = Company::getCompany();
         return view('admin.transaction.index',compact('list'));
     }
@@ -94,6 +96,22 @@ class TransactionController extends Controller
         User::find($id)->delete();
         return redirect()->route('users.index')->with('success','User deleted successfully');
 
+    }
+
+    public function pay_trip(Request $request)
+    {
+        $id=$request->id;
+        $pay_status=$request->pay_status;
+
+        $pay = Transaction::find($id);
+        if($pay)
+        {
+            $data['status']=$pay_status;
+            $data['updated_at']=date('Y-m-d H:i:s');
+            $pay->update($data);
+            return redirect()->back();
+        }
+        return redirect()->with('error','Error');   
     }
 
 }

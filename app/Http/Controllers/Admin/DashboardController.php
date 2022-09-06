@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\{User};
 use App\Models\Company;
 use App\Models\Trip;
+use App\Models\Driver;
 use Spatie\Permission\Models\Role;
 use DB;
 use Hash;
@@ -41,8 +42,8 @@ class DashboardController extends Controller
         $id      = User::where('id', $user_id)->first(); 
         $usercount=User::count();
         $companycount=Company::count();
-        $divercount=User::where('role_id', 1)->count();
-        $tripcount=Trip::count();
+        $divercount=Driver::where('is_active','=',1)->where('created_by','=',$user_id)->count();
+        $tripcount=Trip::where('is_active','=',1)->count();
       
         //print_r($id); die;
         Session::put('company_id_s', $id->company_id);

@@ -95,9 +95,6 @@
                             <textarea class="form-control address1" id="address" name="address" placeholder="" autocomplete="off">{{ $editview->address ?? '' }}</textarea>
                             <span class="error" id="address1" style="display:none">Address is required</span>
                         </div>
-                      </div>
-
-                      <div class="row">
                         <div class="form-group form-material col-md-6">
                           <label class="form-control-label" for="inputBasicFirstName">Landmark <span class="error">*</span></label>
                           <input type="text" class="form-control landmark1" id="landmark" name="landmark" value="{{ $editview->landmark  ?? ''}}"/>
@@ -131,8 +128,31 @@
                           <span class="error" id="city_id1" style="display:none">Neighborhoods is required</span>
                         </div>
                       </div>
+
+                      <div class="row">
+                        <div class="form-group form-material col-md-6">
+                          <label class="form-control-label" for="inputBasicFirstName">Operator Licence </label>                        
+                          <input name="licence" type="file" id="input-file-events" class="dropify-event"  style="opacity: 1 !important; margin-top: 33px;margin-left: 18px;" data-default-file="../../../global/photos/placeholder.png">
+                         <input type="hidden" name="licencehidden" value="{{$editview->licence}}">
+                        </div>
+                      </div>
+                      <div class="row" style="margin-top: 30px;">
+                        <div class="col-sm-6 licenceatt">
+                          @php  
+                          if(!empty($editview->licence)){                    
+                                $info = pathinfo($editview->licence);
+                                if($info["extension"]=='pdf'){
+                                  echo '<a href='.url("public/uploads/".$editview->licence).' target="_blank">View licence</a>' ;                                  
+                                }
+                                else{ 
+                                  echo '<img src='.url("public/uploads/".$editview->licence).'>';                                 
+                                }
+                          }
+                          @endphp
+                          </div>
+                      </div> 
                       
-                      <div class="form-group form-material">
+                      <div class="form-group form-material" style="margin-top: 55px;">
                         <button type="submit" class="btn btn-primary submit-form">Submit</button>
                       </div>
                     
@@ -188,28 +208,7 @@
                         </div>
                       </div>
 
-                      <div class="row">
-                        <div class="form-group form-material col-md-6">
-                          <label class="form-control-label" for="inputBasicFirstName">Operator Licence </label>                        
-                          <input name="licence" type="file" id="input-file-events" class="dropify-event"  style="opacity: 1 !important; margin-top: 33px;margin-left: 18px;" data-default-file="../../../global/photos/placeholder.png">
-                         <input type="hidden" name="licencehidden" value="{{$editview->licence}}">
-                        </div>
-                      </div>
-                      <div class="row" style="margin-top: 30px;">
-                        <div class="col-sm-6 licenceatt">
-                          @php  
-                          if(!empty($editview->licence)){                    
-                                $info = pathinfo($editview->licence);
-                                if($info["extension"]=='pdf'){
-                                  echo '<a href='.url("public/uploads/".$editview->licence).' target="_blank">View licence</a>' ;                                  
-                                }
-                                else{ 
-                                  echo '<img src='.url("public/uploads/".$editview->licence).'>';                                 
-                                }
-                          }
-                          @endphp
-                          </div>
-                      </div>                       
+                                            
                   </div>
                 </div>
                
