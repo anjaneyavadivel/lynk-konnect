@@ -18,7 +18,7 @@
     z-index: 10000 !important;
 }
   </style>
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
 <div class="page">
       <div class="page-header">
         <h1 class="page-title">Trip Management</h1>
@@ -160,7 +160,7 @@
                         <div class="form-group form-material col-md-3"  style="margin-bottom:0px;">
                             <label class="form-control-label" for="inputBasicLastName">From Longitude <span class="error">*</span></label>
                             <input name="from_longitude" class="from-long form-control" value="<?php  echo $editview->from_longitude; ?>" type="text" placeholder="Longitude" style="width: 161px;" readonly>
-                           
+                            <input type="hidden" name="map_from_address" id="map_from_address" value="<?php  echo $editview->map_from_address; ?>"> 
                         </div>
                         
                         <div class="form-group form-material col-md-3" style="margin:30px;">
@@ -216,7 +216,7 @@
                         <div class="form-group form-material col-md-3"  style="margin-bottom:0px;">
                           <label class="form-control-label" for="inputBasicLastName">To Longitude <span class="error">*</span></label>
                           <input name="to_longitude" class="to-long form-control"value="<?php  echo $editview->to_longitude; ?>" type="text" placeholder="Longitude" style="width: 161px;" readonly>
-                                             
+                          <input type="hidden" name="map_to_address" id="map_to_address" value="<?php  echo $editview->map_to_address; ?>">                  
                         </div> 
                         <div class="form-group form-material col-md-3" style="margin:30px;">
                           <a href="javascript::" class="get-lotitude" data-type="2"> Get Latitude & Longitude</a>
@@ -302,7 +302,7 @@
     </div>
 
 @include('admin.include.footer')
-<script src="http://maps.google.com/maps/api/js?libraries=places&region=uk&language=en&sensor=true&key=AIzaSyA4yR0QYbk-PSt19ImAdnw3nKHWfTvhXRo"></script>
+<script src="https://maps.google.com/maps/api/js?libraries=places&region=uk&language=en&sensor=true&key=AIzaSyA4yR0QYbk-PSt19ImAdnw3nKHWfTvhXRo"></script>
 
 <script type="text/javascript">
 function myFunction()
@@ -477,19 +477,30 @@ function myFunction()
        $('#mapModal').modal('show');
        var ltype=$(this).attr('data-type');
        if(ltype==2){
-         $('.modal-title').html("Get To Location's Co-ordinates");         
+         $('.modal-title').html("Get To Locations Co-ordinates");         
          $('.lotitude-label').html('To Latitude');
          $('.longitude-label').html('To Longitude');
+         var laat=$('.to-lat').val();
+         var long=$('.to-long').val();
+         var searchTextField= $('#map_to_address').val();
+
        }
        if(ltype==1){
-         $('.modal-title').html("Get From Location's Co-ordinates");
+         $('.modal-title').html("Get From Locations Co-ordinates");
          $('.lotitude-label').html('From Latitude');
          $('.longitude-label').html('From Longitude');
+         var laat=$('.from-lat').val();
+         var long=$('.from-long').val();
+         var searchTextField= $('#map_from_address').val();
+
        }
+      $('.MapLat').val(laat);
+       $('.MapLon').val(long);
+       $('#searchTextField').val(searchTextField);
        $('.type').val(ltype);
        //Google  map
-        var lat = 44.88623409320778,
-            lng = -87.86480712897173,
+        var lat = laat,
+            lng = long,
             latlng = new google.maps.LatLng(lat, lng),
             image = 'http://www.google.com/intl/en_us/mapfiles/ms/micons/blue-dot.png';
 
@@ -578,13 +589,16 @@ function myFunction()
      var lat= $('.MapLat').val();
      var long= $('.MapLon').val();
      var type= $('.type').val();
+     var searchTextField= $('#searchTextField').val();
      if(type==1){
        $('.from-lat').val(lat);
        $('.from-long').val(long);
+       $('#map_from_address').val(searchTextField);
      }
      else if(type==2){
        $('.to-lat').val(lat);
        $('.to-long').val(long);
+       $('#map_to_address').val(searchTextField);
      }
      $('#mapModal').modal('hide');
    });

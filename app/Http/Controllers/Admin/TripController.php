@@ -119,6 +119,8 @@ class TripController extends Controller
                 'from_longitude'          => '',
                 'to_latitude'             => '', 
                 'to_longitude'            => '', 
+                'map_from_address'         => '', 
+                'map_to_address'            => '', 
                 'trip_time'               => '', 
 
             ]);
@@ -223,6 +225,8 @@ class TripController extends Controller
                 'from_longitude'          => '',
                 'to_latitude'             => '', 
                 'to_longitude'            => '', 
+                'map_from_address'         => '', 
+                'map_to_address'            => '', 
                 'id' => '', 
 
             ]);

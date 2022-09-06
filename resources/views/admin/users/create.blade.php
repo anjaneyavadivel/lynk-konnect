@@ -11,6 +11,9 @@
   .error{
     color:red;
   }
+  .hidden{
+    display: none;
+  }
   </style>
 
 <div class="page">
@@ -34,34 +37,63 @@
         <!-- Panel Table Tools -->
         <div class="panel">
           <div class="panel-body container-fluid">
+            <form method="POST" action="{{ url('add_user') }}" id="add_user">
+              @csrf
             <div class="row row-lg">
+             
               <div class="col-md-6">
+                @if (count($errors) > 0)
+
+                <div class="alert alert-danger">
+              
+                  <strong>Whoops!</strong> There were some problems with your input.<br><br>
+              
+                  <ul>
+              
+                     @foreach ($errors->all() as $error)
+              
+                       <li>{{ $error }}</li>
+              
+                     @endforeach
+              
+                  </ul>
+              
+                </div>
+              
+              @endif
                 <!-- Example Basic Form (Form grid) -->
                 <div class="example-wrap">
                  <!--  <h4 class="example-title">Basic Form (Form grid)</h4> -->
                   <div class="example">
-                    @if (count($errors) > 0)
-
-  <div class="alert alert-danger">
-
-    <strong>Whoops!</strong> There were some problems with your input.<br><br>
-
-    <ul>
-
-       @foreach ($errors->all() as $error)
-
-         <li>{{ $error }}</li>
-
-       @endforeach
-
-    </ul>
-
-  </div>
-
-@endif
-
-                    <form method="POST" action="{{ url('add_user') }}" id="add_user">
-                      @csrf
+                    <div class="form-group form-material" data-plugin="formMaterial">
+                        <label class="form-control-label" for="select">Role <span class="error">*</span></label>
+                        
+                        <select class="form-control role" id="select" name="role_id">
+                          <option value="">Select</option>
+                          @foreach ($roleList as $val)
+                          @if(Auth::user()->roles->first()->id==2)                        
+                            <option value="{{ $val->id }}">{{ $val->name }}</option>                        
+                          @else
+                            @if($val->id!=3)
+                            <option value="{{ $val->id }}">{{ $val->name }}</option>
+                            @endif
+                          @endif
+                          
+                          @endforeach
+                        </select>
+                        <span class="error" id="role" style="display:none">Role is required</span>
+                      </div>
+                      <div class="form-group form-material" data-plugin="formMaterial">
+                        <label class="form-control-label" for="select">Company <span class="error">*</span></label>
+                        
+                        <select class="form-control company" id="select" name="company_id">
+                          <option value="">Select</option>
+                          @foreach ($companyList as $Cval)
+                          <option value="{{ $Cval->id }}">{{ $Cval->company_name }}</option>
+                          @endforeach
+                        </select>
+                        <span class="error" id="company"  style="display:none">Company is required</span>
+                      </div>
                       <div class="row">
                         <div class="form-group form-material col-md-6">
                           <label class="form-control-label" for="inputBasicFirstName">First Name <span class="error">*</span></label>
@@ -102,56 +134,23 @@
                         onfocus="this.removeAttribute('readonly');" readonly>
                           <span class="error" id="password"  style="display:none">Password is required and Password should be above 6 digit</span>
                       </div>
+                      
 
                       <!-- <div class="form-group form-material">
                         <label class="form-control-label" for="inputBasicPassword">Role</label>
                         <input type="password" class="form-control" id="inputBasicPassword" name="password"
                           placeholder="Password" autocomplete="off" />
                       </div> -->
-
-                  <div class="form-group form-material" data-plugin="formMaterial">
-                    <label class="form-control-label" for="select">Company <span class="error">*</span></label>
-                    
-                    <select class="form-control company" id="select" name="company_id">
-                      <option value="">Select</option>
-                      @foreach ($companyList as $Cval)
-                      <option value="{{ $Cval->id }}">{{ $Cval->company_name }}</option>
-                      @endforeach
-                    </select>
-                    <span class="error" id="company"  style="display:none">Company is required</span>
-                  </div>
-
-                  <div class="form-group form-material" data-plugin="formMaterial">
-                    <label class="form-control-label" for="select">Role <span class="error">*</span></label>
-                    
-                    <select class="form-control role" id="select" name="role_id">
-                      <option value="">Select</option>
-                      @foreach ($roleList as $val)
-                      @if(Auth::user()->roles->first()->id==2)                        
-                        <option value="{{ $val->id }}">{{ $val->name }}</option>                        
-                      @else
-                        @if($val->id!=1)
-                        <option value="{{ $val->id }}">{{ $val->name }}</option>
-                        @endif
-                      @endif
-                      
-                      @endforeach
-                    </select>
-                    <span class="error" id="role" style="display:none">Role is required</span>
-                  </div>
-
-                      
                       <div class="form-group form-material">
                         <button type="button" class="btn btn-primary submit-form">Submit</button>
                       </div>
-                    </form>
+                   
                   </div>
                 </div>
                 <!-- End Example Basic Form -->
               </div>
 <!-- Example Basic Form (Form row) -->
-              <div class="col-md-6">
-                
+              <div class="col-md-6 hidden" id="show-on-driver">                
                 <div class="example-wrap">
                   <!-- <h4 class="example-title">Basic Form (Form row)</h4> -->
                   <div class="example">
@@ -160,6 +159,12 @@
                         <!-- <input type="email" class="form-control" id="inputBasicEmail" name="inputEmail"
                           placeholder="Email Address" autocomplete="off" /> -->
                           <input type="file" name="">
+                      </div>
+                      <div class="form-group form-material">
+                        <label class="form-control-label" for="">Contactnumber <span class="error">*</span></label>
+                        <input type="text" class="form-control contact_no1" name="contactnumber"
+                          placeholder="Contact Number" autocomplete="off" onkeypress="return event.charCode >= 48 && event.charCode <= 57"/>
+                          <span class="error" id="contactnumber" style="display:none">Contact no is required and Contact no should be 10 digit</span>
                       </div>
                       <div class="form-group form-material">
                         <label class="form-control-label" for="inputBasicEmail">Address1 <span class="error">*</span></label>
@@ -199,9 +204,10 @@
                 </div>
                
               </div> <!-- End Example Basic Form (Form row) -->
-
-              
+           
             </div>
+          </form>
+              
           </div>
         </div>
         <!-- End Panel Table Tools -->
@@ -210,6 +216,7 @@
     </div>
     @include('admin.include.footer')
 <script type="text/javascript">
+   var roles=$('.role').val();
   $(document).ready(function () {   
 
   $('.submit-form').on('click',function(e) {
@@ -246,36 +253,42 @@
     }else{
       $('#role').css('display','none');
     }
-    if($('.address1').val()=='')
-    {
-      $('#address1').css('display','block');
-    }else{
-      $('#address1').css('display','none');
-    }
-    if($('.country').val()=='')
-    {
-      $('#country').css('display','block');
-    }else{
-      $('#country').css('display','none');
-    }
-    if($('.city_id1').val()=='')
-    {
-      $('#city_id1').css('display','block');
-    }else{
-      $('#city_id1').css('display','none');
-    }
-    if($('.postcode').val()=='' || !/^[0-9]+$/.test($('.postcode').val()) || $('.postcode').val().length<6)
-    {
-      $('#postcode').css('display','block');
-    }else{
-      $('#postcode').css('display','none');
-    }
-
-    if($('.fname').val()!="" && $('.email').val()!="" && $('.password').val()!="" && $('.company').val()!="" && $('.role').val()!="" && $('.address1').val()!="" && $('.country').val()!="" && $('.city_id1').val()!="" && $('.postcode').val()!="")
-    {
-      $('form#add_user').submit();
-    }
-    
+    if(roles==1){
+        if($('.address1').val()=='')
+        {
+          $('#address1').css('display','block');
+        }else{
+          $('#address1').css('display','none');
+        }
+        if($('.country').val()=='')
+        {
+          $('#country').css('display','block');
+        }else{
+          $('#country').css('display','none');
+        }
+        if($('.city_id1').val()=='')
+        {
+          $('#city_id1').css('display','block');
+        }else{
+          $('#city_id1').css('display','none');
+        }
+        if($('.postcode').val()=='' || !/^[0-9]+$/.test($('.postcode').val()) || $('.postcode').val().length<6)
+        {
+          $('#postcode').css('display','block');
+        }else{
+          $('#postcode').css('display','none');
+        }
+   
+      if($('.fname').val()!="" && $('.email').val()!="" && $('.password').val()!="" && $('.company').val()!="" && $('.role').val()!="" && $('.address1').val()!="" && $('.country').val()!="" && $('.city_id1').val()!="" && $('.postcode').val()!="")
+      {
+        $('form#add_user').submit();
+      }
+  }else{
+    if($('.fname').val()!="" && $('.email').val()!="" && $('.password').val()!="" && $('.company').val()!="" && $('.role').val()!="")
+      {
+        $('form#add_user').submit();
+      }
+  }
     
   });
 });
@@ -307,7 +320,16 @@
                  }
              })
           });
+      });
 
+      $('.role').on('change',function(){
+
+        var roles=$(this).val();
+        if(roles==1){
+           $('#show-on-driver').removeClass('hidden');
+        }else{
+           $('#show-on-driver').addClass('hidden');
+        }
 
       });
      </script>

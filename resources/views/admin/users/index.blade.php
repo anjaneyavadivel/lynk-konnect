@@ -75,9 +75,12 @@
                   <td>{{ $user->company_name }}</td>
                   <td>{{ $user->role_name}}</td>
                   <td class="not-export-col">
-                    <!-- <a class="btn btn-info" href="">Show</a> -->
+                    @if($user->role_id==1)
+                       <a class="btn btn-primary" href="{{ url('edit_driver/'. $user->driverid)}}">Edit</a>
+                    @else
                     <a class="btn btn-primary" href="{{ url('edit_user/'. $user->id)}}">Edit</a>
-
+                    @endif
+                   
                     <!-- {!! Form::open(['method' => 'DELETE','route' => ['users.destroy', $user->id],'style'=>'display:inline']) !!}
 
             {!! Form::submit('Delete', ['class' => 'btn btn-danger']) !!}

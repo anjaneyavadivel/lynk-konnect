@@ -44,6 +44,8 @@ class Trip extends Authenticatable
         'from_longitude',
         'to_latitude',
         'to_longitude',
+        'map_from_address',
+        'map_to_address',
         'is_active',
         'is_return_trip',
     ];

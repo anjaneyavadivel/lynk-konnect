@@ -79,7 +79,7 @@
               </li>
               @endif
               @endcan
-              @if($user_info==3 || $user_info==2)
+              @if($user_info==2)
               <li class="site-menu-item has-sub @if(collect(request()->segments())->last()=='manage_driver') active @elseif(request()->path()=='add_driver') active @endif">
                 <a href="javascript:void(0)">
                         <i class="site-menu-icon md-google-pages" aria-hidden="true"></i>

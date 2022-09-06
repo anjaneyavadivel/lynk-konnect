@@ -160,7 +160,7 @@
                         <div class="form-group form-material col-md-3"  style="margin-bottom:0px;">
                             <label class="form-control-label" for="inputBasicLastName">From Longitude <span class="error">*</span></label>
                             <input name="from_longitude" class="from-long form-control" required value="<?php  echo $list->from_longitude; ?>" type="text" placeholder="Longitude" style="width: 161px;" readonly>
-                           
+                            <input type="hidden" name="map_from_address" id="map_from_address" value="<?php  echo $list->map_from_address; ?>"> 
                         </div>
                         
                         <div class="form-group form-material col-md-3" style="margin:30px;">
@@ -214,7 +214,7 @@
                           <label class="form-control-label" for="inputBasicLastName">To Longitude <span class="error">*</span></label>
                           <input name="to_longitude" class="to-long form-control" required
                            value="<?php  echo $list->to_longitude; ?>" type="text" placeholder="Longitude" style="width: 161px;" readonly>
-                                             
+                           <input type="hidden" name="map_to_address" id="map_to_address" value="<?php  echo $list->map_to_address; ?>">                  
                         </div> 
                         <div class="form-group form-material col-md-3" style="margin:30px;">
                           <a href="javascript::" class="get-lotitude" data-type="2"> Get Latitude & Longitude</a>
@@ -329,16 +329,26 @@
          $('.modal-title').html("Get To Location's Co-ordinates");         
          $('.lotitude-label').html('To Latitude');
          $('.longitude-label').html('To Longitude');
+         var laat=$('.to-lat').val();
+         var long=$('.to-long').val();
+         var searchTextField= $('#map_to_address').val();
+
        }
        if(ltype==1){
          $('.modal-title').html("Get From Location's Co-ordinates");
          $('.lotitude-label').html('From Latitude');
          $('.longitude-label').html('From Longitude');
+         var laat=$('.from-lat').val();
+         var long=$('.from-long').val();
+         var searchTextField= $('#map_from_address').val();
        }
+       $('.MapLat').val(laat);
+       $('.MapLon').val(long);
+       $('#searchTextField').val(searchTextField);
        $('.type').val(ltype);
        //Google  map
-        var lat = 44.88623409320778,
-            lng = -87.86480712897173,
+        var lat = laat,
+            lng =long,
             latlng = new google.maps.LatLng(lat, lng),
             image = 'http://www.google.com/intl/en_us/mapfiles/ms/micons/blue-dot.png';
 
@@ -427,13 +437,16 @@
      var lat= $('.MapLat').val();
      var long= $('.MapLon').val();
      var type= $('.type').val();
+     var searchTextField= $('#searchTextField').val();
      if(type==1){
        $('.from-lat').val(lat);
        $('.from-long').val(long);
+       $('#map_from_address').val(searchTextField);
      }
      else if(type==2){
        $('.to-lat').val(lat);
        $('.to-long').val(long);
+       $('#map_to_address').val(searchTextField);
      }
      $('#mapModal').modal('hide');
    });

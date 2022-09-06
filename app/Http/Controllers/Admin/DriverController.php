@@ -113,7 +113,8 @@ class DriverController extends Controller
 
     //---update Driver
     public function update(Request $request,$id=null) {
-        
+       $user_info=Auth::user()->roles->first()->id;
+     
         if(isset($id)){
             $editview = Driver::where('id', $id)->first();
             $usereditview = User::where('id', $editview->user_id)->first(); 
@@ -164,14 +165,21 @@ class DriverController extends Controller
 
                 //$user = Driver::find($data['id']);
                 //$user->update($data);
-                return redirect('manage_driver')->withFlashSuccess('Driver updated successfully');
+                if($user_info==3){
+                    return redirect('manage_users')->withFlashSuccess('success','Driver updated successfully');
+                }else{
+                   return redirect('manage_driver')->withFlashSuccess('Driver updated successfully');
+                }
             } 
         }
         //print_r($userRole); die;
         $CityList    = City::orderBy('city_name', 'ASC')->get(); 
         $stateList    = State::orderBy('state_name', 'ASC')->get();  
         $companyList  = Company::orderBy('company_name', 'ASC')->get();
-        return view('admin.driver.edit',compact('editview','companyList','stateList','usereditview','CityList'));      
+       
+        
+            return view('admin.driver.edit',compact('editview','companyList','stateList','usereditview','CityList'));
+        
     }
 
     
