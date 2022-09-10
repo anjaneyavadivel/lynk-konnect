@@ -3,10 +3,11 @@
 namespace App\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Models\{User,Company,State};;
+use App\Models\{User,Company,State,Driver};
 use Spatie\Permission\Models\Role;
 use DB;
 use Hash;
+use Auth;
 use Illuminate\Support\Arr;
 use Session;
 
@@ -68,9 +69,8 @@ class UserController extends Controller
     // -- Manage Users
     public function index() {
         $company_id_s = Session::get('company_id_s');  
-
         //$list = User::orderBy('id','DESC')->get();
-        $list = User::getUsers($company_id_s);
+        $list = User::getUsers(0);
         //dd($list);
         return view('admin.users.index',compact('list'));
     }
@@ -86,26 +86,8 @@ class UserController extends Controller
         }else{
             $editview = array();
         }
-        
-        if($request->has('_token')){   
-            $data = $this->validate($request, [
-                'fname'      => 'required|regex:/(^[A-Za-z ]+$)+/|string|max:20',
-                'lname'      => '',
-                'email'      => 'email|unique:users,email|',
-                'password'   => 'required',
-                'company_id' => 'required',
-                'role_id'    => 'required',
-                'id'         => '',
-
-            ],[
-                'fname.regex' => 'Charater and space only allowed',
-                
-            ]);
-
-           
-            if(isset($data['id'])){
-
-                
+        if($request->has('_token')){
+            if(isset($data['id'])){       
                 $user = User::find($data['id']);
                 $user->update($data);
                 DB::table('model_has_roles')->where('model_id',$data['id'])->delete();
@@ -113,31 +95,71 @@ class UserController extends Controller
                // return redirect('manage_users')->withFlashSuccess('User updated successfully');
                   return redirect('manage_users')->with('success','User updated successfully!');
             }else{
-              #---- Pro-Pic --
-            if($request->file('image') != ''){ 
-                $file   = $request->file('image');
-                $name   = explode('.', $file->getClientOriginalName());
-                $name   = 'images/' . $name[0];
-                
-                $data['image'] = Helpers::uploadFileToAWS($file, $name . "_" . Carbon::now());
-            }
-          #---End Pro-Pic --
-           $data['password'] = Hash::make($data['password']);
+                $role_id = $request->input('role_id');
+                if($role_id==1){
+                    $data = $this->validate($request, [
+                        'fname'      => 'required|regex:/(^[A-Za-z ]+$)+/|string|max:20',
+                        'lname'      => '',
+                        'email'      => 'email|unique:users,email|',
+                        'password'   => 'required',
+                        'company_id' => 'required',
+                        'role_id'    => 'required',
+                        'postcode'        => 'required',
+                        'address1'        => 'required',
+                        'address2'        => '',
+                        'state_id'       => 'required',
+                        'city_id'       => 'required',
+                        'contactnumber'  => 'required',
+                        'id'         => '',
+        
+                    ],[
+                        'fname.regex' => 'Charater and space only allowed',
+                        
+                    ]);
+                    $user_info=Auth::user();
+                    $data['fname']=$data['fname'];
+                    $data['lname']=$data['lname'];
+                    $data['email']=$data['email'];
+                    $data['role_id'] = 1;
+                    $user = User::create($data);
+                    $data1['user_id']=$user->id;
+                    $data1['address1']=$data['address1'];
+                    $data1['address2']=$data['address2'];
+                    $data1['state_id']=$data['state_id'];
+                    $data1['city_id']=$data['city_id'];
+                    $data1['postcode']=$data['postcode'];
+                    $data1['contactnumber']=$data['contactnumber'];
+                    $data1['created_by']=$user_info->id;
+                    $data1['badge']="test";
+                    $company = Driver::create($data1);
+                }else{
+                    $data = $this->validate($request, [
+                        'fname'      => 'required|regex:/(^[A-Za-z ]+$)+/|string|max:20',
+                        'lname'      => '',
+                        'email'      => 'email|unique:users,email|',
+                        'password'   => 'required',
+                        'company_id' => 'required',
+                        'role_id'    => 'required',
+                    ],[
+                        'fname.regex' => 'Charater and space only allowed',
+                        
+                    ]);
 
-           $user = User::create($data);
-           $user->assignRole($data['role_id']);
-               //$user = User::create($request->except('parish_id','submit'));
-               //$id   = DB::getPdo()->lastInsertId();
-          
-               #----- Mail credentails to admin users
-               
-                $name = $data['fname'];;
-                $mail = $data['email'];
-                //$reply_text = $data['reply_text'];
-                $password = rand(1, 1000000);
-                //Mail::to($mail)->send(new AdminCredentailsMail($name,$password));
-               #----- End of Mail credentails to admi users
-               
+                    if($request->file('image') != ''){ 
+                        $file   = $request->file('image');
+                        $name   = explode('.', $file->getClientOriginalName());
+                        $name   = 'images/' . $name[0];
+                        
+                        $data['image'] = Helpers::uploadFileToAWS($file, $name . "_" . Carbon::now());
+                    }
+                    $data['password'] = Hash::make($data['password']);
+                    $user = User::create($data);
+                    $user->assignRole($data['role_id']);
+                    $name = $data['fname'];;
+                    $mail = $data['email'];
+                    $password = rand(1, 1000000);
+                }
+                
                return redirect('manage_users')->withFlashSuccess('User added successfully');
             } 
         }
@@ -193,12 +215,7 @@ class UserController extends Controller
                 $data['image'] = Helpers::uploadFileToAWS($file, $name . "_" . Carbon::now());
             }
             #---End Pro-Pic --
-            
-            
                 $data['password'] = Hash::make($data['password']);
-            
-                
-
                 $user = User::find($data['id']);
                 $user->update($data);
                 DB::table('model_has_roles')->where('model_id',$data['id'])->delete();

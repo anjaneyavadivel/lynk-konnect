@@ -18,7 +18,7 @@
     z-index: 10000 !important;
 }
   </style>
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
 <div class="page">
       <div class="page-header">
         <h1 class="page-title">Trip Management</h1>
@@ -174,8 +174,8 @@
                         </div>
                         <div class="form-group form-material col-md-4"  style="margin-bottom:0px;">
                             <label class="form-control-label" for="inputBasicLastName">From Longitude <span class="error">*</span></label>
-                            <input name="from_longitude" class="from-long form-control" value="" type="text" placeholder="Longitude" readonly>
-                           
+                            <input name="from_longitude" class="from-long form-control" value="" type="text" placeholder="Longitude" style="width: 161px;" readonly>
+                            <input type="hidden" name="map_from_address" id="map_from_address" >
                         </div>
                         
                         <div class="form-group form-material col-md-4">
@@ -199,8 +199,8 @@
                         </div>
                         <div class="form-group form-material col-md-4"  style="margin-bottom:0px;">
                           <label class="form-control-label" for="inputBasicLastName">To Longitude <span class="error">*</span></label>
-                          <input name="to_longitude" class="to-long form-control" value="" type="text" placeholder="Longitude" readonly>
-                                             
+                          <input name="to_longitude" class="to-long form-control" value="" type="text" placeholder="Longitude" style="width: 161px;" readonly>
+                           <input type="hidden" name="map_to_address" id="map_to_address" >                 
                         </div> 
                         <div class="form-group form-material col-md-4">
                           <a href="javascript::" class="get-lotitude" data-type="2"> Get Latitude & Longitude</a>
@@ -288,7 +288,7 @@
     </div>
 
 @include('admin.include.footer')
-<script src="http://maps.google.com/maps/api/js?libraries=places&region=uk&language=en&sensor=true&key=AIzaSyA4yR0QYbk-PSt19ImAdnw3nKHWfTvhXRo"></script>
+<script src="https://maps.google.com/maps/api/js?libraries=places&region=uk&language=en&sensor=true&key=AIzaSyA4yR0QYbk-PSt19ImAdnw3nKHWfTvhXRo"></script>
 <script type="text/javascript">
 
 function myFunction()
@@ -597,13 +597,18 @@ function myFunction()
       var lat= $('.MapLat').val();
       var long= $('.MapLon').val();
       var type= $('.type').val();
+      var searchTextField= $('#searchTextField').val();
+      //alert(searchTextField); return;
+      
       if(type==1){
         $('.from-lat').val(lat);
         $('.from-long').val(long);
+        $('#map_from_address').val(searchTextField);
       }
       else if(type==2){
         $('.to-lat').val(lat);
         $('.to-long').val(long);
+        $('#map_to_address').val(searchTextField);
       }
       $('#mapModal').modal('hide');
     });

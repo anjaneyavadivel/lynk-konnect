@@ -50,11 +50,14 @@ class User extends Authenticatable
         
        // $company_id_s =  Session::get('company_id_s');
         if($company_id_s == 0){
-            $query = User::select(\DB::raw('*,users.id as id,users.fname as fname, r.name as role_name'))
+            $query = User::select(\DB::raw('*,users.id as id,users.fname as fname, r.name as role_name,d.id as driverid'))
             ->leftjoin('company AS c','c.id', 'users.company_id')
-            ->leftjoin('model_has_roles AS mhr','mhr.model_id', 'users.id')
-            ->leftjoin('roles AS r','r.id', 'mhr.role_id');
+           // ->leftjoin('model_has_roles AS mhr','mhr.model_id', 'users.id')
+            ->leftjoin('roles AS r','r.id', 'users.role_id')
+            ->leftjoin('driver AS d','d.user_id', 'users.id')
+            ->orderBy('users.id', 'ASC');
             $result =  $query->get();
+            
         }else{
             $query = User::select(\DB::raw('*,users.id as id,users.fname as fname, r.name as role_name'))
             ->leftjoin('company AS c','c.id', 'users.company_id')
