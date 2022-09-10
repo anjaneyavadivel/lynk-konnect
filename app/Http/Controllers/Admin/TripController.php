@@ -120,6 +120,8 @@ class TripController extends Controller
                 'from_longitude'          => '',
                 'to_latitude'             => '', 
                 'to_longitude'            => '', 
+                'map_from_address'         => '', 
+                'map_to_address'            => '', 
                 'trip_time'               => '', 
 
             ]);
@@ -224,6 +226,8 @@ class TripController extends Controller
                 'from_longitude'          => '',
                 'to_latitude'             => '', 
                 'to_longitude'            => '', 
+                'map_from_address'         => '', 
+                'map_to_address'            => '', 
                 'id' => '', 
 
             ]);
@@ -362,27 +366,25 @@ class TripController extends Controller
 
         $list = Trip::getreturnTrip($data,$output);
 
-        $livetrip=LiveTracking::where('trip_id','=',$trip_id)->orderBy('id','DESC')->first();
+        $result2=[];
+        $livetrip=LiveTracking::where('trip_id','=',$trip_id)->get(); 
+        $trip = Trip::where('id','=',$trip_id)->first();   
         if($livetrip)
         {
-            $to = Trip::ToLocation($distance,$trip_id);
-            if($to)
+            foreach($livetrip as $track)
             {
-                $to =$to->toArray();
-                $result2 =array_column($to, 'id');
+                
+                
+                $latitude=$track->latitude;
+                $longitude=$track->longitude;
+        
+                $query = Trip::selectRaw("id , (1.609344 * 3956 * acos( cos( radians('$latitude') ) * cos( radians(to_latitude) ) * cos( radians(to_longitude) - radians('$longitude') ) + sin( radians('$latitude') ) * sin( radians(to_latitude) ) ) ) AS distance, to_latitude, to_longitude")
+                        ->having('distance', '<', $distence)
+                        ->orderBy('distance')
+                        ->get()->toArray();
+                    
+                    $result2[] =array_column($query, 'id');
             }
-
-            $latitude=$livetrip->latitude;
-            $longitude=$livetrip->longitude;
-
-            $to = Trip::LiveToLocation($distance,$longitude,$latitude);
-            if($to)
-            {
-                $to =$to->toArray();
-                $result2 =array_column($to, 'id');
-            }            
-
-            $output1 = array_merge(array_diff($result1, $result2), array_diff($result2, $result1));
 
             $suggestion_trip=Trip::select(\DB::raw('*,trip.id as id,u.fname as owner_fname, us.fname as confirm_fname, s.state_name as f_state_name, st.state_name as t_state_name'))
             ->leftjoin('users AS u','u.id', 'trip.trip_owner_user_id')
@@ -394,10 +396,11 @@ class TripController extends Controller
             ->leftjoin('company AS com','com.id', 'trip.trip_owner_company_id')
             ->leftjoin('company AS comp','comp.id', 'trip.trip_confirm_company_id')
             ->where('trip.trip_status','=',1);        
-            $suggestion_trip=$suggestion_trip->where(function ($query) use ($output) {
-                if($output1!='')
+            $suggestion_trip=$suggestion_trip->where(function ($query) use ($result2) {
+                if($result2!='')
                 {
-                    $query->where('trip.id', [$output1]);
+                    $test=array_unique($result2);
+                    $query->where('trip.id', [$test]);
                 }
                 
             });
