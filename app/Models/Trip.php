@@ -47,7 +47,6 @@ class Trip extends Authenticatable
         'map_from_address',
         'map_to_address',
         'is_active',
-        'is_return_trip',
         'completed_on',
     ];
     
@@ -78,8 +77,7 @@ class Trip extends Authenticatable
                     ->leftjoin('city AS c','c.id', 'trip.from_city_id')
                     ->leftjoin('city AS ci','ci.id', 'trip.to_city_id')
                     ->leftjoin('company AS com','com.id', 'trip.trip_owner_company_id')
-                    ->leftjoin('company AS comp','comp.id', 'trip.trip_confirm_company_id')
-                    ->where('trip.is_return_trip','=',1);
+                    ->leftjoin('company AS comp','comp.id', 'trip.trip_confirm_company_id');
 
                 }
         
@@ -118,8 +116,7 @@ class Trip extends Authenticatable
                     ->leftjoin('city AS c','c.id', 'trip.from_city_id')
                     ->leftjoin('city AS ci','ci.id', 'trip.to_city_id')
                     ->leftjoin('company AS com','com.id', 'trip.trip_owner_company_id')
-                    ->leftjoin('company AS comp','comp.id', 'trip.trip_confirm_company_id')
-                    ->where('trip.is_return_trip','=',1);
+                    ->leftjoin('company AS comp','comp.id', 'trip.trip_confirm_company_id');
                 
                 }else{
 
@@ -132,7 +129,7 @@ class Trip extends Authenticatable
                     ->leftjoin('city AS ci','ci.id', 'trip.to_city_id')
                     ->leftjoin('company AS com','com.id', 'trip.trip_owner_company_id')
                     ->leftjoin('company AS comp','comp.id', 'trip.trip_confirm_company_id')
-                    ->where('trip.is_return_trip','=',1)->where(function ($query) use ($output) {
+                    ->where(function ($query) use ($output) {
                         $query->where('trip.id', [$output]);
                     });
 
@@ -150,7 +147,7 @@ class Trip extends Authenticatable
         $longitude=$trip->from_longitude;
 
         return $query = Trip::selectRaw("id as id,(1.609344 * 3956 * acos( cos( radians('$latitude') ) * cos( radians(from_latitude) ) * cos( radians(from_longitude) - radians('$longitude') ) + sin( radians('$latitude') ) * sin( radians(from_latitude) ) ) ) AS distance")
-                        ->having('distance', '<', $distance)->where('trip.is_return_trip','=',1)
+                        ->having('distance', '<', $distance)
                         ->orderBy('distance')->get();
     }
 
@@ -161,8 +158,8 @@ class Trip extends Authenticatable
         $to_latitude=$trip->to_latitude;
         $to_longitude=$trip->to_longitude;
 
-        return $query = Trip::selectRaw("id as id,(1.609344 * 3956 * acos( cos( radians('$to_latitude') ) * cos( radians(to_latitude) ) * cos( radians(to_longitude) - radians('$to_longitude') ) + sin( radians('$to_latitude') ) * sin( radians(from_latitude) ) ) ) AS distance")
-                    ->having('distance', '<', $distance)->where('trip.is_return_trip','=',1)
+        return $query = Trip::selectRaw("id as id,(1.609344 * 3956 * acos( cos( radians('$to_latitude') ) * cos( radians(to_latitude) ) * cos( radians(to_longitude) - radians('$to_longitude') ) + sin( radians('$to_latitude') ) * sin( radians(to_latitude) ) ) ) AS distance")
+                    ->having('distance', '<', $distance)
                     ->orderBy('distance')->get();
     }
 
@@ -172,7 +169,7 @@ class Trip extends Authenticatable
         $to_longitude=$longitude;
 
         return $query = Trip::selectRaw("id as id,(1.609344 * 3956 * acos( cos( radians('$to_latitude') ) * cos( radians(to_latitude) ) * cos( radians(to_longitude) - radians('$to_longitude') ) + sin( radians('$to_latitude') ) * sin( radians(from_latitude) ) ) ) AS distance")
-                    ->having('distance', '<', $distance)->where('trip.is_return_trip','=',1)
+                    ->having('distance', '<', $distance)
                     ->orderBy('distance')->get();
     }
 
