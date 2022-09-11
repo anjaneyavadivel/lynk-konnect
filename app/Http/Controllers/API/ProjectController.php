@@ -60,7 +60,7 @@ class ProjectController extends Controller
     public function trip_list()
     {
         $user_info=auth()->guard('api')->user();
-        $trips=Trip::select(\DB::raw('*,trip.id as id,u.fname as owner_fname, us.fname as confirm_fname, s.state_name as f_state_name, st.state_name as t_state_name'))
+        $trips=Trip::select(\DB::raw('*,trip.id as id,u.fname as owner_fname, us.fname as confirm_fname, s.state_name as f_state_name, st.state_name as t_state_name,cb.fname as takenby'))
         ->leftjoin('users AS u','u.id', 'trip.trip_owner_user_id')
         ->leftjoin('users AS us','us.id', 'trip.trip_confirm_user_id')
         ->leftjoin('state AS s','s.id', 'trip.from_state_id')
@@ -69,6 +69,7 @@ class ProjectController extends Controller
         ->leftjoin('city AS ci','ci.id', 'trip.to_city_id')
         ->leftjoin('company AS com','com.id', 'trip.trip_owner_company_id')
         ->leftjoin('company AS comp','comp.id', 'trip.trip_confirm_company_id')
+        ->leftjoin('users AS cb','cb.id', 'trip.trip_takenby')
         ->where('trip.is_active','=',1)
         ->where('trip.completed_on','=',null)
         ->orWhere('trip.trip_date','>=',date('Y-m-d'))->paginate(20);

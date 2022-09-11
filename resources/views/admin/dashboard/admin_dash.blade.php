@@ -9,7 +9,7 @@
     <div class="page">
       <div class="page-content container-fluid">
         <div class="row" data-plugin="matchHeight" data-by-row="true">
-          @php $user_info=Auth::user()->roles->first()->id; @endphp
+          @php $user_info=Auth::user()->role_id; @endphp
           @can('user-list')             
           @if($user_info==0 || $user_info==3)
           <div class="col-xl-3 col-md-6">

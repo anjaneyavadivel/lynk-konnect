@@ -23,9 +23,9 @@ class DashboardController extends Controller
      */
     function __construct(){
          //$this->middleware('permission:user-list|user-create|user-edit|user-delete', ['only' => ['index','show']]);
-         $this->middleware('permission:dashboard-admin', ['only' => ['dashboardAdmin']]);
+       /*$this->middleware('permission:dashboard-admin', ['only' => ['dashboardAdmin']]);
          $this->middleware('permission:dashboard-operator', ['only' => ['dashboardOperator']]);
-        $this->middleware('permission:dashboard-driver', ['only' => ['dashboardDriver']]);
+        $this->middleware('permission:dashboard-driver', ['only' => ['dashboardDriver']]);*/
          // $this->middleware('permission:user-edit', ['only' => ['edit','update']]);
          // $this->middleware('permission:user-delete', ['only' => ['destroy']]);
     }
@@ -39,6 +39,8 @@ class DashboardController extends Controller
     {
         
         $user_id = Auth::user()->id;
+        $user_info=Auth::user()->role_id;
+        //dd( $user_info);
         $id      = User::where('id', $user_id)->first(); 
         $usercount=User::count();
         $companycount=Company::count();

@@ -18,11 +18,11 @@ class TripController extends Controller
 {
 
     function __construct(){
-         $this->middleware('permission:trip-list|trip-list-own|trip-create|trip-edit|trip-delete', ['only' => ['index','show']]);         
+        /* $this->middleware('permission:trip-list|trip-list-own|trip-create|trip-edit|trip-delete', ['only' => ['index','show']]);         
          $this->middleware('permission:trip-list-own', ['only' => ['index_own']]);
          $this->middleware('permission:trip-create', ['only' => ['create','store']]);
          $this->middleware('permission:trip-edit', ['only' => ['edit','update']]);
-         $this->middleware('permission:trip-delete', ['only' => ['destroy']]);
+         $this->middleware('permission:trip-delete', ['only' => ['destroy']]);*/
     }
 
     // -- Manage Trip
@@ -77,22 +77,7 @@ class TripController extends Controller
     //---Create Trip
     public function create(Request $request) { 
         // $time = '04:25PM'; 
-
-        
-        // echo date("H:i:s", strtotime($time));
-        // die; 
-        // $fromStateId  = 130; 
-        //     $toStateId    = 124;
-        
-            
-        //     $routeId = Stops::getRouteId($fromStateId,$toStateId);
-       
-            
-        //     echo $routeId['0']['routeId']; die;
-
-
-    
-    $companyList  = Company::orderBy('company_name', 'ASC')->get();
+     $companyList  = Company::orderBy('company_name', 'ASC')->get();
     $stateList    = State::orderBy('state_name', 'ASC')->get();
         if($request->has('_token')){   
            // dd($request->all());
@@ -267,14 +252,12 @@ class TripController extends Controller
         $trip_status=$request->trip_status;
 
         $trip = Trip::find($id);
-        if($trip)
-        {
+        if($trip){
             $data['trip_status']=$trip_status;
             $data['completed_on']=date('Y-m-d H:i:s');
-            $trip->update($data);
-
-            if($trip_status==2)
-            {
+            $user_id = Auth::user()->id;
+            if($trip_status==2) {
+                $data['trip_takenby']=$user_id;
                 $transaction=new Transaction;
                 $transaction->uniq_id=mt_rand(10000000,99999999);
                 $transaction->trip_id=$id;
@@ -282,6 +265,8 @@ class TripController extends Controller
                 $transaction->status=1;
                 $transaction->save();
             }
+          
+            $trip->update($data);
             return redirect()->back();
         }
         return redirect()->with('error','Error');      
