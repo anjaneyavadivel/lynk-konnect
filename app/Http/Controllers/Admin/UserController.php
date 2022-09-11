@@ -130,7 +130,13 @@ class UserController extends Controller
                     $data1['postcode']=$data['postcode'];
                     $data1['contactnumber']=$data['contactnumber'];
                     $data1['created_by']=$user_info->id;
-                    $data1['badge']="test";
+                    if (request()->hasFile('badge')) {
+                        //echo "3";exit;
+                        $imageName = time().'.'.request()->badge->getClientOriginalExtension();
+                        request()->badge->move(public_path('uploads'), $imageName);
+                        $data1['badge']=$imageName;
+                     }
+                  //  $data1['badge']="test";
                     $company = Driver::create($data1);
                 }else{
                     $data = $this->validate($request, [

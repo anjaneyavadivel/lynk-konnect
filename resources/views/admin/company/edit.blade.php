@@ -26,6 +26,8 @@
           <li class="breadcrumb-item"><a href="">Company Management</a></li>
           <li class="breadcrumb-item active">Create Company</li>
         </ol>
+        <br>
+        <a href="{{ url('manage_company')}}">Back to list</a>
         <!-- <div class="page-header-actions">
           <a class="btn btn-sm btn-primary btn-round" href="{{ url('add_user') }}">
         <i class="icon md-plus" aria-hidden="true"></i>
@@ -33,44 +35,29 @@
       </a>
         </div> -->
       </div>
-
       <div class="page-content">
-        
         <!-- Panel Table Tools -->
         <div class="panel">
           <div class="panel-body container-fluid">
             <div class="row row-lg">
-              
-
               <div class="col-md-6">
                 <!-- Example Basic Form (Form grid) -->
                 <div class="example-wrap">
                  <!--  <h4 class="example-title">Basic Form (Form grid)</h4> -->
                   <div class="example">
                     @if (count($errors) > 0)
-
-  <div class="alert alert-danger">
-
-    <strong>Whoops!</strong> There were some problems with your input.<br><br>
-
-    <ul>
-
-       @foreach ($errors->all() as $error)
-
-         <li>{{ $error }}</li>
-
-       @endforeach
-
-    </ul>
-
-  </div>
-
-@endif
-
+                      <div class="alert alert-danger">
+                        <strong>Whoops!</strong> There were some problems with your input.<br><br>
+                        <ul>
+                          @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                          @endforeach
+                        </ul>
+                      </div>
+                    @endif
                     <form method="POST" action="{{ url('edit_company') }}" id="add_form" enctype="multipart/form-data">
                       <input type="hidden" name="id" value="<?php if(isset($editview->id)){ echo $editview->id;} ?>">
                       @csrf
-
                      <div class="row">
                         <div class="form-group form-material col-md-6">
                           <label class="form-control-label" for="inputBasicFirstName">Company Name <span class="error">*</span></label>
@@ -85,13 +72,11 @@
                             <span class="error" id="emailid"  style="display:none">Email is required</span>
                         </div>
                       </div>
-
                       <div class="row">
                         <div class="form-group form-material col-md-6">
                           <label class="form-control-label" for="inputBasicFirstName">Address <span class="error">*</span></label>
                          <!--  <input type="text" class="form-control" id="inputBasicFirstName" name="company_name"
                             placeholder="Company Name" autocomplete="off" /> -->
-
                             <textarea class="form-control address1" id="address" name="address" placeholder="" autocomplete="off">{{ $editview->address ?? '' }}</textarea>
                             <span class="error" id="address1" style="display:none">Address is required</span>
                         </div>
@@ -101,7 +86,6 @@
                           <span class="error" id="landmark1" style="display:none">Landmark is required</span>
                         </div>
                       </div>
-
                       <div class="form-row">
                         <div class="form-group form-material col-md-6">
                           <label class="form-control-label" for="inputBasicFirstName">County <span class="error">*</span></label>
@@ -128,7 +112,6 @@
                           <span class="error" id="city_id1" style="display:none">Neighborhoods is required</span>
                         </div>
                       </div>
-
                       <div class="row">
                         <div class="form-group form-material col-md-6">
                           <label class="form-control-label" for="inputBasicFirstName">Operator Licence </label>                        
@@ -151,11 +134,9 @@
                           @endphp
                           </div>
                       </div> 
-                      
                       <div class="form-group form-material" style="margin-top: 55px;">
                         <button type="submit" class="btn btn-primary submit-form">Submit</button>
                       </div>
-                    
                   </div>
                 </div>
                 <!-- End Example Basic Form -->

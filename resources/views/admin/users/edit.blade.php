@@ -20,6 +20,8 @@
           <li class="breadcrumb-item"><a href="">Users Management</a></li>
           <li class="breadcrumb-item active">Edit User</li>
         </ol>
+        <br>
+        <a href="{{ url('manage_users')}}">Back to list</a>
         <!-- <div class="page-header-actions">
           <a class="btn btn-sm btn-primary btn-round" href="{{ route('add_user') }}">
         <i class="icon md-plus" aria-hidden="true"></i>

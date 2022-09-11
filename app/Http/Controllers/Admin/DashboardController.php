@@ -42,7 +42,7 @@ class DashboardController extends Controller
         $id      = User::where('id', $user_id)->first(); 
         $usercount=User::count();
         $companycount=Company::count();
-        $divercount=Driver::where('is_active','=',1)->where('created_by','=',$user_id)->count();
+        $divercount=Driver::where('is_active','=',1)->count();
         $tripcount=Trip::where('is_active','=',1)->count();
       
         //print_r($id); die;

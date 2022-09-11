@@ -92,9 +92,14 @@ class DriverController extends Controller
             $data1['postcode']=$data['postcode'];
             $data1['contactnumber']=$data['contactnumber'];
             $data1['created_by']=$user_info->id;
-
+            if (request()->hasFile('badge')) {
+                $imageName = time().'.'.request()->badge->getClientOriginalExtension();
+                request()->badge->move(public_path('uploads'), $imageName);
+                $data1['badge']=$imageName;
+             }
+             
             //dd($data1);
-            $data1['badge']="test";
+          // $data1['badge']="test";
 
            $company = Driver::create($data1);
            return redirect('manage_driver')->withFlashSuccess('Driver added successfully');
@@ -159,7 +164,15 @@ class DriverController extends Controller
             $data1['city_id']=$data['city_id'];
             $data1['postcode']=$data['postcode'];
             $data1['contactnumber']=$data['contactnumber'];
-            $data1['badge']="test";
+            //$data1['badge']="test";
+            if (request()->hasFile('badge')) {
+                $imageName = time().'.'.request()->badge->getClientOriginalExtension();
+                request()->badge->move(public_path('uploads'), $imageName);
+                $data1['badge']=$imageName;
+             }
+             else{
+                $data1['badge']=request()->badgehidden;
+             }
             $driver = Driver::find($data['id']);         
             $driver->update($data1);
 

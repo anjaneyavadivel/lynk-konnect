@@ -14,6 +14,11 @@
   .hidden{
     display: none;
   }
+  .form-material input[type=file] {
+    opacity: inherit;
+    position: relative;
+
+  }
   </style>
 
 <div class="page">
@@ -37,7 +42,7 @@
         <!-- Panel Table Tools -->
         <div class="panel">
           <div class="panel-body container-fluid">
-            <form method="POST" action="{{ url('add_user') }}" id="add_user">
+            <form method="POST" action="{{ url('add_user') }}" id="add_user" enctype="multipart/form-data">
               @csrf
             <div class="row row-lg">
              
@@ -158,7 +163,7 @@
                         <label class="form-control-label" for="inputBasicEmail">Badge</label>
                         <!-- <input type="email" class="form-control" id="inputBasicEmail" name="inputEmail"
                           placeholder="Email Address" autocomplete="off" /> -->
-                          <input type="file" name="">
+                          <input type="file" name="badge">
                       </div>
                       <div class="form-group form-material">
                         <label class="form-control-label" for="">Contactnumber <span class="error">*</span></label>
