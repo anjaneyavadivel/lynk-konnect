@@ -131,15 +131,21 @@
                           placeholder="Email Address" autocomplete="off" />
                           <span class="error" id="email" style="display:none">Email is required</span>
                       </div>
-                      <div class="form-group form-material">
+                      <div class="form-group form-material" style="margin-bottom: 2px;">
+                       
                         <label class="form-control-label" for="inputBasicPassword">Password <span class="error">*</span></label>
                         <input type="password" class="form-control password" id="inputBasicPassword" name="password"
                         autocomplete="new-password" 
                         onblur="this.setAttribute('readonly', 'readonly');" 
-                        onfocus="this.removeAttribute('readonly');" readonly>
+                        onfocus="this.removeAttribute('readonly');" readonly >
                           <span class="error" id="password"  style="display:none">Password is required and Password should be above 6 digit</span>
-                      </div>
-                      
+                           
+                        </div>
+                        <div class="form-group form-material">
+                          <input type="checkbox" onclick="Toggle()">
+                          <b>Show Password</b>
+                         </div>
+                     
 
                       <!-- <div class="form-group form-material">
                         <label class="form-control-label" for="inputBasicPassword">Role</label>
@@ -337,6 +343,17 @@
         }
 
       });
+
+      function Toggle() {
+            var temp = document.getElementById("inputBasicPassword");
+            if (temp.type === "password") {
+                temp.type = "text";
+            }
+            else {
+                temp.type = "password";
+            }
+        }
+
      </script>
      
 

@@ -124,7 +124,7 @@
                       <div class="form-group form-material">
                         <label class="form-control-label" for="inputBasicPassword">Password <span class="error">*</span></label>
                         <input type="password" class="form-control password" id="inputBasicPassword" name="password"
-                          placeholder="Password" autocomplete="off" value="{{$usereditview->password}}"/>
+                          placeholder="Password" autocomplete="off" value=""/>
                           <span class="error" id="password"  style="display:none">Password is required and Password should be above 6 digit</span>
                       </div>
 
@@ -168,7 +168,7 @@
                           <input type="hidden" name="badgehidden" value="{{$editview->badge}}">
                           <div class="col-sm-12" style="margin-top:10px;">
                             @php  
-                            if(!empty($editview->badge)){
+                            if(!empty($editview->badge && $editview->badge!="test")){
                                   $info = pathinfo($editview->badge);
                                    echo '<img src='.url("public/uploads/".$editview->badge).' style="width:100px; height:100px">';                                 
                             }

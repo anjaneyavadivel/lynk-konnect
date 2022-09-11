@@ -180,10 +180,10 @@ class TripController extends Controller
     public function show($id){
       $companyList  = Company::orderBy('company_name', 'ASC')->get();
       $stateList    = State::orderBy('state_name', 'ASC')->get(); 
-
+      $citylist    =City::select('id', 'city_name')->get();
         $list = Trip::find($id);
         //$list = Trip::getTrip($id);
-        return view('admin.trip.show',compact('list','companyList','stateList'));
+        return view('admin.trip.show',compact('list','companyList','stateList','citylist'));
     }
     
 

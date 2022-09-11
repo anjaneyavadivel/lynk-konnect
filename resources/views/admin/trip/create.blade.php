@@ -93,7 +93,7 @@
                         <span class="input-group-addon">
                           <i class="icon md-calendar" aria-hidden="true"></i>
                         </span>
-                        <input data-date-format="dd-mm-yyyy" readonly type="text" pattern="([0-9]{2})\/([0-9]{2})\/([0-9]{4})" class="form-control trip_date_time" data-plugin="datepicker" name="trip_date" id="trip_date">
+                        <input data-date-a="dd-mm-yyyy" readonly type="text" pattern="([0-9]{2})\/([0-9]{2})\/([0-9]{4})" class="form-control trip_date_time" data-plugin="datepicker"  data-date-start-date="0d" name="trip_date" id="trip_date">
                       </div>
                     </div>
                   </div>
