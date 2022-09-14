@@ -105,9 +105,9 @@
                      <button tyep="submit" class="btn btn-primary" style="margin: 6px;">Complete Trip</button>
                     </form>          
                     @endif           
-                    
+                    @if($val->trip_date>=date('Y-m-dd'))
                      <a class="btn btn-primary" href="{{ url('return_trip/'. $val->id)}}" style="margin: 6px;">Return Trip</a>
-                    
+                    @endif
                   </td>
                 </tr>
                 @endforeach

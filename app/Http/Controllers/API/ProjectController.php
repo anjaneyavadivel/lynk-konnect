@@ -209,10 +209,15 @@ class ProjectController extends Controller
             'is_active'=> 'required',
         ]);
         $driver = Driver::where('id','=',$request->id)->first();
+        $user = User::where('id','=',$driver->user_id)->first();
         if($driver)
         {
             $driver->is_active=$request->is_active;
             $driver->save();
+
+            $user->is_active=$request->is_active;
+            $user->save();
+            
             return response()->json(['data' => [],'message' => 'Driver deleted successfully', 'success' => 1], 200);
         }else{
             return response()->json(['data' => [],'message' => 'Something Went Wrong', 'success' => 0],500);

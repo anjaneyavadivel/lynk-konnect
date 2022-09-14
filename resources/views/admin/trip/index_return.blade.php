@@ -18,7 +18,8 @@
           <li class="breadcrumb-item"><a href="">Return Trip</a></li>
           <!-- <li class="breadcrumb-item active">DataTables</li> -->
         </ol>
-        
+        <br>
+        <a href="{{ url('manage_trip')}}">Back to list</a>
       </div>
 
       <div class="page-content">        

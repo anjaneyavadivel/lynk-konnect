@@ -108,14 +108,14 @@
                     </a>
                 <ul class="site-menu-sub">
                   <?php  $ff = Auth::user()->id; ?>
-                 
+                  @if($user_info==3)
                   <li class="site-menu-item">
                     <a class="animsition-link" href="{{ url('manage_trip')}}">
                       <span class="site-menu-title">Manage Trip</span>
                     </a>
                   </li>
-                 
-                 @if($user_info!=1)
+                 @endif
+                 @if($user_info!=3)
                   <li class="site-menu-item">
                     <a class="animsition-link" href="{{ url('manage_own_trip')}}">
                       <span class="site-menu-title">Manage Own Trip</span>

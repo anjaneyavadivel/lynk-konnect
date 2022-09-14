@@ -8,6 +8,7 @@ use Spatie\Permission\Models\Role;
 use DB;
 use Hash;
 use Auth;
+use Session;
 use Illuminate\Support\Arr;
 
 class DriverController extends Controller
@@ -22,8 +23,14 @@ class DriverController extends Controller
 
     // -- Manage Driver
     public function index() { 
-
-        $list = Driver::driverlist();
+        $user_info=Auth::user()->role_id;
+        if($user_info==3){
+            $list = Driver::driverlist(0);
+        }
+       else if($user_info==2){
+            $company_id_s = Session::get('company_id_s');
+            $list = Driver::driverlist( $company_id_s);
+        }
        // dd($list);
         //$list = Company::getCompany();
         return view('admin.driver.index',compact('list'));

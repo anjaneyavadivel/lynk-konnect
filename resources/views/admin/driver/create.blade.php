@@ -11,6 +11,11 @@
   .error{
     color:red;
   }
+  .form-material input[type=file] {
+    opacity: inherit;
+    position: relative;
+
+  }
   </style>
 
 <div class="page">
@@ -60,7 +65,7 @@
 
 @endif
 
-                    <form method="POST" action="{{ url('add_driver') }}" id="add_form"  autocomplete="false">
+                    <form method="POST" action="{{ url('add_driver') }}" id="add_form"  autocomplete="false" enctype="multipart/form-data">
                       @csrf
                       <?php if(Auth::user()->id == 2){ ?>
                       <div class="row">
@@ -156,7 +161,7 @@
                   <div class="example">
                       <div class="form-group form-material">
                         <label class="form-control-label" for="">Badge</label>  
-                          <input type="file" name="">
+                          <input type="file" name="badge">
                       </div>
                       <div class="form-group form-material">
                         <label class="form-control-label" for="">Address1 <span class="error">*</span></label>

@@ -27,6 +27,8 @@
           <li class="breadcrumb-item"><a href="">Trip Management</a></li>
           <li class="breadcrumb-item active">Show Trip</li>
         </ol>
+        <br>
+        <a href="{{ url('manage_trip')}}">Back to list</a>
         <!-- <div class="page-header-actions">
           <a class="btn btn-sm btn-primary btn-round" href="{{ url('add_user') }}">
         <i class="icon md-plus" aria-hidden="true"></i>
@@ -163,9 +165,9 @@
                             <input type="hidden" name="map_from_address" id="map_from_address" value="<?php  echo $list->map_from_address; ?>"> 
                         </div>
                         
-                      <!--  <div class="form-group form-material col-md-3" style="margin:30px;">
-                            <a href="javascript::" class="get-lotitude" data-type="1"> Get Latitude & Longitude</a>
-                        </div>-->
+                       <div class="form-group form-material col-md-3" style="margin:30px;">
+                            <a href="javascript::" class="get-lotitude" data-type="1"> Show Latitude & Longitude</a>
+                        </div>
                         <span class="error" id="latitude-error-1" style="display:none">From address Latitude & longitude is required</span>  
                       </div>
 
@@ -216,9 +218,9 @@
                            value="<?php  echo $list->to_longitude; ?>" type="text" placeholder="Longitude" style="width: 161px;" readonly>
                            <input type="hidden" name="map_to_address" readonly id="map_to_address" value="<?php  echo $list->map_to_address; ?>">                  
                         </div> 
-                        <!--<div class="form-group form-material col-md-3" style="margin:30px;">
-                          <a href="javascript::" class="get-lotitude" data-type="2"> Get Latitude & Longitude</a>
-                      </div>-->
+                        <div class="form-group form-material col-md-3" style="margin:30px;">
+                          <a href="javascript::" class="get-lotitude" data-type="2"> Show Latitude & Longitude</a>
+                      </div>
                         <span class="error" id="latitude-error-2" style="display:none"> To address Latitude & longitude is required</span> 
                       </div>  
 
@@ -276,7 +278,7 @@
 
             <div class="row col-sm-12">
               <label class="form-control-label" for="inputBasicLastName">Search Location <span class="error">*</span></label>
-              <input id="searchTextField" type="text" size="50" class="form-control" style="direction: ltr;">
+              <input id="searchTextField" type="text" size="50" class="form-control" style="direction: ltr;" disabled>
             </div>
             <div class="row form-material" style="margin-top: 20px;">
               <div class="form-group form-material col-md-6">
@@ -292,7 +294,7 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary save-location">Save changes</button>
+            
           </div>
         </div>
       </div>
@@ -341,6 +343,7 @@
        $('.MapLon').val(long);
        $('#searchTextField').val(searchTextField);
        $('.type').val(ltype);
+
        //Google  map
         var lat = laat,
             lng =long,
@@ -391,12 +394,12 @@
                 map.setZoom(17);
             }
 
-            moveMarker(place.name, place.geometry.location);
+            //moveMarker(place.name, place.geometry.location);
             $('.MapLat').val(place.geometry.location.lat());
             $('.MapLon').val(place.geometry.location.lng());
         });
         
-        google.maps.event.addListener(map, 'click', function (event) {
+      /*  google.maps.event.addListener(map, 'click', function (event) {
          
             $('.MapLat').val(event.latLng.lat());
             $('.MapLon').val(event.latLng.lng());
@@ -417,14 +420,14 @@
                             $("#searchTextField").val(results[0].formatted_address);
                         }
                     });
-        });
+        });*/
 
-        function moveMarker(placeName, latlng) {
+     /*   function moveMarker(placeName, latlng) {
             marker.setIcon(image);
             marker.setPosition(latlng);
             infowindow.setContent(placeName);
             //infowindow.open(map, marker);
-        }
+        }*/
 
     });
  
