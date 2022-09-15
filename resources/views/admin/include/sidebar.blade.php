@@ -10,7 +10,7 @@
                         <span class="site-menu-title">Dashboard</span>
                     </a>
               </li>
-              @php $user_info=Auth::user()->roles->first()->id; @endphp
+              @php  $user_info=Auth::user()->role_id; @endphp
               @can('user-list')               
               @if($user_info==3)
               <li class="site-menu-item has-sub @if(collect(request()->segments())->last()=='manage_users') active @elseif(collect(request()->segments())->last()=='add_user') active @endif">
@@ -36,7 +36,7 @@
               @endcan
               @can('role-list')
               
-              <!-- <li class="site-menu-item has-sub @if(collect(request()->segments())->last()=='roles') active @elseif(request()->path()=='roles/create') active @endif">
+            <!--  <li class="site-menu-item has-sub @if(collect(request()->segments())->last()=='roles') active @elseif(request()->path()=='roles/create') active @endif">
                 <a href="javascript:void(0)">
                         <i class="site-menu-icon md-bookmark" aria-hidden="true"></i>
                         <span class="site-menu-title">Roles</span>
@@ -114,8 +114,8 @@
                       <span class="site-menu-title">Manage Trip</span>
                     </a>
                   </li>
-                  @endif
-                 @if($user_info!=1)
+                 @endif
+                 @if($user_info!=3)
                   <li class="site-menu-item">
                     <a class="animsition-link" href="{{ url('manage_own_trip')}}">
                       <span class="site-menu-title">Manage Own Trip</span>

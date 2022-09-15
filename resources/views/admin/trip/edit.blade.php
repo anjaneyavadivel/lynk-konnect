@@ -75,7 +75,7 @@
                       <?php if(Auth::user()->id == 2){ ?>
                      
                         <div class="form-group form-material col-md-4">
-                          <label class="form-control-label" for="inputBasicFirstName">Operator t <span class="error">*</span></label>
+                          <label class="form-control-label" for="inputBasicFirstName">Operator <span class="error">*</span></label>
                            <select class="form-control operator" id="select" name="trip_owner_company_id">
                               @foreach ($companyList as $Cval)
                               <option value="{{ $Cval->id }}"  <?php if($editview->trip_owner_company_id==$Cval->id){echo "selected";} ?>>{{ $Cval->company_name }}</option>
@@ -94,7 +94,7 @@
                           <span class="input-group-addon">
                             <i class="icon md-calendar" aria-hidden="true"></i>
                           </span>
-                          <input data-date-format="dd-mm-yyyy" readonly type="text" value="{{ $editview->trip_date }}" pattern="([0-9]{2})\/([0-9]{2})\/([0-9]{4})" class="form-control trip_date_time" data-plugin="datepicker" name="trip_date" id="trip_date">
+                          <input data-date-format="dd-mm-yyyy" readonly type="text" value="{{ $editview->trip_date }}" pattern="([0-9]{2})\/([0-9]{2})\/([0-9]{4})" class="form-control trip_date_time" data-plugin="datepicker" name="trip_date" id="trip_date"  data-date-start-date="0d">
                         </div>
                       </div>
                     </div>

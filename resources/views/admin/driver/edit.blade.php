@@ -11,6 +11,11 @@
   .error{
     color:red;
   }
+  .form-material input[type=file] {
+    opacity: inherit;
+    position: relative;
+
+  }
   </style>
 
 <div class="page">
@@ -21,6 +26,14 @@
           <li class="breadcrumb-item"><a href="">Driver Management</a></li>
           <li class="breadcrumb-item active">Edit Driver</li>
         </ol>
+        <br>
+        @php
+         $user_info=Auth::user()->roles->first()->id;@endphp
+        @if($user_info==3)
+        <a href="{{ url('manage_users')}}">Back to list</a>
+        @else
+        <a href="{{ url('manage_driver')}}">Back to list</a>
+        @endif
         <!-- <div class="page-header-actions">
           <a class="btn btn-sm btn-primary btn-round" href="{{ url('add_user') }}">
         <i class="icon md-plus" aria-hidden="true"></i>
@@ -42,25 +55,25 @@
                   <div class="example">
                     @if (count($errors) > 0)
 
-  <div class="alert alert-danger">
+                    <div class="alert alert-danger">
 
-    <strong>Whoops!</strong> There were some problems with your input.<br><br>
+                      <strong>Whoops!</strong> There were some problems with your input.<br><br>
 
-    <ul>
+                      <ul>
 
-       @foreach ($errors->all() as $error)
+                        @foreach ($errors->all() as $error)
 
-         <li>{{ $error }}</li>
+                          <li>{{ $error }}</li>
 
-       @endforeach
+                        @endforeach
 
-    </ul>
+                      </ul>
 
-  </div>
+                    </div>
 
-@endif
+                  @endif
 
-                    <form method="POST" action="{{ url('edit_driver') }}" id="add_form">                      
+                    <form method="POST" action="{{ url('edit_driver') }}" id="add_form" enctype="multipart/form-data">                      
                       @csrf
                       <input type="hidden" name="id" value="<?php if(isset($editview->id)){ echo $editview->id;} ?>">
                       <?php if(Auth::user()->id == 2){ ?>
@@ -111,7 +124,7 @@
                       <div class="form-group form-material">
                         <label class="form-control-label" for="inputBasicPassword">Password <span class="error">*</span></label>
                         <input type="password" class="form-control password" id="inputBasicPassword" name="password"
-                          placeholder="Password" autocomplete="off" value="{{$usereditview->password}}"/>
+                          placeholder="Password" autocomplete="off" value=""/>
                           <span class="error" id="password"  style="display:none">Password is required and Password should be above 6 digit</span>
                       </div>
 
@@ -151,7 +164,16 @@
                   <div class="example">
                       <div class="form-group form-material">
                         <label class="form-control-label" for="">Badge</label>  
-                          <input type="file" name="">
+                          <input type="file" name="badge">
+                          <input type="hidden" name="badgehidden" value="{{$editview->badge}}">
+                          <div class="col-sm-12" style="margin-top:10px;">
+                            @php  
+                            if(!empty($editview->badge && $editview->badge!="test")){
+                                  $info = pathinfo($editview->badge);
+                                   echo '<img src='.url("public/uploads/".$editview->badge).' style="width:100px; height:100px">';                                 
+                            }
+                          @endphp
+                          </div>
                       </div>
                       <div class="form-group form-material">
                         <label class="form-control-label" for="">Address1 <span class="error">*</span></label>

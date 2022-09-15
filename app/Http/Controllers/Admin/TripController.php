@@ -18,36 +18,24 @@ class TripController extends Controller
 {
 
     function __construct(){
-         $this->middleware('permission:trip-list|trip-list-own|trip-create|trip-edit|trip-delete', ['only' => ['index','show']]);         
+        /* $this->middleware('permission:trip-list|trip-list-own|trip-create|trip-edit|trip-delete', ['only' => ['index','show']]);         
          $this->middleware('permission:trip-list-own', ['only' => ['index_own']]);
          $this->middleware('permission:trip-create', ['only' => ['create','store']]);
          $this->middleware('permission:trip-edit', ['only' => ['edit','update']]);
-         $this->middleware('permission:trip-delete', ['only' => ['destroy']]);
+         $this->middleware('permission:trip-delete', ['only' => ['destroy']]);*/
     }
 
     // -- Manage Trip
     public function index($rid=null) { 
-        
-        //$list = Trip::orderBy('id','DESC')->get();
         $list = Trip::getTrip($rid);
         return view('admin.trip.index',compact('list'));
-    }
-
-    
+    }  
     // -- Manage Own Trip
-    public function index_own() { 
-        
+    public function index_own() {        
         $user_id = Auth::user()->id;
         $id      = User::where('id', $user_id)->first(); 
-        // echo $id->company_id;
-        // die;
-        // Session::put('company_id_s', $id->company_id);
-
-        //$comp_id = Session::get('company_id_s'); 
         $comp_id = $id->company_id;
-        
         $list    = Trip::getOwnTrip($comp_id);
-        
         if(isset($list)){
             $list    = Trip::getOwnTrip($comp_id);
         }else{
@@ -57,16 +45,7 @@ class TripController extends Controller
     }
 
     public static function getReturnRouteId($from_id,$to_id){
-        // if (!Session::has('userID')){return redirect('/');}
-        // $customerpay = new InvCustomerPay();
-        // $TotalpaySub = $customerpay->TotalpaySub($cusid);
-        // return $TotalpaySub;
-      //  return Routes::select('idX')->where('from_route_state_id', $to_id)->where('to_route_state_id', $from_id)->get();
-
         return $editview = Routes::select('id')->where('from_route_state_id', $to_id)->where('to_route_state_id', $from_id)->get();  
-        
-        
-
     }
     
     public function getCity(Request $request)
@@ -77,23 +56,8 @@ class TripController extends Controller
     //---Create Trip
     public function create(Request $request) { 
         // $time = '04:25PM'; 
-
-        
-        // echo date("H:i:s", strtotime($time));
-        // die; 
-        // $fromStateId  = 130; 
-        //     $toStateId    = 124;
-        
-            
-        //     $routeId = Stops::getRouteId($fromStateId,$toStateId);
-       
-            
-        //     echo $routeId['0']['routeId']; die;
-
-
-    
-    $companyList  = Company::orderBy('company_name', 'ASC')->get();
-    $stateList    = State::orderBy('state_name', 'ASC')->get();
+     $companyList  = Company::orderBy('company_name', 'ASC')->get();
+     $stateList    = State::orderBy('state_name', 'ASC')->get();
         if($request->has('_token')){   
            // dd($request->all());
             $data = $this->validate($request, [
@@ -169,9 +133,13 @@ class TripController extends Controller
            #---- End of dev  ----
 
            $trip = Trip::create($data);
-      
-           return redirect('manage_trip')->withFlashSuccess('Trip added successfully');
-            
+           $user_id = Auth::user()->id;
+           $user_info=Auth::user()->role_id;
+           if($user_info==3){
+               return redirect('manage_trip')->withFlashSuccess('Trip added successfully');
+           }else{
+               return redirect('manage_own_trip')->withFlashSuccess('Trip added successfully');
+           }
         }
         return view('admin.trip.create', compact('companyList','stateList'));      
     }
@@ -180,16 +148,15 @@ class TripController extends Controller
     public function show($id){
       $companyList  = Company::orderBy('company_name', 'ASC')->get();
       $stateList    = State::orderBy('state_name', 'ASC')->get(); 
-
-        $list = Trip::find($id);
+      $citylist    =City::select('id', 'city_name')->get();
+      $list = Trip::find($id);
         //$list = Trip::getTrip($id);
-        return view('admin.trip.show',compact('list','companyList','stateList'));
+        return view('admin.trip.show',compact('list','companyList','stateList','citylist'));
     }
     
 
     //---update Driver
     public function update(Request $request,$id=null) {
-     
         if(isset($id)){
            
             //$editview = Company::where('id', $id)->first(); 
@@ -267,14 +234,12 @@ class TripController extends Controller
         $trip_status=$request->trip_status;
 
         $trip = Trip::find($id);
-        if($trip)
-        {
+        if($trip){
             $data['trip_status']=$trip_status;
             $data['completed_on']=date('Y-m-d H:i:s');
-            $trip->update($data);
-
-            if($trip_status==2)
-            {
+            $user_id = Auth::user()->id;
+            if($trip_status==2) {
+                $data['trip_takenby']=$user_id;
                 $transaction=new Transaction;
                 $transaction->uniq_id=mt_rand(10000000,99999999);
                 $transaction->trip_id=$id;
@@ -282,6 +247,8 @@ class TripController extends Controller
                 $transaction->status=1;
                 $transaction->save();
             }
+          
+            $trip->update($data);
             return redirect()->back();
         }
         return redirect()->with('error','Error');      

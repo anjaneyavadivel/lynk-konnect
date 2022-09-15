@@ -11,6 +11,11 @@
   .error{
     color:red;
   }
+  .form-material input[type=file] {
+    opacity: inherit;
+    position: relative;
+
+  }
   </style>
 
 <div class="page">
@@ -60,7 +65,7 @@
 
 @endif
 
-                    <form method="POST" action="{{ url('add_driver') }}" id="add_form"  autocomplete="false">
+                    <form method="POST" action="{{ url('add_driver') }}" id="add_form"  autocomplete="false" enctype="multipart/form-data">
                       @csrf
                       <?php if(Auth::user()->id == 2){ ?>
                       <div class="row">
@@ -116,6 +121,10 @@
                           onfocus="this.removeAttribute('readonly');" readonly>
                           <span class="error" id="password"  style="display:none">Password is required and Password should be above 6 digit</span>
                       </div>
+                      <div class="form-group form-material">
+                        <input type="checkbox" onclick="Toggle()">
+                        <b>Show Password</b>
+                       </div>
 
                       <!-- <div class="form-group form-material">
                         <label class="form-control-label" for="inputBasicPassword">Role</label>
@@ -152,7 +161,7 @@
                   <div class="example">
                       <div class="form-group form-material">
                         <label class="form-control-label" for="">Badge</label>  
-                          <input type="file" name="">
+                          <input type="file" name="badge">
                       </div>
                       <div class="form-group form-material">
                         <label class="form-control-label" for="">Address1 <span class="error">*</span></label>
@@ -298,6 +307,15 @@
 
 
       });
+      function Toggle() {
+            var temp = document.getElementById("inputBasicPassword");
+            if (temp.type === "password") {
+                temp.type = "text";
+            }
+            else {
+                temp.type = "password";
+            }
+        }
      </script>
      
 

@@ -55,15 +55,18 @@ class User extends Authenticatable
            // ->leftjoin('model_has_roles AS mhr','mhr.model_id', 'users.id')
             ->leftjoin('roles AS r','r.id', 'users.role_id')
             ->leftjoin('driver AS d','d.user_id', 'users.id')
+            ->where('users.is_active',1)
             ->orderBy('users.id', 'ASC');
             $result =  $query->get();
             
         }else{
-            $query = User::select(\DB::raw('*,users.id as id,users.fname as fname, r.name as role_name'))
+            $query = User::select(\DB::raw('*,users.id as id,users.fname as fname, r.name as role_name,d.id as driverid'))
             ->leftjoin('company AS c','c.id', 'users.company_id')
-            ->leftjoin('model_has_roles AS mhr','mhr.model_id', 'users.id')
-            ->leftjoin('roles AS r','r.id', 'mhr.role_id')
-            ->where('users.company_id', $company_id_s);
+          //  ->leftjoin('model_has_roles AS mhr','mhr.model_id', 'users.id')
+            ->leftjoin('roles AS r','r.id', 'users.role_id')
+            ->leftjoin('driver AS d','d.user_id', 'users.id')
+            ->where('users.company_id', $company_id_s)
+            ->where('users.is_active',1);
             $result =  $query->get();
         }
 

@@ -25,8 +25,10 @@
         <ol class="breadcrumb">
           <li class="breadcrumb-item"><a href="">Dashboard</a></li>
           <li class="breadcrumb-item"><a href="">Trip Management</a></li>
-          <li class="breadcrumb-item active">Create Trip</li>
+          <li class="breadcrumb-item active">Show Trip</li>
         </ol>
+        <br>
+        <a href="{{ url('manage_trip')}}">Back to list</a>
         <!-- <div class="page-header-actions">
           <a class="btn btn-sm btn-primary btn-round" href="{{ url('add_user') }}">
         <i class="icon md-plus" aria-hidden="true"></i>
@@ -75,7 +77,7 @@
                           <label class="form-control-label" for="inputBasicFirstName">Operator</label>
                           <!-- <input type="text" class="form-control" id="inputBasicFirstName" name="company_name"
                             placeholder="" autocomplete="off" /> -->
-                           <select class="form-control" id="select" name="trip_owner_company_id">
+                           <select class="form-control" id="select" name="trip_owner_company_id" disabled="disabled" >
                               <option value="">Select</option>
                               @foreach ($companyList as $Cval)
                               <option value="{{ $Cval->id }}" <?php if($list->trip_owner_company_id == $Cval->id){ echo 'selected';}?>>{{ $Cval->company_name }}</option>
@@ -105,7 +107,7 @@
                               <span class="input-group-addon">
                                 <i class="icon md-time" aria-hidden="true"></i>
                               </span>
-                              <input type="text" class="form-control trip_time" data-plugin="timepicker" name="trip_time" id="trip_time" onkeyup="myFunction()"  value="{{ $list->trip_time }}"/>
+                              <input type="text" class="form-control trip_time" data-plugin="timepicker" name="trip_time" id="trip_time" onkeyup="myFunction()"  value="{{ $list->trip_time }}" readonly/>
                             </div>
                           </div>
                         </div>
@@ -120,7 +122,7 @@
                       <div class="form-row">
                         <div class="form-group form-material col-md-6">
                           <label class="form-control-label" for="inputBasicFirstName">From Address</label>
-                            <textarea class="form-control" id="inputBasicFirstName" name="from_address" placeholder="" autocomplete="off"><?php echo $list->from_address; ?></textarea>
+                            <textarea class="form-control" id="inputBasicFirstName" name="from_address" placeholder="" autocomplete="off" readonly><?php echo $list->from_address; ?></textarea>
                         </div>
                         
                       </div>
@@ -128,7 +130,7 @@
                       <div class="form-row">
                         <div class="form-group form-material col-md-4">
                           <label class="form-control-label" for="inputBasicFirstName">From County</label>
-                          <select class="form-control" id="select" name="from_state_id">
+                          <select class="form-control" id="select" name="from_state_id" disabled="disabled" >
                               <option value="">Select</option>
                               @foreach ($stateList as $Sval)
                               <option value="{{ $Sval->id }}" <?php if($list->from_state_id == $Sval->id){ echo 'selected';}?>>{{ $Sval->state_name }}</option>
@@ -137,34 +139,34 @@
                         </div>                        
                         <div class="form-group form-material col-md-4">
                           <label class="form-control-label" for="inputBasicFirstName">From Neighborhoods</label>
-                          <select class="form-control" id="select" name="from_city_id">
+                          <select class="form-control" id="select" name="from_city_id" disabled="disabled">
                               <option value="">Select</option>
-                              @foreach ($companyList as $Cval)
-                              <option value="{{ $Cval->id }}" <?php if($list->from_state_id == $Sval->id){ echo 'selected';}?>>{{ $Cval->company_name }}</option>
+                              @foreach ($citylist as $Cval)
+                              <option value="{{ $Cval->id }}" <?php if($list->from_city_id == $Cval->id){ echo 'selected';}?>>{{ $Cval->city_name }}</option>
                               @endforeach
                           </select>  
                         </div>
                         <input type="hidden" name="from_city_id" value="{{$list->from_city_id}}">
                         <div class="form-group form-material col-md-4">
                           <label class="form-control-label" for="inputBasicLastName">From Postcode</label>
-                          <input type="text" class="form-control" id="select" name="from_postcode" value="<?php  echo $list->from_postcode; ?>">
+                          <input readonly type="text" class="form-control" id="select" name="from_postcode" value="<?php  echo $list->from_postcode; ?>">
                               
                         </div>
                       </div>
                       <div class="form-row">
                         <div class="form-group form-material col-md-3" style="margin-bottom:0px;">
                           <label class="form-control-label" for="inputBasicLastName">From Latitude <span class="error">*</span></label>
-                          <input name="from_latitude" class="from-lat form-control" required value="<?php  echo $list->from_latitude; ?>" type="text" placeholder="Latitude" style="margin-bottom:10px;" readonly >
+                          <input readonly name="from_latitude" class="from-lat form-control" required value="<?php  echo $list->from_latitude; ?>" type="text" placeholder="Latitude" style="margin-bottom:10px;" readonly >
                                              
                         </div>
                         <div class="form-group form-material col-md-3"  style="margin-bottom:0px;">
                             <label class="form-control-label" for="inputBasicLastName">From Longitude <span class="error">*</span></label>
-                            <input name="from_longitude" class="from-long form-control" required value="<?php  echo $list->from_longitude; ?>" type="text" placeholder="Longitude" style="width: 161px;" readonly>
+                            <input name="from_longitude" class="from-long form-control" readonly required value="<?php  echo $list->from_longitude; ?>" type="text" placeholder="Longitude" style="width: 161px;" readonly>
                             <input type="hidden" name="map_from_address" id="map_from_address" value="<?php  echo $list->map_from_address; ?>"> 
                         </div>
                         
-                        <div class="form-group form-material col-md-3" style="margin:30px;">
-                            <a href="javascript::" class="get-lotitude" data-type="1"> Get Latitude & Longitude</a>
+                       <div class="form-group form-material col-md-3" style="margin:30px;">
+                            <a href="javascript::" class="get-lotitude" data-type="1"> Show Latitude & Longitude</a>
                         </div>
                         <span class="error" id="latitude-error-1" style="display:none">From address Latitude & longitude is required</span>  
                       </div>
@@ -173,7 +175,7 @@
                       <div class="form-row">
                         <div class="form-group form-material col-md-6">
                           <label class="form-control-label" for="inputBasicFirstName">To Address</label>
-                            <textarea class="form-control" id="inputBasicFirstName" name="to_address" placeholder="" autocomplete="off"><?php  echo $list->to_address; ?></textarea>
+                            <textarea class="form-control" id="inputBasicFirstName" name="to_address" readonly placeholder="" autocomplete="off"><?php  echo $list->to_address; ?></textarea>
                         </div>
                        
                       </div>
@@ -181,7 +183,7 @@
                       <div class="form-row">
                         <div class="form-group form-material col-md-4">
                           <label class="form-control-label" for="inputBasicFirstName">To County</label>
-                          <select class="form-control" id="select" name="to_state_id">
+                          <select class="form-control" id="select" name="to_state_id" disabled="disabled" >
                               <option value="">Select</option>
                               @foreach ($stateList as $STval)
                               <option value="{{ $STval->id }}" <?php if($list->to_state_id == $STval->id){ echo 'selected';}?>>{{ $STval->state_name }}</option>
@@ -190,34 +192,34 @@
                         </div>
                         <div class="form-group form-material col-md-4">
                           <label class="form-control-label" for="inputBasicFirstName">To Neighborhoods</label>
-                          <select class="form-control" id="select" name="to_city_id">
+                          <select class="form-control" id="select" name="to_city_id" disabled="disabled" >
                               <option value="">Select</option>
-                              @foreach ($companyList as $Cval)
-                              <option value="{{ $Cval->id }}" <?php if($list->to_state_id == $STval->id){ echo 'selected';}?>>{{ $Cval->company_name }}</option>
+                              @foreach ($citylist as $Cval)
+                              <option value="{{ $Cval->id }}" <?php if($list->to_city_id == $Cval->id){ echo 'selected';}?>>{{ $Cval->city_name }}</option>
                               @endforeach
                           </select>  
                         </div>
                         <input type="hidden" name="to_city_id" value="{{$list->to_city_id}}">
                         <div class="form-group form-material col-md-4">
                           <label class="form-control-label" for="inputBasicLastName">To Postcode</label>
-                          <input type="text" class="form-control" id="select" name="to_postcode" value="<?php echo $list->to_postcode; ?>">
+                          <input type="text" class="form-control" readonly id="select" name="to_postcode" value="<?php echo $list->to_postcode; ?>">
                               
                         </div>
                       </div>
                       <div class="form-row">                        
                         <div class="form-group form-material col-md-3"  style="margin-bottom:0px;">
                           <label class="form-control-label" for="inputBasicLastName">To Latitude <span class="error">*</span></label>
-                          <input name="to_latitude" class="to-lat form-control" required value="<?php  echo $list->to_latitude; ?>" type="text" placeholder="Latitude" style="margin-bottom:10px;" readonly>
+                          <input name="to_latitude" class="to-lat form-control" readonly required value="<?php  echo $list->to_latitude; ?>" type="text" placeholder="Latitude" style="margin-bottom:10px;" readonly>
                                          
                         </div>
                         <div class="form-group form-material col-md-3"  style="margin-bottom:0px;">
                           <label class="form-control-label" for="inputBasicLastName">To Longitude <span class="error">*</span></label>
                           <input name="to_longitude" class="to-long form-control" required
                            value="<?php  echo $list->to_longitude; ?>" type="text" placeholder="Longitude" style="width: 161px;" readonly>
-                           <input type="hidden" name="map_to_address" id="map_to_address" value="<?php  echo $list->map_to_address; ?>">                  
+                           <input type="hidden" name="map_to_address" readonly id="map_to_address" value="<?php  echo $list->map_to_address; ?>">                  
                         </div> 
                         <div class="form-group form-material col-md-3" style="margin:30px;">
-                          <a href="javascript::" class="get-lotitude" data-type="2"> Get Latitude & Longitude</a>
+                          <a href="javascript::" class="get-lotitude" data-type="2"> Show Latitude & Longitude</a>
                       </div>
                         <span class="error" id="latitude-error-2" style="display:none"> To address Latitude & longitude is required</span> 
                       </div>  
@@ -226,18 +228,18 @@
                         
                         <div class="form-group form-material col-md-12">
                           <label class="form-control-label" for="inputBasicFirstName">Trip Description</label>
-                          <textarea class="form-control" id="inputBasicFirstName" name="description_trip" placeholder="" autocomplete="off"><?php echo $list->description_trip; ?></textarea>
+                          <textarea class="form-control" id="inputBasicFirstName" readonly name="description_trip" placeholder="" autocomplete="off"><?php echo $list->description_trip; ?></textarea>
                         </div>
                        <div class="form-group form-material col-md-4">
                           <label class="form-control-label" for="inputBasicFirstName">No of persons  <span class="error">*</span></label>
-                          <input type="number" class="form-control no_of_passengers" id="inputBasicFirstName" name="no_of_passengers" value="<?php echo $list->no_of_passengers; ?>"
+                          <input type="number" class="form-control no_of_passengers" readonly id="inputBasicFirstName" name="no_of_passengers" value="<?php echo $list->no_of_passengers; ?>"
                              autocomplete="off" required />
                              <span class="error" id="no_of_passengers" style="display:none">No of persons is required</span> 
                         </div>
                       
                         <div class="form-group form-material col-md-4">
                           <label class="form-control-label" for="inputBasicFirstName">Trip amount <span class="error">*</span></label>
-                          <input type="number" class="form-control trip_amount" id="inputBasicFirstName" name="trip_amount"
+                          <input type="number" readonly class="form-control trip_amount" id="inputBasicFirstName" name="trip_amount"
                              autocomplete="off" required value="<?php echo $list->trip_amount; ?>" />
                              <span class="error" id="trip_amount" style="display:none">Trip amount is required</span> 
 
@@ -245,25 +247,20 @@
                      
                     </div>
                       
-                      <div class="form-group form-material">
+                    <!--  <div class="form-group form-material">
                         <button type="submit" class="btn btn-primary">Submit</button>
-                      </div>
+                      </div>-->
                     
                   </div>
                 </div>
                 <!-- End Example Basic Form -->
               </div>
-<!-- Example Basic Form (Form row) -->
-
-               
               </div> <!-- End Example Basic Form (Form row) -->
-</form>
-              
+            </form>  
             </div>
           </div>
         </div>
         <!-- End Panel Table Tools -->
-        
       </div>
     </div>
 
@@ -281,7 +278,7 @@
 
             <div class="row col-sm-12">
               <label class="form-control-label" for="inputBasicLastName">Search Location <span class="error">*</span></label>
-              <input id="searchTextField" type="text" size="50" class="form-control" style="direction: ltr;">
+              <input id="searchTextField" type="text" size="50" class="form-control" style="direction: ltr;" disabled>
             </div>
             <div class="row form-material" style="margin-top: 20px;">
               <div class="form-group form-material col-md-6">
@@ -297,14 +294,14 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary save-location">Save changes</button>
+            
           </div>
         </div>
       </div>
     </div>
 
 @include('admin.include.footer')
-<script src="http://maps.google.com/maps/api/js?libraries=places&region=uk&language=en&sensor=true&key=AIzaSyA4yR0QYbk-PSt19ImAdnw3nKHWfTvhXRo"></script>
+<script src="https://maps.google.com/maps/api/js?libraries=places&region=uk&language=en&sensor=true&key=AIzaSyA4yR0QYbk-PSt19ImAdnw3nKHWfTvhXRo"></script>
 <script type="text/javascript">
        $(function() {
         
@@ -346,6 +343,7 @@
        $('.MapLon').val(long);
        $('#searchTextField').val(searchTextField);
        $('.type').val(ltype);
+
        //Google  map
         var lat = laat,
             lng =long,
@@ -396,12 +394,12 @@
                 map.setZoom(17);
             }
 
-            moveMarker(place.name, place.geometry.location);
+            //moveMarker(place.name, place.geometry.location);
             $('.MapLat').val(place.geometry.location.lat());
             $('.MapLon').val(place.geometry.location.lng());
         });
         
-        google.maps.event.addListener(map, 'click', function (event) {
+      /*  google.maps.event.addListener(map, 'click', function (event) {
          
             $('.MapLat').val(event.latLng.lat());
             $('.MapLon').val(event.latLng.lng());
@@ -422,14 +420,14 @@
                             $("#searchTextField").val(results[0].formatted_address);
                         }
                     });
-        });
+        });*/
 
-        function moveMarker(placeName, latlng) {
+     /*   function moveMarker(placeName, latlng) {
             marker.setIcon(image);
             marker.setPosition(latlng);
             infowindow.setContent(placeName);
             //infowindow.open(map, marker);
-        }
+        }*/
 
     });
  

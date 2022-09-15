@@ -93,7 +93,7 @@
                         <span class="input-group-addon">
                           <i class="icon md-calendar" aria-hidden="true"></i>
                         </span>
-                        <input data-date-format="dd-mm-yyyy" readonly type="text" pattern="([0-9]{2})\/([0-9]{2})\/([0-9]{4})" class="form-control trip_date_time" data-plugin="datepicker" name="trip_date" id="trip_date">
+                        <input data-date-a="dd-mm-yyyy" readonly type="text" pattern="([0-9]{2})\/([0-9]{2})\/([0-9]{4})" class="form-control trip_date_time" data-plugin="datepicker"  data-date-start-date="0d" name="trip_date" id="trip_date">
                       </div>
                     </div>
                   </div>
@@ -499,16 +499,30 @@ function myFunction()
           $('.modal-title').html("Get To Location's Co-ordinates");         
           $('.lotitude-label').html('To Latitude');
           $('.longitude-label').html('To Longitude');
+          var laat=$('.to-lat').val();
+          var long=$('.to-long').val();
+          var searchTextField= $('#map_to_address').val();
         }
         if(ltype==1){
           $('.modal-title').html("Get From Location's Co-ordinates");
           $('.lotitude-label').html('From Latitude');
           $('.longitude-label').html('From Longitude');
+          var laat=$('.from-lat').val();
+          var long=$('.from-long').val();
+          var searchTextField= $('#map_from_address').val();
         }
+        $('.MapLat').val(laat);
+        $('.MapLon').val(long);
+        $('#searchTextField').val(searchTextField);
         $('.type').val(ltype);
+        
+       if(laat=="" && long==""){
+           laat=43.51638699999999;
+           long=16.2501894;
+       }
         //Google  map
-         var lat = 44.88623409320778,
-             lng = -87.86480712897173,
+        var lat = laat,
+            lng = long,
              latlng = new google.maps.LatLng(lat, lng),
              image = 'http://www.google.com/intl/en_us/mapfiles/ms/micons/blue-dot.png';
 

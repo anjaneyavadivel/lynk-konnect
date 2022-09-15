@@ -81,9 +81,9 @@
                   <td>{{ $val->no_of_passengers }}</td>
                   <td>{{ $val->trip_amount}}</td>
                   <td>
-                  <?php if($val->trip_status == 1){ echo "New Trip"; } ?>
-                  <?php  if($val->trip_status == 2){ echo 'Inprogress';} ?>
-                  <?php  if($val->trip_status == 3){ echo 'Completed Trip';} ?>
+                  <?php if($val->trip_status == 1){ echo "Active"; } ?>
+                  <?php  if($val->trip_status == 2){ echo'Trip taken by '.$val->takenby;} ?>
+                  <?php  if($val->trip_status == 3){ echo 'Trip Completed';} ?>
                   <?php  if($val->trip_status == 4){ echo 'Return Trip';} ?>   
                   </td>
                   <td>
@@ -103,10 +103,11 @@
                       <input type="hidden" value="3" name="trip_status">
                      <button tyep="submit" class="btn btn-primary" style="margin: 6px;">Complete Trip</button>
                     </form>                     
-                    @elseif($val->trip_status==3)
+                    @endif
+                    @if($val->trip_date>=date('Y-m-dd'))
                      <a class="btn btn-primary" href="{{ url('return_trip/'. $val->id)}}" style="margin: 6px;">Return Trip</a>
+                   
                      @endif
-                     
                   </td>
                 </tr>
                 @endforeach

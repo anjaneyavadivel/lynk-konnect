@@ -68,9 +68,17 @@ class UserController extends Controller
     
     // -- Manage Users
     public function index() {
-        $company_id_s = Session::get('company_id_s');  
+        $user_info=Auth::user()->role_id;
+        if($user_info==3){
+            $list = User::getUsers(0);
+        }
+        else{
+            $company_id_s = Session::get('company_id_s');
+            $list = User::getUsers($company_id_s);
+           
+        }
         //$list = User::orderBy('id','DESC')->get();
-        $list = User::getUsers(0);
+       
         //dd($list);
         return view('admin.users.index',compact('list'));
     }
@@ -130,7 +138,13 @@ class UserController extends Controller
                     $data1['postcode']=$data['postcode'];
                     $data1['contactnumber']=$data['contactnumber'];
                     $data1['created_by']=$user_info->id;
-                    $data1['badge']="test";
+                    if (request()->hasFile('badge')) {
+                        //echo "3";exit;
+                        $imageName = time().'.'.request()->badge->getClientOriginalExtension();
+                        request()->badge->move(public_path('uploads'), $imageName);
+                        $data1['badge']=$imageName;
+                     }
+                  //  $data1['badge']="test";
                     $company = Driver::create($data1);
                 }else{
                     $data = $this->validate($request, [
